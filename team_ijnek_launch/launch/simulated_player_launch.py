@@ -43,5 +43,11 @@ def generate_launch_description():
                 'initial_pose_y': LaunchConfiguration('initial_pose_y'),
                 'initial_pose_theta': LaunchConfiguration('initial_pose_theta')
             }]
-        )
+        ),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                get_package_share_directory('walk_generator'),
+                '/launch', '/walk_launch.py'])
+        ),
     ])
