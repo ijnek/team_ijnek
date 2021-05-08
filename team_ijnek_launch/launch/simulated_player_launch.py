@@ -18,10 +18,10 @@ def generate_launch_description():
         DeclareLaunchArgument('initial_pose_y', default_value='0.0'),
         DeclareLaunchArgument('initial_pose_theta', default_value='0.0'),
 
-        # player_launch (naosoccer_sim)
+        # player_launch (rcss3d_agent)
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
-                get_package_share_directory('naosoccer_sim'),
+                get_package_share_directory('rcss3d_agent'),
                 '/launch', '/player_launch.py']),
             launch_arguments={
                 'namespace': LaunchConfiguration('namespace'),
