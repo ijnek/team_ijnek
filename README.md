@@ -1,3 +1,6 @@
+## NOTE: THIS PACKAGE IS UNDER HEAVY DEVELOPMENT AND NOT READY FOR USE
+
+
 # team_ijnek
 Sample "team" package
 
