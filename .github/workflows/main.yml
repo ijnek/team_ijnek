@@ -28,5 +28,5 @@ jobs:
           required-ros-distributions: foxy
       - uses: ros-tooling/action-ros-ci@v0.2
         with:
-          package-name: team_ijnek
+          package-name: motion_msgs walk_generator static_pose_publisher team_ijnek_launch
           target-ros2-distro: foxy
