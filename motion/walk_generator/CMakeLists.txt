@@ -27,7 +27,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(motion_msgs REQUIRED)
 
 # Build walk_generator
-add_executable(walk_generator 
+add_executable(walk_generator
   src/walk_generator_node.cpp
   src/walk_generator.cpp)
 
@@ -38,7 +38,7 @@ ament_target_dependencies(walk_generator
   motion_msgs)
 
 # Build inverse_kinematics
-add_executable(inverse_kinematics 
+add_executable(inverse_kinematics
   src/inverse_kinematics_node.cpp
   src/inverse_kinematics.cpp)
 
@@ -54,7 +54,12 @@ install(TARGETS
   inverse_kinematics
   DESTINATION lib/${PROJECT_NAME})
 
-install(DIRECTORY launch/ 
+install(DIRECTORY launch/
   DESTINATION share/${PROJECT_NAME}/launch/)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
 
 ament_package()
