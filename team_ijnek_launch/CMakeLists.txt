@@ -17,7 +17,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY launch/ 
+install(DIRECTORY launch/
   DESTINATION share/${PROJECT_NAME}/launch/)
 
 if(BUILD_TESTING)
