@@ -1,6 +1,3 @@
-## NOTE: THIS PACKAGE IS UNDER HEAVY DEVELOPMENT AND NOT READY FOR USE
-
-
 # team_ijnek
 
 [![CI](https://github.com/ijnek/team_ijnek/actions/workflows/main.yml/badge.svg)](https://github.com/ijnek/team_ijnek/actions/workflows/main.yml)
