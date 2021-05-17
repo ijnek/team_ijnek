@@ -26,7 +26,7 @@ WalkGenerator::WalkGenerator()
     create_subscription<geometry_msgs::msg::Twist>(
     "turtle1/cmd_vel", 1,
     [this](geometry_msgs::msg::Twist::SharedPtr twist) {
-      RCLCPP_INFO(
+      RCLCPP_DEBUG(
         get_logger(), "Recevied twist: %g, %g, %g, %g, %g, %g",
         twist->linear.x, twist->linear.y, twist->linear.z,
         twist->angular.x, twist->angular.y, twist->angular.z);
@@ -41,13 +41,13 @@ WalkGenerator::WalkGenerator()
       pub_walk_command->publish(walkCommand);
     });
 
-  pub_walk_command = create_publisher<motion_msgs::msg::WalkCommand>("walk_command", 1);
+  pub_walk_command = create_publisher<motion_msgs::msg::WalkCommand>("motion/walk_command", 1);
 }
 
 motion_msgs::msg::WalkCommand WalkGenerator::generate_walk_command(
   nao_interfaces::msg::Joints & sensor_joints)
 {
-  RCLCPP_INFO(get_logger(), "generate_walk_command called");
+  RCLCPP_DEBUG(get_logger(), "generate_walk_command called");
   if (twist.angular.z == 0.0) {
     if (abs(hiph - STAND_HIP_HEIGHT) < .0001) {
       walkOption = STAND;
@@ -63,9 +63,7 @@ motion_msgs::msg::WalkCommand WalkGenerator::generate_walk_command(
       walkOption = CROUCH;
     }
   }
-  RCLCPP_INFO(get_logger(), "walkOption: " + std::to_string(walkOption));
-
-  RCLCPP_INFO(get_logger(), "walkOption: " + std::to_string(walkOption));
+  RCLCPP_DEBUG(get_logger(), "walkOption: " + std::to_string(walkOption));
 
   t += dt;
 
@@ -86,7 +84,7 @@ motion_msgs::msg::WalkCommand WalkGenerator::generate_walk_command(
   motion_msgs::msg::WalkCommand walkCommand;
   walkCommand.hiph = hiph;
 
-  RCLCPP_INFO(get_logger(), "hiph is: %.5f", hiph);
+  RCLCPP_DEBUG(get_logger(), "hiph is: %.5f", hiph);
 
   return walkCommand;
 }

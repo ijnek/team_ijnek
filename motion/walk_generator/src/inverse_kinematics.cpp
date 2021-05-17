@@ -23,7 +23,7 @@ InverseKinematics::InverseKinematics()
 {
   sub_walk_command =
     create_subscription<motion_msgs::msg::WalkCommand>(
-    "walk_command", 1,
+    "motion/walk_command", 1,
     [this](motion_msgs::msg::WalkCommand::SharedPtr walk_command) {
       nao_interfaces::msg::Joints joints = calculate_joints(*walk_command);
       pub_joints->publish(joints);

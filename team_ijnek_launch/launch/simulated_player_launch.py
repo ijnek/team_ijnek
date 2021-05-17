@@ -62,6 +62,9 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 get_package_share_directory('walk_generator'),
-                '/launch', '/walk_launch.py'])
+                '/launch', '/walk_launch.py']),
+            launch_arguments={
+                'namespace': LaunchConfiguration('namespace'),
+            }.items(),
         ),
     ])
