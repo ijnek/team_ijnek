@@ -27,44 +27,37 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('namespace', default_value=''),
         DeclareLaunchArgument('team', default_value='ijnek'),
-        DeclareLaunchArgument('player_number', default_value='2'),
-        DeclareLaunchArgument('initial_pose_x', default_value='0.0'),
-        DeclareLaunchArgument('initial_pose_y', default_value='0.0'),
-        DeclareLaunchArgument('initial_pose_theta', default_value='0.0'),
-
-        # player_launch (rcss3d_agent)
+        DeclareLaunchArgument('number', default_value='2'),
+        DeclareLaunchArgument('x', default_value='0.0'),
+        DeclareLaunchArgument('y', default_value='0.0'),
+        DeclareLaunchArgument('theta', default_value='0.0'),
+        Node(
+            package='rcss3d_agent',
+            executable='rcss3d_agent',
+            namespace=LaunchConfiguration('namespace'),
+            parameters=[{
+                'team': LaunchConfiguration('team'),
+                'number': LaunchConfiguration('number'),
+                'x': LaunchConfiguration('x'),
+                'y': LaunchConfiguration('y'),
+                'theta': LaunchConfiguration('theta')
+            }]),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
-                get_package_share_directory('rcss3d_agent'),
-                '/launch', '/player_launch.py']),
+                get_package_share_directory('nao_state_publisher'),
+                '/launch', '/nao_state_publisher_launch.py']),
             launch_arguments={
                 'namespace': LaunchConfiguration('namespace'),
-                'team': LaunchConfiguration('team'),
-                'player_number': LaunchConfiguration('player_number'),
-                'initial_pose_x': LaunchConfiguration('initial_pose_x'),
-                'initial_pose_y': LaunchConfiguration('initial_pose_y'),
-                'initial_pose_theta': LaunchConfiguration('initial_pose_theta')
             }.items(),
         ),
-
-        # static_pose_publisher
         Node(
             package='static_pose_publisher',
             executable='static_pose_publisher',
             namespace=LaunchConfiguration('namespace'),
             parameters=[{
-                'initial_pose_x': LaunchConfiguration('initial_pose_x'),
-                'initial_pose_y': LaunchConfiguration('initial_pose_y'),
-                'initial_pose_theta': LaunchConfiguration('initial_pose_theta')
+                'x': LaunchConfiguration('x'),
+                'y': LaunchConfiguration('y'),
+                'theta': LaunchConfiguration('theta')
             }]
-        ),
-
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                get_package_share_directory('walk_generator'),
-                '/launch', '/walk_launch.py']),
-            launch_arguments={
-                'namespace': LaunchConfiguration('namespace'),
-            }.items(),
         ),
     ])

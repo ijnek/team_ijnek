@@ -19,7 +19,7 @@ Currently the supported arguments are:
 
 * **namespace** - string (default: '')
 * **team** - string (default: 'ijnek')
-* **player_number** - int (default: '2')
-* **initial_pose_x** - double (default: '0.0')
-* **initial_pose_y** - double (default: '0.0')
-* **initial_pose_theta** - double (default: '0.0')
+* **number** - int (default: '2')
+* **x** - double (default: '0.0')
+* **y** - double (default: '0.0')
+* **theta** - double (default: '0.0')

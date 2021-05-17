@@ -17,8 +17,10 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY launch/
-  DESTINATION share/${PROJECT_NAME}/launch/)
+foreach(dir launch config)
+  install(DIRECTORY ${dir}/
+    DESTINATION share/${PROJECT_NAME}/${dir}/)
+endforeach()
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
