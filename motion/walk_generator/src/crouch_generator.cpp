@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "walk_generator/crouch_generator.hpp"
+#include "walk_generator/maths_functions.hpp"
 
 #define STAND_HIP_HEIGHT 0.248
 #define WALK_HIP_HEIGHT 0.23
@@ -73,11 +74,11 @@ motion_msgs::msg::IKCommand CrouchGenerator::generate_ik_command(
     hiph = WALK_HIP_HEIGHT;
   } else if (walkOption == CROUCH) {
     hiph = STAND_HIP_HEIGHT + (WALK_HIP_HEIGHT - STAND_HIP_HEIGHT) * parabolicStep(
-      t,
+      dt, t,
       CROUCH_STAND_PERIOD);
   } else if (walkOption == STANDUP) {
     hiph = WALK_HIP_HEIGHT + (STAND_HIP_HEIGHT - WALK_HIP_HEIGHT) * parabolicStep(
-      t,
+      dt, t,
       CROUCH_STAND_PERIOD);
   }
 
@@ -87,21 +88,4 @@ motion_msgs::msg::IKCommand CrouchGenerator::generate_ik_command(
   RCLCPP_DEBUG(get_logger(), "hiph is: %.5f", hiph);
 
   return ikCommand;
-}
-
-float CrouchGenerator::parabolicStep(float time, float period, float deadTimeFraction)
-{
-  // normalised [0,1] step up
-  float deadTime = period * deadTimeFraction / 2;
-  if (time < deadTime + dt / 2) {
-    return 0;
-  }
-  if (time > period - deadTime - dt / 2) {
-    return 1;
-  }
-  float timeFraction = (time - deadTime) / (period - 2 * deadTime);
-  if (time < period / 2) {
-    return 2.0 * timeFraction * timeFraction;
-  }
-  return 4 * timeFraction - 2 * timeFraction * timeFraction - 1;
 }

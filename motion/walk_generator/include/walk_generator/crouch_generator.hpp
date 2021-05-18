@@ -41,7 +41,6 @@ private:
   float t = 0.0;
 
   motion_msgs::msg::IKCommand generate_ik_command(nao_interfaces::msg::Joints & sensor_joints);
-  float parabolicStep(float time, float period, float deadTimeFraction = 0);
 
   rclcpp::Subscription<nao_interfaces::msg::Joints>::SharedPtr sub_joint_states;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;

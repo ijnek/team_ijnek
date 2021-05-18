@@ -33,15 +33,18 @@ private:
     STANDUP = 1,      // process of moving from WALK crouch to STAND
     CROUCH = 2,      // process of transitioning from STAND to WALK
     READY = 3,      // crouch still ready to walk
+    WALK = 4,
   };
 
   WalkOption walkOption = STAND;
   float hiph;
   float dt = 0.02;    // make sure to change this for real robot
   float t = 0.0;
+  float forwardL0, forwardR0, leftL0, leftR0, turnRL0;
+  bool isLeftPhase = false;
+  bool weightHasShifted = true;
 
   motion_msgs::msg::IKCommand generate_ik_command(nao_interfaces::msg::Joints & sensor_joints);
-  float parabolicStep(float time, float period, float deadTimeFraction = 0);
 
   rclcpp::Subscription<nao_interfaces::msg::Joints>::SharedPtr sub_joint_states;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;

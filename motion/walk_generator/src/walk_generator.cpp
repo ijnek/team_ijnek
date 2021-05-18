@@ -13,10 +13,13 @@
 // limitations under the License.
 
 #include "walk_generator/walk_generator.hpp"
+#include "walk_generator/maths_functions.hpp"
 
 #define STAND_HIP_HEIGHT 0.248
 #define WALK_HIP_HEIGHT 0.23
 #define CROUCH_STAND_PERIOD 0.5
+#define BASE_WALK_PERIOD 0.25
+#define BASE_LEG_LIFT 0.012
 
 WalkGenerator::WalkGenerator()
 : Node("WalkGenerator"),
@@ -48,7 +51,7 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
   nao_interfaces::msg::Joints & sensor_joints)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
-  if (twist.angular.z == 0.0) {
+  if (twist.linear.z == 0.0) {
     if (abs(hiph - STAND_HIP_HEIGHT) < .0001) {
       walkOption = STAND;
       t = 0;
@@ -57,8 +60,15 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
     }
   } else {
     if (abs(hiph - WALK_HIP_HEIGHT) < .0001) {
-      walkOption = READY;
-      t = 0;
+      if (twist.linear.x != 0.0 || twist.linear.y != 0.0 || twist.angular.z != 0.0) {
+        walkOption = WALK;
+        if (t >= BASE_WALK_PERIOD) {
+          t = 0;
+        }
+      } else {
+        walkOption = READY;
+        t = 0;
+      }
     } else {
       walkOption = CROUCH;
     }
@@ -67,41 +77,104 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
 
   t += dt;
 
+  float forwardL = 0, forwardR = 0, leftL = 0, leftR = 0,
+    foothL = 0, foothR = 0, turnRL = 0;
+
   if (walkOption == STAND) {
     hiph = STAND_HIP_HEIGHT;
   } else if (walkOption == READY) {
     hiph = WALK_HIP_HEIGHT;
   } else if (walkOption == CROUCH) {
     hiph = STAND_HIP_HEIGHT + (WALK_HIP_HEIGHT - STAND_HIP_HEIGHT) * parabolicStep(
-      t,
+      dt, t,
       CROUCH_STAND_PERIOD);
   } else if (walkOption == STANDUP) {
     hiph = WALK_HIP_HEIGHT + (STAND_HIP_HEIGHT - WALK_HIP_HEIGHT) * parabolicStep(
-      t,
+      dt, t,
       CROUCH_STAND_PERIOD);
+  } else if (walkOption == WALK) {
+    float forward = twist.linear.x;
+    float left = twist.linear.y;
+    float turn = twist.angular.z;
+
+    // 5.1 Calculate the height to lift each swing foot
+    float maxFootHeight = BASE_LEG_LIFT + abs(forward) * 0.01 + abs(left) * 0.03;
+    float varfootHeight = maxFootHeight * parabolicReturnMod(t / BASE_WALK_PERIOD);     // 0.012 lift of swing foot from ground
+    // 5.2 When walking in an arc, the outside foot needs to travel further than the inside one - void
+    // 5.3L Calculate intra-walkphase forward, left and turn at time-step dt, for left swing foot
+    if (isLeftPhase) {                 // if the support foot is right
+      if (weightHasShifted) {
+        // 5.3.1L forward (the / by 2 is because the CoM moves as well and forwardL is wrt the CoM
+        forwardR = forwardR0 + ((forward) / 2 - forwardR0) * linearStep(t, BASE_WALK_PERIOD);
+        forwardL = forwardL0 + parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardL0);         // swing-foot follow-through
+        // 5.3.2L Jab kick with left foot - removed
+        // 5.3.3L Determine how much to lean from side to side - removed
+        // 5.3.4L left
+        if (left > 0) {
+          leftL = leftL0 + (left - leftL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.2);
+          leftR = -leftL;
+        } else {
+          leftL = leftL0 * (1 - parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0));
+          leftR = -leftL;
+        }
+        // 5.3.5L turn (note, we achieve correct turn by splitting turn foot placement unevely over two steps, but 1.6 + 0.4 = 2 and adds up to two steps worth of turn)
+        if (turn < 0) {
+          turnRL = turnRL0 + (-1.6 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
+        } else {
+          turnRL = turnRL0 + (-0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);           //turn back to restore previous turn angle
+        }
+      }
+      // 5.3.6L determine how high to lift the swing foot off the ground
+      foothL = varfootHeight;                            // lift left swing foot
+      foothR = 0;                                   // do not lift support foot;
+    }
+    // 5.3R Calculate intra-walkphase forward, left and turn at time-step dt, for right swing foot
+    if (!isLeftPhase) {              // if the support foot is left
+      if (weightHasShifted) {
+        // 5.3.1R forward
+        forwardL = forwardL0 + ((forward) / 2 - forwardL0) * linearStep(t, BASE_WALK_PERIOD);
+        forwardR = forwardR0 + parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardR0);         // swing-foot follow-through
+        // 5.3.2R Jab-Kick with right foot - removed
+        // 5.3.3R lean - not used
+        // 5.3.4R left
+        if (left < 0) {
+          leftR = leftR0 + (left - leftR0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.2);
+          leftL = -leftR;
+        } else {
+          leftR = leftR0 * (1 - parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0));
+          leftL = -leftR;
+        }
+        // 5.3.5R turn
+        if (turn < 0) {
+          turnRL = turnRL0 + (0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);           //turn back to restore previous turn angle
+        } else {
+          turnRL = turnRL0 + (1.6 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
+        }
+        // 5.3.6R Foot height
+      }
+      foothR = varfootHeight;
+      foothL = 0;
+    }
+
+    if (t >= BASE_WALK_PERIOD) {
+      turnRL0 = turnRL;
+      forwardR0 = forwardR;
+      forwardL0 = forwardL;
+      leftL0 = leftL;
+      leftR0 = leftR;
+      isLeftPhase = !isLeftPhase;
+    }
   }
 
   motion_msgs::msg::IKCommand ikCommand;
   ikCommand.hiph = hiph;
-
-  RCLCPP_DEBUG(get_logger(), "hiph is: %.5f", hiph);
+  ikCommand.forward_l = forwardL;
+  ikCommand.forward_r = forwardR;
+  ikCommand.left_l = leftL;
+  ikCommand.left_r = leftR;
+  ikCommand.turn_rl = turnRL;
+  ikCommand.footh_l = foothL;
+  ikCommand.footh_r = foothR;
 
   return ikCommand;
-}
-
-float WalkGenerator::parabolicStep(float time, float period, float deadTimeFraction)
-{
-  // normalised [0,1] step up
-  float deadTime = period * deadTimeFraction / 2;
-  if (time < deadTime + dt / 2) {
-    return 0;
-  }
-  if (time > period - deadTime - dt / 2) {
-    return 1;
-  }
-  float timeFraction = (time - deadTime) / (period - 2 * deadTime);
-  if (time < period / 2) {
-    return 2.0 * timeFraction * timeFraction;
-  }
-  return 4 * timeFraction - 2 * timeFraction * timeFraction - 1;
 }

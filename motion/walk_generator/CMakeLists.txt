@@ -26,6 +26,11 @@ find_package(nao_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(motion_msgs REQUIRED)
 
+# Build maths_functions lib
+add_library(maths_functions SHARED
+  src/maths_functions.cpp
+)
+
 # Build crouch_generator
 add_executable(crouch_generator
   src/crouch_generator_node.cpp
@@ -37,6 +42,10 @@ ament_target_dependencies(crouch_generator
   geometry_msgs
   motion_msgs)
 
+target_link_libraries(
+  crouch_generator maths_functions
+)
+
 # Build walk_generator
 add_executable(walk_generator
   src/walk_generator_node.cpp
@@ -47,6 +56,10 @@ ament_target_dependencies(walk_generator
   nao_interfaces
   geometry_msgs
   motion_msgs)
+
+target_link_libraries(
+  walk_generator maths_functions
+)
 
 # Build inverse_kinematics
 add_executable(inverse_kinematics
@@ -68,6 +81,14 @@ install(TARGETS
 
 install(DIRECTORY launch/
   DESTINATION share/${PROJECT_NAME}/launch/)
+
+install(
+  TARGETS maths_functions
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
