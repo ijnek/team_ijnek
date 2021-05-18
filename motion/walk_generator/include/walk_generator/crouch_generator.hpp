@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WALK_GENERATOR__WALK_GENERATOR_HPP_
-#define WALK_GENERATOR__WALK_GENERATOR_HPP_
+#ifndef CROUCH_GENERATOR__CROUCH_GENERATOR_HPP_
+#define CROUCH_GENERATOR__CROUCH_GENERATOR_HPP_
 
 #include "rclcpp/rclcpp.hpp"
 #include "nao_interfaces/msg/joints.hpp"
@@ -21,17 +21,17 @@
 #include "motion_msgs/msg/ik_command.hpp"
 
 
-class WalkGenerator : public rclcpp::Node
+class CrouchGenerator : public rclcpp::Node
 {
 public:
-  WalkGenerator();
+  CrouchGenerator();
 
 private:
   enum WalkOption
   {
     STAND = 0,      // with knees straight
-    STANDUP = 1,      // process of moving from WALK crouch to STAND
-    CROUCH = 2,      // process of transitioning from STAND to WALK
+    STANDUP = 1,      // process of moving from CROUCH crouch to STAND
+    CROUCH = 2,      // process of transitioning from STAND to CROUCH
     READY = 3,      // crouch still ready to walk
   };
 
@@ -50,4 +50,4 @@ private:
   geometry_msgs::msg::Twist twist;
 };
 
-#endif  // WALK_GENERATOR__WALK_GENERATOR_HPP_
+#endif  // CROUCH_GENERATOR__CROUCH_GENERATOR_HPP_

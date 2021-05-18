@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "walk_generator/walk_generator.hpp"
+#include "walk_generator/crouch_generator.hpp"
 
 #define STAND_HIP_HEIGHT 0.248
 #define WALK_HIP_HEIGHT 0.23
 #define CROUCH_STAND_PERIOD 0.5
 
-WalkGenerator::WalkGenerator()
-: Node("WalkGenerator"),
+CrouchGenerator::CrouchGenerator()
+: Node("CrouchGenerator"),
   hiph(STAND_HIP_HEIGHT)
 {
   sub_twist =
@@ -44,7 +44,7 @@ WalkGenerator::WalkGenerator()
   pub_ik_command = create_publisher<motion_msgs::msg::IKCommand>("motion/ik_command", 1);
 }
 
-motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
+motion_msgs::msg::IKCommand CrouchGenerator::generate_ik_command(
   nao_interfaces::msg::Joints & sensor_joints)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
@@ -89,7 +89,7 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
   return ikCommand;
 }
 
-float WalkGenerator::parabolicStep(float time, float period, float deadTimeFraction)
+float CrouchGenerator::parabolicStep(float time, float period, float deadTimeFraction)
 {
   // normalised [0,1] step up
   float deadTime = period * deadTimeFraction / 2;

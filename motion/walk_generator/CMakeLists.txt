@@ -26,6 +26,17 @@ find_package(nao_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(motion_msgs REQUIRED)
 
+# Build crouch_generator
+add_executable(crouch_generator
+  src/crouch_generator_node.cpp
+  src/crouch_generator.cpp)
+
+ament_target_dependencies(crouch_generator
+  rclcpp
+  nao_interfaces
+  geometry_msgs
+  motion_msgs)
+
 # Build walk_generator
 add_executable(walk_generator
   src/walk_generator_node.cpp
@@ -50,6 +61,7 @@ ament_target_dependencies(inverse_kinematics
 
 # Install
 install(TARGETS
+  crouch_generator
   walk_generator
   inverse_kinematics
   DESTINATION lib/${PROJECT_NAME})

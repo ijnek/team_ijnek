@@ -21,11 +21,11 @@ static const float ankle = 0.04519;
 InverseKinematics::InverseKinematics()
 : Node("InverseKinematics")
 {
-  sub_walk_command =
-    create_subscription<motion_msgs::msg::WalkCommand>(
-    "motion/walk_command", 1,
-    [this](motion_msgs::msg::WalkCommand::SharedPtr walk_command) {
-      nao_interfaces::msg::Joints joints = calculate_joints(*walk_command);
+  sub_ik_command =
+    create_subscription<motion_msgs::msg::IKCommand>(
+    "motion/ik_command", 1,
+    [this](motion_msgs::msg::IKCommand::SharedPtr ik_command) {
+      nao_interfaces::msg::Joints joints = calculate_joints(*ik_command);
       pub_joints->publish(joints);
     });
 
@@ -33,18 +33,18 @@ InverseKinematics::InverseKinematics()
 }
 
 nao_interfaces::msg::Joints InverseKinematics::calculate_joints(
-  motion_msgs::msg::WalkCommand & walk_command)
+  motion_msgs::msg::IKCommand & ik_command)
 {
   // 9. Work out joint angles from walk variables above
-  float & hiph = walk_command.hiph;
-  float & foothL = walk_command.footh_l;
-  float & foothR = walk_command.footh_r;
-  float & forwardL = walk_command.forward_l;
-  float & forwardR = walk_command.forward_r;
-  float & leftL = walk_command.left_l;
-  float & leftR = walk_command.left_r;
-  float & turnRL = walk_command.turn_rl;
-  float & comOffset = walk_command.com_offset;
+  float & hiph = ik_command.hiph;
+  float & foothL = ik_command.footh_l;
+  float & foothR = ik_command.footh_r;
+  float & forwardL = ik_command.forward_l;
+  float & forwardR = ik_command.forward_r;
+  float & leftL = ik_command.left_l;
+  float & leftR = ik_command.left_r;
+  float & turnRL = ik_command.turn_rl;
+  float & comOffset = ik_command.com_offset;
 
   // 9.05 Sert hip and ankle values
   float HrL = atan(leftL / (hiph - ankle));
