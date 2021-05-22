@@ -7,8 +7,9 @@
 class State
 {
 public:
-  std::optional<bool> standing;
-  std::optional<bool> walking;
+  std::optional<bool> standing;  // Robot is not moving feet, and is standing
+  std::optional<bool> walking;  // Robot is moving weight across from left to right foot, not necessarily travelling about
+  std::optional<bool> travelling;  // Robot is moving while walking around
   std::optional<bool> diving;
   std::optional<bool> on_ground;
   std::optional<bool> getting_up;
@@ -75,6 +76,19 @@ public:
       }
 
       if (this->getting_up.value() != requirements.getting_up.value())
+      {
+        return false;
+      }
+    }
+
+    if (requirements.travelling.has_value())
+    {
+      if (!this->travelling.has_value())
+      {
+        return false;
+      }
+
+      if (this->travelling.value() != requirements.travelling.value())
       {
         return false;
       }

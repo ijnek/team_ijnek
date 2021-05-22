@@ -23,47 +23,239 @@ public:
   Getup getup;
 };
 
-
-TEST_F(TransitionerTest, TestGetupToDive)
+TEST_F(TransitionerTest, TestStandingToDiving)
 {
-  // **getting_up** -> Stand -> dived
+  // EXPECTED: Dive
   State current;
-  current.getting_up = true;
+  current.standing = true;
+  current.walking = false;
+  current.diving = false;
+  current.on_ground = false;
+  current.getting_up = false;
 
   State aim;
   aim.diving = true;
 
-  auto [first_motion, first_motion_end_state] = transitioner.findNextMotion(current, aim);
-  EXPECT_EQ(first_motion->name, getup.name);
+  auto [motion, motion_aim_state] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion->name, dive.name);
 
-  auto [second_motion, second_motion_end_state] = transitioner.findNextMotion(first_motion_end_state, aim);
-  EXPECT_EQ(second_motion->name, stand.name);
-
-  auto [third_motion, third_motion_end_state] = transitioner.findNextMotion(second_motion_end_state, aim);
-  EXPECT_EQ(third_motion->name, dive.name);
-
-  EXPECT_TRUE(third_motion_end_state.satisfies(aim));
+  EXPECT_TRUE(motion_aim_state.satisfies(aim));
 }
 
-TEST(TestTransitioner, TestDiveToWalk)
+TEST_F(TransitionerTest, TestWalkingToDiving)
 {
-  MotionTransitioner transitioner;
-  Walk walk;
-  Stand stand;
-  Dive dive;
-  Getup getup;
-  transitioner.addMotion(&walk);
-  transitioner.addMotion(&stand);
-  transitioner.addMotion(&dive);
-  transitioner.addMotion(&getup);
-
-  // **diving** -> Getup ->  Stand -> Walk
+  // EXPECTED: Dive
   State current;
-  current.diving = true;
+  current.walking = true;
+  current.diving = false;
+  current.on_ground = false;
+  current.getting_up = false;
+
+  State aim;
+  aim.diving = true;
+
+  auto [motion, motion_aim_state] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion->name, dive.name);
+
+  EXPECT_TRUE(motion_aim_state.satisfies(aim));
+}
+
+TEST_F(TransitionerTest, TestGettingUpToDiving)
+{
+  // EXPECTED: nullptr, we have to wait until getup is coplete
+  State current;
+  current.getting_up = true;
+  current.walking = false;
+  current.diving = false;
+  current.on_ground = false;
+  current.standing = false;
+
+  State aim;
+  aim.diving = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion_1, nullptr);
+}
+
+TEST_F(TransitionerTest, TestOnGroundToDiving)
+{
+  // EXPECTED: Getup -> Dive
+  State current;
+  current.getting_up = false;
+  current.walking = false;
+  current.diving = false;
+  current.on_ground = true;
+  current.standing = false;
+
+  State aim;
+  aim.diving = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  ASSERT_NE(motion_1, nullptr);
+  EXPECT_EQ(motion_1->name, getup.name);
+
+  auto [motion_2, aim_state_2] = transitioner.findNextMotion(aim_state_1, aim);
+  ASSERT_NE(motion_2, nullptr);
+  EXPECT_EQ(motion_2->name, dive.name);
+
+  EXPECT_TRUE(aim_state_2.satisfies(aim));
+}
+
+TEST_F(TransitionerTest, TestStandingToWalking)
+{
+  // EXPECTED: Walk
+  State current;
+  current.standing = true;
+  current.walking = false;
+  current.diving = false;
+  current.on_ground = false;
+  current.getting_up = false;
 
   State aim;
   aim.walking = true;
 
-  auto [motion, motion_aim] = transitioner.findNextMotion(current, aim);
-  EXPECT_EQ(motion->name, getup.name);
+  auto [motion, motion_aim_state] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion->name, walk.name);
+
+  EXPECT_TRUE(motion_aim_state.satisfies(aim));
+}
+
+TEST_F(TransitionerTest, TestGettingUpToWalking)
+{
+  // EXPECTED: nullptr, we have to wait until getup is coplete
+  State current;
+  current.standing = false;
+  current.walking = false;
+  current.diving = false;
+  current.on_ground = false;
+  current.getting_up = true;
+
+  State aim;
+  aim.walking = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion_1, nullptr);
+}
+
+TEST_F(TransitionerTest, TestOnGroundToWalking)
+{
+  // EXPECTED: Getup -> Walk
+  State current;
+  current.standing = false;
+  current.walking = false;
+  current.diving = false;
+  current.on_ground = true;
+  current.getting_up = false;
+
+  State aim;
+  aim.walking = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  ASSERT_NE(motion_1, nullptr);
+  EXPECT_EQ(motion_1->name, getup.name);
+
+  auto [motion_2, aim_state_2] = transitioner.findNextMotion(aim_state_1, aim);
+  ASSERT_NE(motion_2, nullptr);
+  EXPECT_EQ(motion_2->name, walk.name);
+
+  EXPECT_TRUE(aim_state_2.satisfies(aim));
+}
+
+TEST_F(TransitionerTest, TestDivingToWalking)
+{
+  // EXPECTED: nullptr, we have to wait until getup is coplete
+  State current;
+  current.standing = false;
+  current.walking = false;
+  current.diving = true;
+  current.on_ground = false;
+  current.getting_up = false;
+
+  State aim;
+  aim.walking = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion_1, nullptr);
+}
+
+TEST_F(TransitionerTest, TestWalkingAndTravellingToStanding)
+{
+  // Walk -> Stand
+  State current;
+  current.standing = false;
+  current.walking = true;
+  current.travelling = true;
+  current.diving = false;
+  current.on_ground = false;
+  current.getting_up = false;
+
+  State aim;
+  aim.standing = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  ASSERT_NE(motion_1, nullptr);
+  EXPECT_EQ(motion_1->name, walk.name);
+
+  auto [motion_2, aim_state_2] = transitioner.findNextMotion(aim_state_1, aim);
+  ASSERT_NE(motion_2, nullptr);
+  EXPECT_EQ(motion_2->name, stand.name);
+
+  EXPECT_TRUE(aim_state_2.satisfies(aim));
+}
+
+TEST_F(TransitionerTest, TestGettingUpToStanding)
+{
+  // EXPECTED: nullptr, we have to wait until getup is coplete
+  State current;
+  current.standing = false;
+  current.walking = false;
+  current.travelling = false;
+  current.diving = false;
+  current.on_ground = false;
+  current.getting_up = true;
+
+  State aim;
+  aim.standing = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion_1, nullptr);
+}
+
+TEST_F(TransitionerTest, TestOnGroundToStanding)
+{
+  // Getup
+  State current;
+  current.standing = false;
+  current.walking = false;
+  current.travelling = true;
+  current.diving = false;
+  current.on_ground = true;
+  current.getting_up = false;
+
+  State aim;
+  aim.standing = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  ASSERT_NE(motion_1, nullptr);
+  EXPECT_EQ(motion_1->name, getup.name);
+
+  EXPECT_TRUE(aim_state_1.satisfies(aim));
+}
+
+TEST_F(TransitionerTest, TestDivingToStanding)
+{
+  // EXPECTED: nullptr, we have to wait until dive is coplete
+  State current;
+  current.standing = false;
+  current.walking = false;
+  current.travelling = false;
+  current.diving = false;
+  current.on_ground = false;
+  current.getting_up = true;
+
+  State aim;
+  aim.standing = true;
+
+  auto [motion_1, aim_state_1] = transitioner.findNextMotion(current, aim);
+  EXPECT_EQ(motion_1, nullptr);
 }

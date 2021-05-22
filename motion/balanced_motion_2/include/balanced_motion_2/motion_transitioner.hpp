@@ -66,7 +66,7 @@ public:
         }
       }
 
-      // Remove from motionsToSearch
+      // Remove from motionsT3oSearch
       for (Motion * motion : motionsAddedInLastIteration) {
         auto position = std::find(motionsToSearch.begin(), motionsToSearch.end(), motion);
         if (position != motionsToSearch.end()) {
@@ -88,7 +88,7 @@ public:
     } while (motionsAddedInLastIteration.size() != 0);
 
     std::cout << "COULDN'T FIND A VALID TRANSITION TO REACH AIM" << std::endl;
-    return std::make_tuple(motions.at(0), State{});
+    return std::make_tuple(nullptr, State{});
   }
 
 private:
