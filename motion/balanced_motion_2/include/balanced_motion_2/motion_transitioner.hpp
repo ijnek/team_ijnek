@@ -24,12 +24,12 @@ public:
       motionsAddedInLastIteration = {};
       motionsAddedInLastIterationWithAim = {};
 
-      std::cout << "motionsToSearch: ";
-      for (Motion *motion : motionsToSearch)
-      {
-        std::cout << motion->name << ", ";
-      }
-      std::cout << std::endl;
+      // std::cout << "motionsToSearch: ";
+      // for (Motion *motion : motionsToSearch)
+      // {
+      //   std::cout << motion->name << ", ";
+      // }
+      // std::cout << std::endl;
 
       for (Motion * motion : motionsToSearch) {
 
@@ -51,12 +51,12 @@ public:
         }
       }
 
-      std::cout << "motionsAddedInLastIteration: ";
-      for (Motion *motion : motionsAddedInLastIteration)
-      {
-        std::cout << motion->name << ", ";
-      }
-      std::cout << std::endl;
+      // std::cout << "motionsAddedInLastIteration: ";
+      // for (Motion *motion : motionsAddedInLastIteration)
+      // {
+      //   std::cout << motion->name << ", ";
+      // }
+      // std::cout << std::endl;
 
       // If we've found a motion that we can execute right now, return!
       for (auto [motion, aim] : motionsAddedInLastIterationWithAim) {
@@ -81,16 +81,15 @@ public:
         }
       }
 
-      std::cout << "motionsLeadingToAim: ";
-      for (Motion *motion : motionsLeadingToAim)
-      {
-        std::cout << motion->name << ", ";
-      }
-      std::cout << std::endl;
+      // std::cout << "motionsLeadingToAim: ";
+      // for (Motion *motion : motionsLeadingToAim)
+      // {
+      //   std::cout << motion->name << ", ";
+      // }
+      // std::cout << std::endl;
 
     } while (motionsAddedInLastIteration.size() != 0);
 
-    std::cout << "COULDN'T FIND A VALID TRANSITION TO REACH AIM" << std::endl;
     return std::make_tuple(nullptr, State{});
   }
 

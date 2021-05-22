@@ -25,6 +25,11 @@ public:
         requirements.on_feet = true;
         return requirements;
     }
+
+    bool isTravelling()
+    {
+        return false;
+    }
 };
 
 #endif  // BALANCED_MOTION_2__WALK_HPP_

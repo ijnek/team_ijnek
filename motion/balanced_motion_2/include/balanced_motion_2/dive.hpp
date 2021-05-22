@@ -7,6 +7,13 @@ class Dive : public Motion
 {
 public:
     Dive() : Motion("Dive") {}
+    
+    nao_interfaces::msg::Joints makeJoints (State state)
+    {
+        counter++;
+        return nao_interfaces::msg::Joints{};
+    }
+
 
     bool isAchievable(State &aim)
     {
@@ -23,6 +30,19 @@ public:
         requirements.on_feet = true;
         return requirements;
     }
+
+    bool hasFinished()
+    {
+        return counter > 3;
+    }
+
+    void reset()
+    {
+        counter = 0;
+    }
+
+private:
+    int counter;
 };
 
 #endif  // BALANCED_MOTION_2__DIVE_HPP_

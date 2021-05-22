@@ -6,24 +6,32 @@
 class Stand : public Motion
 {
 public:
-    Stand() : Motion("Stand") {}
+  Stand()
+  : Motion("Stand") {}
 
-    bool isAchievable(State &aim)
-    {
-        if (aim.standing.has_value() && aim.standing.value() == true)
-        {
-            return true;
-        }
-        return false;
-    }
+  nao_interfaces::msg::Joints makeJoints(State state)
+  {
+    nao_interfaces::msg::Joints joints;
+    joints.angles[nao_interfaces::msg::Joints::LSHOULDERPITCH] = 90 * 3.1415 / 180;
+    joints.angles[nao_interfaces::msg::Joints::RSHOULDERPITCH] = 90 * 3.1415 / 180;
+    return joints;
+  }
 
-    State requirements()
-    {
-        State requirements;
-        requirements.on_feet = true;
-        requirements.travelling = false;
-        return requirements;
+  bool isAchievable(State & aim)
+  {
+    if (aim.standing.has_value() && aim.standing.value() == true) {
+      return true;
     }
+    return false;
+  }
+
+  State requirements()
+  {
+    State requirements;
+    requirements.on_feet = true;
+    requirements.travelling = false;
+    return requirements;
+  }
 };
 
 #endif  // BALANCED_MOTION_2__STAND_HPP_

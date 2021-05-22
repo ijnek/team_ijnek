@@ -25,6 +25,10 @@ public:
         return State{};
     }
 
+    // Called when motion transitions to another motion
+    virtual void reset() {
+    }
+
     const std::string name;
 };
 

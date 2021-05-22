@@ -23,9 +23,25 @@ include_directories(
 find_package(ament_cmake REQUIRED)
 find_package(nao_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(motion_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+add_executable(balanced_motion_2
+  src/balanced_motion_2.cpp)
+
+ament_target_dependencies(balanced_motion_2
+  nao_interfaces
+  geometry_msgs
+  rclcpp
+  motion_msgs)
+
+# Install
+install(TARGETS
+  balanced_motion_2
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
