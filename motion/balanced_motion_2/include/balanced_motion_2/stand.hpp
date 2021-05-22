@@ -2,6 +2,9 @@
 #define BALANCED_MOTION_2__STAND_HPP_
 
 #include "balanced_motion_2/motion.hpp"
+#include "balanced_motion_2/inverse_kinematics.hpp"
+
+#define STANDING_HIPH 0.248
 
 class Stand : public Motion
 {
@@ -11,10 +14,9 @@ public:
 
   nao_interfaces::msg::Joints makeJoints (State &, nao_interfaces::msg::Joints &) override
   {
-    nao_interfaces::msg::Joints joints;
-    joints.angles[nao_interfaces::msg::Joints::LSHOULDERPITCH] = 90 * 3.1415 / 180;
-    joints.angles[nao_interfaces::msg::Joints::RSHOULDERPITCH] = 90 * 3.1415 / 180;
-    return joints;
+    motion_msgs::msg::IKCommand command;
+    command.hiph = STANDING_HIPH;
+    return calculate_joints(command);
   }
 
   bool isAchievable(State & aim) override

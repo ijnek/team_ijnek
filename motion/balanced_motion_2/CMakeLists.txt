@@ -32,6 +32,16 @@ find_package(Boost COMPONENTS filesystem REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(ament_index_cpp REQUIRED)  
 
+# Build inverse kinematics library
+
+add_library(inverse_kinematics src/inverse_kinematics.cpp)
+
+ament_target_dependencies(inverse_kinematics
+  nao_interfaces
+  motion_msgs
+  geometry_msgs
+  rclcpp)
+
 # Build linear library
 
 add_library(linear src/linear.cpp)
@@ -51,6 +61,10 @@ install(
 install(TARGETS
   linear
   DESTINATION lib/${PROJECT_NAME}/)
+
+target_link_libraries(linear
+  inverse_kinematics
+)
 
 # Build balanced_motion_2
 add_executable(balanced_motion_2
