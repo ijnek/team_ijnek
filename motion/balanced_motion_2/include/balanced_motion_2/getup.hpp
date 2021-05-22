@@ -8,12 +8,12 @@ class Getup : public Motion
 public:
     Getup() : Motion("Getup") {}
 
-    bool isAchievable(State &state)
+    bool isAchievable(State &aim)
     {
-        if (state.diving.has_value() && state.diving.value() == true){
+        if (aim.diving.has_value() && aim.diving.value() == true){
             return false;
         }
-        if (state.walking.has_value() && state.walking.value() == true){
+        if (aim.walking.has_value() && aim.walking.value() == true){
             return false;
         }
         return true;
@@ -22,7 +22,6 @@ public:
     State requirements()
     {
         State requirements;
-        requirements.getting_up = false;
         requirements.on_ground = true;
         return requirements;
     }

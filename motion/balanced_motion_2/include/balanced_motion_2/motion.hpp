@@ -15,7 +15,7 @@ public:
     }
 
     // Can we achieve a certain state after the motion?
-    virtual bool isAchievable(State &state)
+    virtual bool isAchievable(State &aim)
     {
         return false;
     }

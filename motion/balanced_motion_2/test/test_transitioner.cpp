@@ -26,12 +26,9 @@ public:
 TEST_F(TransitionerTest, TestStandingToDiving)
 {
   // EXPECTED: Dive
-  State current;
+  State current(true);
   current.standing = true;
-  current.walking = false;
-  current.diving = false;
-  current.on_ground = false;
-  current.getting_up = false;
+  current.on_feet = true;
 
   State aim;
   aim.diving = true;
@@ -45,11 +42,9 @@ TEST_F(TransitionerTest, TestStandingToDiving)
 TEST_F(TransitionerTest, TestWalkingToDiving)
 {
   // EXPECTED: Dive
-  State current;
+  State current(true);
   current.walking = true;
-  current.diving = false;
-  current.on_ground = false;
-  current.getting_up = false;
+  current.on_feet = true;
 
   State aim;
   aim.diving = true;
@@ -63,12 +58,8 @@ TEST_F(TransitionerTest, TestWalkingToDiving)
 TEST_F(TransitionerTest, TestGettingUpToDiving)
 {
   // EXPECTED: nullptr, we have to wait until getup is coplete
-  State current;
+  State current(true);
   current.getting_up = true;
-  current.walking = false;
-  current.diving = false;
-  current.on_ground = false;
-  current.standing = false;
 
   State aim;
   aim.diving = true;
@@ -80,12 +71,8 @@ TEST_F(TransitionerTest, TestGettingUpToDiving)
 TEST_F(TransitionerTest, TestOnGroundToDiving)
 {
   // EXPECTED: Getup -> Dive
-  State current;
-  current.getting_up = false;
-  current.walking = false;
-  current.diving = false;
+  State current(true);
   current.on_ground = true;
-  current.standing = false;
 
   State aim;
   aim.diving = true;
@@ -104,12 +91,9 @@ TEST_F(TransitionerTest, TestOnGroundToDiving)
 TEST_F(TransitionerTest, TestStandingToWalking)
 {
   // EXPECTED: Walk
-  State current;
+  State current(true);
   current.standing = true;
-  current.walking = false;
-  current.diving = false;
-  current.on_ground = false;
-  current.getting_up = false;
+  current.on_feet = true;
 
   State aim;
   aim.walking = true;
@@ -123,11 +107,7 @@ TEST_F(TransitionerTest, TestStandingToWalking)
 TEST_F(TransitionerTest, TestGettingUpToWalking)
 {
   // EXPECTED: nullptr, we have to wait until getup is coplete
-  State current;
-  current.standing = false;
-  current.walking = false;
-  current.diving = false;
-  current.on_ground = false;
+  State current(true);
   current.getting_up = true;
 
   State aim;
@@ -140,12 +120,8 @@ TEST_F(TransitionerTest, TestGettingUpToWalking)
 TEST_F(TransitionerTest, TestOnGroundToWalking)
 {
   // EXPECTED: Getup -> Walk
-  State current;
-  current.standing = false;
-  current.walking = false;
-  current.diving = false;
+  State current(true);
   current.on_ground = true;
-  current.getting_up = false;
 
   State aim;
   aim.walking = true;
@@ -164,12 +140,8 @@ TEST_F(TransitionerTest, TestOnGroundToWalking)
 TEST_F(TransitionerTest, TestDivingToWalking)
 {
   // EXPECTED: nullptr, we have to wait until getup is coplete
-  State current;
-  current.standing = false;
-  current.walking = false;
+  State current(true);
   current.diving = true;
-  current.on_ground = false;
-  current.getting_up = false;
 
   State aim;
   aim.walking = true;
@@ -181,13 +153,10 @@ TEST_F(TransitionerTest, TestDivingToWalking)
 TEST_F(TransitionerTest, TestWalkingAndTravellingToStanding)
 {
   // Walk -> Stand
-  State current;
-  current.standing = false;
+  State current(true);
   current.walking = true;
   current.travelling = true;
-  current.diving = false;
-  current.on_ground = false;
-  current.getting_up = false;
+  current.on_feet = true;
 
   State aim;
   aim.standing = true;
@@ -206,12 +175,7 @@ TEST_F(TransitionerTest, TestWalkingAndTravellingToStanding)
 TEST_F(TransitionerTest, TestGettingUpToStanding)
 {
   // EXPECTED: nullptr, we have to wait until getup is coplete
-  State current;
-  current.standing = false;
-  current.walking = false;
-  current.travelling = false;
-  current.diving = false;
-  current.on_ground = false;
+  State current(true);
   current.getting_up = true;
 
   State aim;
@@ -224,13 +188,8 @@ TEST_F(TransitionerTest, TestGettingUpToStanding)
 TEST_F(TransitionerTest, TestOnGroundToStanding)
 {
   // Getup
-  State current;
-  current.standing = false;
-  current.walking = false;
-  current.travelling = true;
-  current.diving = false;
+  State current(true);
   current.on_ground = true;
-  current.getting_up = false;
 
   State aim;
   aim.standing = true;
@@ -245,13 +204,8 @@ TEST_F(TransitionerTest, TestOnGroundToStanding)
 TEST_F(TransitionerTest, TestDivingToStanding)
 {
   // EXPECTED: nullptr, we have to wait until dive is coplete
-  State current;
-  current.standing = false;
-  current.walking = false;
-  current.travelling = false;
-  current.diving = false;
-  current.on_ground = false;
-  current.getting_up = true;
+  State current(true);
+  current.diving = true;
 
   State aim;
   aim.standing = true;

@@ -8,9 +8,9 @@ class Stand : public Motion
 public:
     Stand() : Motion("Stand") {}
 
-    bool isAchievable(State &state)
+    bool isAchievable(State &aim)
     {
-        if (state.standing.has_value() && state.standing.value() == true)
+        if (aim.standing.has_value() && aim.standing.value() == true)
         {
             return true;
         }
@@ -20,7 +20,7 @@ public:
     State requirements()
     {
         State requirements;
-        requirements.getting_up = false;
+        requirements.on_feet = true;
         requirements.travelling = false;
         return requirements;
     }

@@ -8,9 +8,9 @@ class Dive : public Motion
 public:
     Dive() : Motion("Dive") {}
 
-    bool isAchievable(State &state)
+    bool isAchievable(State &aim)
     {
-        if (state.diving.has_value() && state.diving.value() == true)
+        if (aim.diving.has_value() && aim.diving.value() == true)
         {
             return true;
         }
@@ -20,9 +20,7 @@ public:
     State requirements()
     {
         State requirements;
-        requirements.diving = false;
-        requirements.on_ground = false;
-        requirements.getting_up = false;
+        requirements.on_feet = true;
         return requirements;
     }
 };

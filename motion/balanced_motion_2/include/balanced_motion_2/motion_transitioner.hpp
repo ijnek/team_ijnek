@@ -66,7 +66,7 @@ public:
         }
       }
 
-      // Remove from motionsT3oSearch
+      // Remove from motionsToSearch
       for (Motion * motion : motionsAddedInLastIteration) {
         auto position = std::find(motionsToSearch.begin(), motionsToSearch.end(), motion);
         if (position != motionsToSearch.end()) {
@@ -74,9 +74,12 @@ public:
         }
       }
 
-      motionsLeadingToAim.insert(
-        std::end(motionsLeadingToAim),
-        std::begin(motionsAddedInLastIteration), std::end(motionsAddedInLastIteration));
+      for (Motion * motion : motionsAddedInLastIteration) {
+        auto position = std::find(motionsLeadingToAim.begin(), motionsLeadingToAim.end(), motion);
+        if (position == motionsLeadingToAim.end()) {
+          motionsLeadingToAim.push_back(motion);
+        }
+      }
 
       std::cout << "motionsLeadingToAim: ";
       for (Motion *motion : motionsLeadingToAim)

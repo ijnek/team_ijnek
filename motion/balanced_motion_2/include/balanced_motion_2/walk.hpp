@@ -8,12 +8,12 @@ class Walk : public Motion
 public:
     Walk() : Motion("Walk") {}
 
-    bool isAchievable(State &state)
+    bool isAchievable(State &aim)
     {
-        if (state.diving.has_value() && state.diving.value() == true){
+        if (aim.diving.has_value() && aim.diving.value() == true){
             return false;
         }
-        if (state.standing.has_value() && state.standing.value() == true){
+        if (aim.standing.has_value() && aim.standing.value() == true){
             return false;
         }
         return true;
@@ -22,9 +22,7 @@ public:
     State requirements()
     {
         State requirements;
-        requirements.getting_up = false;
-        requirements.on_ground = false;
-        requirements.diving = false;
+        requirements.on_feet = true;
         return requirements;
     }
 };

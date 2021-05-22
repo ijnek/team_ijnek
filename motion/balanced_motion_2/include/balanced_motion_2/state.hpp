@@ -13,6 +13,20 @@ public:
   std::optional<bool> diving;
   std::optional<bool> on_ground;
   std::optional<bool> getting_up;
+  std::optional<bool> on_feet;
+
+  State(bool initialise_as_false = false) {
+    if (initialise_as_false)
+    {
+      standing = false;
+      walking = false;
+      travelling = false;
+      diving = false;
+      on_ground = false;
+      getting_up = false;
+      on_feet = false;
+    }
+  }
 
   bool satisfies(State &requirements)
   {
@@ -89,6 +103,19 @@ public:
       }
 
       if (this->travelling.value() != requirements.travelling.value())
+      {
+        return false;
+      }
+    }
+
+    if (requirements.on_feet.has_value())
+    {
+      if (!this->on_feet.has_value())
+      {
+        return false;
+      }
+
+      if (this->on_feet.value() != requirements.on_feet.value())
       {
         return false;
       }
