@@ -9,13 +9,14 @@ class Motion
 public:
     Motion(std::string name) : name(name){}
 
-    virtual nao_interfaces::msg::Joints makeJoints (State state, nao_interfaces::msg::Joints & sensor_joints)
+    // First argument is the "aim" state, and the second argument is the sensor_joint angles
+    virtual nao_interfaces::msg::Joints makeJoints (State &, nao_interfaces::msg::Joints &)
     {
         return nao_interfaces::msg::Joints{};
     }
 
     // Can we achieve a certain state after the motion?
-    virtual bool isAchievable(State &aim)
+    virtual bool isAchievable(State &)
     {
         return false;
     }

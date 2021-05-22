@@ -7,9 +7,9 @@
 class Getup : public Linear
 {
 public:
-    Getup(int dt_ms) : Linear("Getup", "getupBack.pos", dt_ms){}
+    Getup() : Linear("Getup", "getupBack.pos") {}
 
-    bool isAchievable(State &aim)
+    bool isAchievable(State &aim) override
     {
         if (aim.diving.has_value() && aim.diving.value() == true){
             return false;
@@ -20,7 +20,7 @@ public:
         return true;
     }
 
-    State requirements()
+    State requirements() override
     {
         State requirements;
         requirements.on_ground = true;

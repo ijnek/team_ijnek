@@ -30,18 +30,16 @@ namespace fs = boost::filesystem;
 class Linear : public Motion
 {
 public:
-  Linear(std::string name, std::string fileName, int dt_ms);
+  Linear(std::string name, std::string fileName);
 
-  nao_interfaces::msg::Joints makeJoints (State state, nao_interfaces::msg::Joints & sensor_joints);
+  nao_interfaces::msg::Joints makeJoints (State &state, nao_interfaces::msg::Joints & sensor_joints) override;
 
   bool hasFinished();
 
-  void reset();
+  void reset() override;
 
 private:
   bool initialiseKeyFrameVector(std::string filePath);
-
-  void calculate_effector_joints(nao_interfaces::msg::Joints & sensor_joints);
 
   std::pair<nao_interfaces::msg::Joints, int> & findPreviousKeyFrame(int time_ms);
 

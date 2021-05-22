@@ -23,11 +23,12 @@
 #include "rclcpp/time.hpp"
 #include "balanced_motion_2/linear.hpp"
 #include "ament_index_cpp/get_package_share_directory.hpp"
+#include "balanced_motion_2/motion_defs.hpp"
 
 namespace fs = boost::filesystem;
 
 
-Linear::Linear(std::string name, std::string fileName, int dt_ms) : Motion(name), dt_ms(dt_ms)
+Linear::Linear(std::string name, std::string fileName) : Motion(name), dt_ms(MOTION_DT_MS)
 {
   std::string package_share_directory = ament_index_cpp::get_package_share_directory(
     "balanced_motion_2");
@@ -113,7 +114,7 @@ bool Linear::initialiseKeyFrameVector(std::string filePath)
   return true;
 }
 
-nao_interfaces::msg::Joints Linear::makeJoints (State state, nao_interfaces::msg::Joints & sensor_joints)
+nao_interfaces::msg::Joints Linear::makeJoints (State &, nao_interfaces::msg::Joints & sensor_joints)
 {
   t_ms += dt_ms;
 

@@ -1,9 +1,7 @@
 #include "balanced_motion_2/balanced_motion_2.hpp"
 
-#define MOTION_DT_MS 20
-
 BalancedMotion2::BalancedMotion2()
-: Node("BalancedMotion2"), dive(MOTION_DT_MS), getup(MOTION_DT_MS)
+: Node("BalancedMotion2")
 {
   transitioner.addMotion(&walk);
   transitioner.addMotion(&stand);

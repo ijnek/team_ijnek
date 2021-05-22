@@ -5,12 +5,10 @@
 #include "balanced_motion_2/getup.hpp"
 #include "balanced_motion_2/dive.hpp"
 
-#define MOTION_DT_MS 20
-
 class TransitionerTest : public ::testing::Test
 {
 protected:
-  TransitionerTest() : dive(MOTION_DT_MS), getup(MOTION_DT_MS)
+  TransitionerTest()
   {
     transitioner.addMotion(&walk);
     transitioner.addMotion(&stand);

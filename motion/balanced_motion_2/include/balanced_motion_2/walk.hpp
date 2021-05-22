@@ -8,7 +8,7 @@ class Walk : public Motion
 public:
     Walk() : Motion("Walk") {}
 
-    bool isAchievable(State &aim)
+    bool isAchievable(State &aim) override
     {
         if (aim.diving.has_value() && aim.diving.value() == true){
             return false;
@@ -19,7 +19,7 @@ public:
         return true;
     }
 
-    State requirements()
+    State requirements() override
     {
         State requirements;
         requirements.on_feet = true;

@@ -7,9 +7,9 @@
 class Dive : public Linear
 {
 public:
-    Dive(int dt_ms) : Linear("Dive", "diveLeft.pos", dt_ms){}
+    Dive() : Linear("Dive", "diveLeft.pos") {}
 
-    bool isAchievable(State &aim)
+    bool isAchievable(State &aim) override
     {
         if (aim.diving.has_value() && aim.diving.value() == true)
         {
@@ -18,7 +18,7 @@ public:
         return false;
     }
 
-    State requirements()
+    State requirements() override
     {
         State requirements;
         requirements.on_feet = true;

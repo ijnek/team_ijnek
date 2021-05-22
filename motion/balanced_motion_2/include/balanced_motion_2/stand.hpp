@@ -9,7 +9,7 @@ public:
   Stand()
   : Motion("Stand") {}
 
-  nao_interfaces::msg::Joints makeJoints(State state)
+  nao_interfaces::msg::Joints makeJoints (State &, nao_interfaces::msg::Joints &) override
   {
     nao_interfaces::msg::Joints joints;
     joints.angles[nao_interfaces::msg::Joints::LSHOULDERPITCH] = 90 * 3.1415 / 180;
@@ -17,7 +17,7 @@ public:
     return joints;
   }
 
-  bool isAchievable(State & aim)
+  bool isAchievable(State & aim) override
   {
     if (aim.standing.has_value() && aim.standing.value() == true) {
       return true;
@@ -25,7 +25,7 @@ public:
     return false;
   }
 
-  State requirements()
+  State requirements() override
   {
     State requirements;
     requirements.on_feet = true;
