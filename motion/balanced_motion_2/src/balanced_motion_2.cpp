@@ -1,6 +1,9 @@
 #include "balanced_motion_2/balanced_motion_2.hpp"
 
-BalancedMotion2::BalancedMotion2() : Node("BalancedMotion2")
+#define MOTION_DT_MS 20
+
+BalancedMotion2::BalancedMotion2()
+: Node("BalancedMotion2"), dive(MOTION_DT_MS), getup(MOTION_DT_MS)
 {
   transitioner.addMotion(&walk);
   transitioner.addMotion(&stand);
@@ -32,21 +35,23 @@ BalancedMotion2::BalancedMotion2() : Node("BalancedMotion2")
   pub_joints = this->create_publisher<nao_interfaces::msg::Joints>("effectors/joints", 10);
 }
 
-nao_interfaces::msg::Joints BalancedMotion2::make_joints(nao_interfaces::msg::Joints & sensor_joints)
+nao_interfaces::msg::Joints BalancedMotion2::make_joints(
+  nao_interfaces::msg::Joints & sensor_joints)
 {
   // Evaluate current state
   State current = evaluate_current_state();
 
   auto [motion, motion_aim_state] = transitioner.findNextMotion(current, aim);
-  if (motion != nullptr)
-  {
-    std::cout << "transitioning to: " << motion->name << std::endl;
-    currentMotion->reset();
-    currentMotion = motion;
+  if (motion != nullptr) {
+    if (currentMotion != motion) {
+      std::cout << "transitioning to: " << motion->name << std::endl;
+      currentMotion->reset();
+      currentMotion = motion;
+    }
     currentMotionAimState = motion_aim_state;
   }
 
-  return currentMotion->makeJoints(currentMotionAimState);
+  return currentMotion->makeJoints(currentMotionAimState, sensor_joints);
 }
 
 State BalancedMotion2::evaluate_current_state()
@@ -66,8 +71,7 @@ State BalancedMotion2::evaluate_current_state()
 State BalancedMotion2::evaluate_aim(motion_msgs::msg::Action action)
 {
   State state;
-  if (action.action == motion_msgs::msg::Action::ACTIONWALK)
-  {
+  if (action.action == motion_msgs::msg::Action::ACTIONWALK) {
     state.walking = true;
   } else if (action.action == motion_msgs::msg::Action::ACTIONSTAND) {
     state.standing = true;

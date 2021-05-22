@@ -1,0 +1,5 @@
+int32 ACTIONWALK = 1
+int32 ACTIONSTAND = 2
+int32 ACTIONDIVE = 3
+
+int32 action

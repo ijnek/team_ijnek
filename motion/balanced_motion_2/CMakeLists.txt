@@ -28,7 +28,31 @@ find_package(motion_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(Boost COMPONENTS filesystem REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(ament_index_cpp REQUIRED)  
 
+# Build linear library
+
+add_library(linear src/linear.cpp)
+
+ament_target_dependencies(linear
+  rclcpp
+  Boost
+  nao_interfaces
+  std_msgs
+  ament_index_cpp)
+
+install(
+  DIRECTORY pos/
+  DESTINATION share/${PROJECT_NAME}/pos/
+)
+
+install(TARGETS
+  linear
+  DESTINATION lib/${PROJECT_NAME}/)
+
+# Build balanced_motion_2
 add_executable(balanced_motion_2
   src/balanced_motion_2.cpp)
 
@@ -37,6 +61,9 @@ ament_target_dependencies(balanced_motion_2
   geometry_msgs
   rclcpp
   motion_msgs)
+
+target_link_libraries(balanced_motion_2
+  linear)
 
 # Install
 install(TARGETS

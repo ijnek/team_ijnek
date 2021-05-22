@@ -2,18 +2,12 @@
 #define BALANCED_MOTION_2__DIVE_HPP_
 
 #include "balanced_motion_2/motion.hpp"
+#include "balanced_motion_2/linear.hpp"
 
-class Dive : public Motion
+class Dive : public Linear
 {
 public:
-    Dive() : Motion("Dive") {}
-    
-    nao_interfaces::msg::Joints makeJoints (State state)
-    {
-        counter++;
-        return nao_interfaces::msg::Joints{};
-    }
-
+    Dive(int dt_ms) : Linear("Dive", "diveLeft.pos", dt_ms){}
 
     bool isAchievable(State &aim)
     {
@@ -30,19 +24,6 @@ public:
         requirements.on_feet = true;
         return requirements;
     }
-
-    bool hasFinished()
-    {
-        return counter > 3;
-    }
-
-    void reset()
-    {
-        counter = 0;
-    }
-
-private:
-    int counter;
 };
 
 #endif  // BALANCED_MOTION_2__DIVE_HPP_

@@ -2,7 +2,6 @@
 #define BALANCED_MOTION__STATE_HPP_
 
 #include <optional>
-#include "geometry_msgs/msg/twist.hpp"
 
 class State
 {

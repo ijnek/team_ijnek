@@ -2,17 +2,12 @@
 #define BALANCED_MOTION_2__GETUP_HPP_
 
 #include "balanced_motion_2/motion.hpp"
+#include "balanced_motion_2/linear.hpp"
 
-class Getup : public Motion
+class Getup : public Linear
 {
 public:
-    Getup() : Motion("Getup") {}
-
-    nao_interfaces::msg::Joints makeJoints (State state)
-    {
-        counter++;
-        return nao_interfaces::msg::Joints{};
-    }
+    Getup(int dt_ms) : Linear("Getup", "getupBack.pos", dt_ms){}
 
     bool isAchievable(State &aim)
     {
@@ -31,20 +26,6 @@ public:
         requirements.on_ground = true;
         return requirements;
     }
-
-    bool hasFinished()
-    {
-        return counter > 3;
-    }
-
-    void reset()
-    {
-        counter = 0;
-    }
-
-private:
-    int counter;
-
 };
 
 #endif  // BALANCED_MOTION_2__GETUP_HPP_

@@ -9,7 +9,7 @@ class Motion
 public:
     Motion(std::string name) : name(name){}
 
-    virtual nao_interfaces::msg::Joints makeJoints (State state)
+    virtual nao_interfaces::msg::Joints makeJoints (State state, nao_interfaces::msg::Joints & sensor_joints)
     {
         return nao_interfaces::msg::Joints{};
     }
