@@ -155,7 +155,9 @@ TEST_F(TransitionerTest, TestWalkingAndTravellingToStanding)
   // Walk -> Stand
   State current(true);
   current.walking = true;
-  current.travelling = true;
+  geometry_msgs::msg::Twist twist;
+  twist.linear.x = 0.05;
+  current.twist = twist;
   current.on_feet = true;
 
   State aim;

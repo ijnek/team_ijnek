@@ -66,6 +66,10 @@ target_link_libraries(linear
   inverse_kinematics
 )
 
+# Build maths_functions library
+add_library(maths_functions
+  src/maths_functions.cpp)
+
 # Build balanced_motion_2
 add_executable(balanced_motion_2
   src/balanced_motion_2.cpp)
@@ -77,7 +81,8 @@ ament_target_dependencies(balanced_motion_2
   motion_msgs)
 
 target_link_libraries(balanced_motion_2
-  linear)
+  linear
+  maths_functions)
 
 # Install
 install(TARGETS

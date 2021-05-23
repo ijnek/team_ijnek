@@ -10,7 +10,7 @@ public:
     Motion(std::string name) : name(name){}
 
     // First argument is the "aim" state, and the second argument is the sensor_joint angles
-    virtual nao_interfaces::msg::Joints makeJoints (State &, nao_interfaces::msg::Joints &)
+    virtual nao_interfaces::msg::Joints makeJoints (State &, State &, nao_interfaces::msg::Joints &)
     {
         return nao_interfaces::msg::Joints{};
     }

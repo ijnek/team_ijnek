@@ -8,4 +8,5 @@ ament_target_dependencies(test_transitioner
     geometry_msgs)
 
 target_link_libraries(test_transitioner
-    linear)
+    linear
+    maths_functions)

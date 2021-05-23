@@ -49,7 +49,7 @@ nao_interfaces::msg::Joints BalancedMotion2::make_joints(
     currentMotionAimState = motion_aim_state;
   }
 
-  return currentMotion->makeJoints(currentMotionAimState, sensor_joints);
+  return currentMotion->makeJoints(current, currentMotionAimState, sensor_joints);
 }
 
 State BalancedMotion2::evaluate_current_state()
@@ -59,10 +59,16 @@ State BalancedMotion2::evaluate_current_state()
   state.walking = (currentMotion == &walk);
   state.diving = (currentMotion == &dive && !dive.hasFinished());
   state.on_ground = (currentMotion == &dive && dive.hasFinished());  // Or, use gyroscope or something here
-  state.travelling = (currentMotion == &walk && walk.isTravelling());
   state.getting_up = (currentMotion == &getup && !getup.hasFinished());
   state.on_feet = (currentMotion == &walk || currentMotion == &stand ||
     (currentMotion == &getup && getup.hasFinished()));
+  state.twist = (currentMotion == &walk ? walk.getTwist() : geometry_msgs::msg::Twist{});
+  
+  if (currentMotion == &walk)
+    state.ik_command = walk.getIKCommand();
+  if (currentMotion == &stand)
+    state.ik_command = stand.getIKCommand();
+
   return state;
 }
 
@@ -71,6 +77,9 @@ State BalancedMotion2::evaluate_aim(motion_msgs::msg::Action action)
   State state;
   if (action.action == motion_msgs::msg::Action::ACTIONWALK) {
     state.walking = true;
+    geometry_msgs::msg::Twist twist;
+    twist.linear.x = 0.3;
+    state.twist = twist;
   } else if (action.action == motion_msgs::msg::Action::ACTIONSTAND) {
     state.standing = true;
   } else if (action.action == motion_msgs::msg::Action::ACTIONDIVE) {

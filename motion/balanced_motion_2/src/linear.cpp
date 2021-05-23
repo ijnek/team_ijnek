@@ -114,7 +114,7 @@ bool Linear::initialiseKeyFrameVector(std::string filePath)
   return true;
 }
 
-nao_interfaces::msg::Joints Linear::makeJoints (State &, nao_interfaces::msg::Joints & sensor_joints)
+nao_interfaces::msg::Joints Linear::makeJoints (State &, State &, nao_interfaces::msg::Joints & sensor_joints)
 {
   t_ms += dt_ms;
 

@@ -32,7 +32,7 @@ class Linear : public Motion
 public:
   Linear(std::string name, std::string fileName);
 
-  nao_interfaces::msg::Joints makeJoints (State &state, nao_interfaces::msg::Joints & sensor_joints) override;
+  nao_interfaces::msg::Joints makeJoints (State &, State &state, nao_interfaces::msg::Joints & sensor_joints) override;
 
   bool hasFinished();
 
