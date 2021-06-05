@@ -21,6 +21,13 @@ include_directories(
 
 find_package(ament_cmake REQUIRED)
 
+ament_export_include_directories(include)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   add_subdirectory(test)
