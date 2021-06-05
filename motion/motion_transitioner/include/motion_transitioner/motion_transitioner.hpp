@@ -1,6 +1,7 @@
 #ifndef MOTION_TRANSITIONER__MOTION_TRANSITIONER_HPP_
 #define MOTION_TRANSITIONER__MOTION_TRANSITIONER_HPP_
 
+#include <functional>
 #include "motion_transitioner/requests.hpp"
 
 class MotionTransitioner
@@ -8,18 +9,22 @@ class MotionTransitioner
 public:
   MotionTransitioner(
     std::function<void(GetupRequest)> startGetup,
-    std::function<void(KickRequest)> startKick)
-  : startGetup(startGetup), startKick(startKick) {}
-  void request(GetupRequest req) {duringGetup = true; startGetup(req);}
-  void request(KickRequest req) {if (!duringGetup) {startKick(req);}}
-  void notifyGetupDone() {duringGetup = false;}
-  void notifyKickDone() {}
+    std::function<void(KickRequest)> startKick,
+    std::function<void(CrouchRequest)> startCrouch);
+  void request(GetupRequest req);
+  void request(KickRequest req);
+  void request(WalkRequest req);
+  void request(CrouchRequest req);
+  void notifyGetupDone();
+  void notifyKickDone();
 
 private:
   std::function<void(GetupRequest)> startGetup;
   std::function<void(KickRequest)> startKick;
+  std::function<void(CrouchRequest)> startCrouch;
 
   bool duringGetup = false;
+  bool duringKick = false;
 };
 
 #endif  // MOTION_TRANSITIONER__MOTION_TRANSITIONER_HPP_

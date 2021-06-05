@@ -23,6 +23,19 @@ find_package(ament_cmake REQUIRED)
 
 ament_export_include_directories(include)
 
+# Build motion_transitioner
+add_library(motion_transitioner src/motion_transitioner.cpp)
+
+# Install
+
+install(
+  TARGETS motion_transitioner
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 install(
   DIRECTORY include/
   DESTINATION include

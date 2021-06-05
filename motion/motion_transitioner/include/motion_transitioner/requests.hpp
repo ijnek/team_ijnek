@@ -12,4 +12,14 @@ class KickRequest
   bool isLeft;
 };
 
+class WalkRequest
+{
+
+};
+
+class CrouchRequest
+{
+
+};
+
 #endif  // MOTION_TRANSITIONER_REQUESTS_HPP_
