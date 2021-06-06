@@ -31,7 +31,7 @@ float parabolicStep(float dt, float time, float period, float deadTimeFraction)
   return 4 * timeFraction - 2 * timeFraction * timeFraction - 1;
 }
 
-float parabolicReturnMod(float f)   //normalised [0,1] up and down
+float parabolicReturnMod(float f)  // normalised [0,1] up and down
 {
   double x = 0;
   double y = 0;

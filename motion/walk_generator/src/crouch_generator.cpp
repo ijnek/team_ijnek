@@ -46,7 +46,7 @@ CrouchGenerator::CrouchGenerator()
 }
 
 motion_msgs::msg::IKCommand CrouchGenerator::generate_ik_command(
-  nao_interfaces::msg::Joints & sensor_joints)
+  nao_interfaces::msg::Joints &)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
   if (twist.angular.z == 0.0) {
@@ -64,7 +64,7 @@ motion_msgs::msg::IKCommand CrouchGenerator::generate_ik_command(
       walkOption = CROUCH;
     }
   }
-  RCLCPP_DEBUG(get_logger(), "walkOption: " + std::to_string(walkOption));
+  RCLCPP_DEBUG(get_logger(), ("walkOption: " + std::to_string(walkOption)).c_str());
 
   t += dt;
 
