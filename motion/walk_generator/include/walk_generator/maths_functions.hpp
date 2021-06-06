@@ -19,4 +19,4 @@ float parabolicStep(float dt, float time, float period, float deadTimeFraction =
 float parabolicReturnMod(float f);
 float linearStep(float time, float period);
 
-#endif  // WALK_GENERATOR__WALK_GENERATOR_HPP_
+#endif  // WALK_GENERATOR__MATHS_FUNCTIONS_HPP_

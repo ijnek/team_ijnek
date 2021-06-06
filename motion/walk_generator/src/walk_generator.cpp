@@ -48,7 +48,7 @@ WalkGenerator::WalkGenerator()
 }
 
 motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
-  nao_interfaces::msg::Joints & sensor_joints)
+  nao_interfaces::msg::Joints &)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
   if (twist.linear.z == 0.0) {
@@ -73,7 +73,7 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
       walkOption = CROUCH;
     }
   }
-  RCLCPP_DEBUG(get_logger(), "walkOption: " + std::to_string(walkOption));
+  RCLCPP_DEBUG(get_logger(), ("walkOption: " + std::to_string(walkOption)).c_str());
 
   t += dt;
 
@@ -99,14 +99,18 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
 
     // 5.1 Calculate the height to lift each swing foot
     float maxFootHeight = BASE_LEG_LIFT + abs(forward) * 0.01 + abs(left) * 0.03;
-    float varfootHeight = maxFootHeight * parabolicReturnMod(t / BASE_WALK_PERIOD);     // 0.012 lift of swing foot from ground
-    // 5.2 When walking in an arc, the outside foot needs to travel further than the inside one - void
-    // 5.3L Calculate intra-walkphase forward, left and turn at time-step dt, for left swing foot
+    float varfootHeight = maxFootHeight * parabolicReturnMod(t / BASE_WALK_PERIOD);
+    // 5.2 When walking in an arc, the outside foot needs to travel further
+    //     than the inside one - void
+    // 5.3L Calculate intra-walkphase forward, left and turn at time-step dt,
+    //      for left swing foot
     if (isLeftPhase) {                 // if the support foot is right
       if (weightHasShifted) {
         // 5.3.1L forward (the / by 2 is because the CoM moves as well and forwardL is wrt the CoM
         forwardR = forwardR0 + ((forward) / 2 - forwardR0) * linearStep(t, BASE_WALK_PERIOD);
-        forwardL = forwardL0 + parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardL0);         // swing-foot follow-through
+        // swing-foot follow-through
+        forwardL = forwardL0 +
+          parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardL0);
         // 5.3.2L Jab kick with left foot - removed
         // 5.3.3L Determine how much to lean from side to side - removed
         // 5.3.4L left
@@ -117,11 +121,13 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
           leftL = leftL0 * (1 - parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0));
           leftR = -leftL;
         }
-        // 5.3.5L turn (note, we achieve correct turn by splitting turn foot placement unevely over two steps, but 1.6 + 0.4 = 2 and adds up to two steps worth of turn)
+        // 5.3.5L turn (note, we achieve correct turn by splitting turn foot placement unevely over
+        //        two steps, but 1.6 + 0.4 = 2 and adds up to two steps worth of turn)
         if (turn < 0) {
           turnRL = turnRL0 + (-1.6 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
         } else {
-          turnRL = turnRL0 + (-0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);           //turn back to restore previous turn angle
+          // turn back to restore previous turn angle
+          turnRL = turnRL0 + (-0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
         }
       }
       // 5.3.6L determine how high to lift the swing foot off the ground
@@ -133,7 +139,9 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
       if (weightHasShifted) {
         // 5.3.1R forward
         forwardL = forwardL0 + ((forward) / 2 - forwardL0) * linearStep(t, BASE_WALK_PERIOD);
-        forwardR = forwardR0 + parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardR0);         // swing-foot follow-through
+        // swing-foot follow-through
+        forwardR = forwardR0 +
+          parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardR0);
         // 5.3.2R Jab-Kick with right foot - removed
         // 5.3.3R lean - not used
         // 5.3.4R left
@@ -146,7 +154,8 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
         }
         // 5.3.5R turn
         if (turn < 0) {
-          turnRL = turnRL0 + (0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);           //turn back to restore previous turn angle
+          // turn back to restore previous turn angle
+          turnRL = turnRL0 + (0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
         } else {
           turnRL = turnRL0 + (1.6 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
         }

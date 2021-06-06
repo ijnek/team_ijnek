@@ -30,9 +30,9 @@ public:
       std::bind(&MotionTransitionerNode::startCrouch, this, _1))
   {
     sub_getup_request =
-      create_subscription<Getup>(
+      create_subscription<motion_msgs::msg::Getup>(
       "behaviour/getup", 1,
-      [this](Getup::SharedPtr request) {
+      [this](motion_msgs::msg::Getup::SharedPtr request) {
         motionTransitioner.request(*request);
       });
 
@@ -42,11 +42,11 @@ public:
       [this](std_msgs::msg::Empty::SharedPtr) {
         motionTransitioner.notifyGetupDone();
       });
-  
+
     sub_kick_request =
-      create_subscription<Kick>(
+      create_subscription<motion_msgs::msg::Kick>(
       "behaviour/kick", 1,
-      [this](Kick::SharedPtr request) {
+      [this](motion_msgs::msg::Kick::SharedPtr request) {
         motionTransitioner.request(*request);
       });
 
@@ -54,49 +54,49 @@ public:
       create_subscription<std_msgs::msg::Empty>(
       "motion/kick_done", 1,
       [this](std_msgs::msg::Empty::SharedPtr) {
-      motionTransitioner.notifyKickDone();
+        motionTransitioner.notifyKickDone();
       });
 
     sub_crouch_request =
-      create_subscription<Crouch>(
+      create_subscription<motion_msgs::msg::Crouch>(
       "behaviour/crouch", 1,
-      [this](Crouch::SharedPtr request) {
+      [this](motion_msgs::msg::Crouch::SharedPtr request) {
         motionTransitioner.request(*request);
       });
 
-    pub_start_getup = this->create_publisher<Getup>("motion/getup", 10);
-    pub_start_kick = this->create_publisher<Kick>("motion/kick", 10);
-    pub_start_crouch = this->create_publisher<Crouch>("motion/crouch", 10);
+    pub_start_getup = this->create_publisher<motion_msgs::msg::Getup>("motion/getup", 10);
+    pub_start_kick = this->create_publisher<motion_msgs::msg::Kick>("motion/kick", 10);
+    pub_start_crouch = this->create_publisher<motion_msgs::msg::Crouch>("motion/crouch", 10);
   }
 
 private:
   MotionTransitioner motionTransitioner;
 
-  void startGetup(Getup req)
+  void startGetup(motion_msgs::msg::Getup req)
   {
     pub_start_getup->publish(req);
   }
 
-  void startKick(Kick req)
+  void startKick(motion_msgs::msg::Kick req)
   {
     pub_start_kick->publish(req);
   }
 
-  void startCrouch(Crouch req)
+  void startCrouch(motion_msgs::msg::Crouch req)
   {
     pub_start_crouch->publish(req);
   }
 
-  rclcpp::Subscription<Getup>::SharedPtr sub_getup_request;
+  rclcpp::Subscription<motion_msgs::msg::Getup>::SharedPtr sub_getup_request;
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_getup_done;
-  rclcpp::Publisher<Getup>::SharedPtr pub_start_getup;
+  rclcpp::Publisher<motion_msgs::msg::Getup>::SharedPtr pub_start_getup;
 
-  rclcpp::Subscription<Kick>::SharedPtr sub_kick_request;
+  rclcpp::Subscription<motion_msgs::msg::Kick>::SharedPtr sub_kick_request;
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_kick_done;
-  rclcpp::Publisher<Kick>::SharedPtr pub_start_kick;
+  rclcpp::Publisher<motion_msgs::msg::Kick>::SharedPtr pub_start_kick;
 
-  rclcpp::Subscription<Crouch>::SharedPtr sub_crouch_request;
-  rclcpp::Publisher<Crouch>::SharedPtr pub_start_crouch;
+  rclcpp::Subscription<motion_msgs::msg::Crouch>::SharedPtr sub_crouch_request;
+  rclcpp::Publisher<motion_msgs::msg::Crouch>::SharedPtr pub_start_crouch;
 };
 
 int main(int argc, char * argv[])

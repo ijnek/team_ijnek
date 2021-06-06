@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CROUCH_GENERATOR__CROUCH_GENERATOR_HPP_
-#define CROUCH_GENERATOR__CROUCH_GENERATOR_HPP_
+#ifndef WALK_GENERATOR__CROUCH_GENERATOR_HPP_
+#define WALK_GENERATOR__CROUCH_GENERATOR_HPP_
 
 #include "rclcpp/rclcpp.hpp"
 #include "nao_interfaces/msg/joints.hpp"
@@ -49,4 +49,4 @@ private:
   geometry_msgs::msg::Twist twist;
 };
 
-#endif  // CROUCH_GENERATOR__CROUCH_GENERATOR_HPP_
+#endif  // WALK_GENERATOR__CROUCH_GENERATOR_HPP_
