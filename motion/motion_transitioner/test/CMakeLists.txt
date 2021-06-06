@@ -1,6 +1,6 @@
-ament_add_gtest(test_motion_transitioner_2
-test_motion_transitioner_2.cpp)
+ament_add_gtest(test_motion_transitioner
+test_motion_transitioner.cpp)
 
-target_link_libraries(test_motion_transitioner_2
+target_link_libraries(test_motion_transitioner
   motion_transitioner
 )
