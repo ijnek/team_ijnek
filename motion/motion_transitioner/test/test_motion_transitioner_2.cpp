@@ -5,17 +5,17 @@ bool startGetupCalled = false;
 bool startKickCalled = false;
 bool startCrouchCalled = false;
 
-void startGetup(GetupRequest)
+void startGetup(Getup)
 {
   startGetupCalled = true;
 }
 
-void startKick(KickRequest)
+void startKick(Kick)
 {
   startKickCalled = true;
 }
 
-void startCrouch(CrouchRequest)
+void startCrouch(Crouch)
 {
   startCrouchCalled = true;
 }
@@ -23,7 +23,7 @@ void startCrouch(CrouchRequest)
 TEST(TestMotionTransitioner2, Test1)
 {
   MotionTransitioner motionTransitioner(startGetup, startKick, startCrouch);
-  motionTransitioner.request(GetupRequest{});
+  motionTransitioner.request(Getup{});
   ASSERT_TRUE(startGetupCalled);
 
   motionTransitioner.notifyGetupDone();
@@ -33,11 +33,11 @@ TEST(TestMotionTransitioner2, Test1)
 TEST(TestMotionTransitioner2, Test2)
 {
   MotionTransitioner motionTransitioner(startGetup, startKick, startCrouch);
-  motionTransitioner.request(GetupRequest{});
-  motionTransitioner.request(KickRequest{});
+  motionTransitioner.request(Getup{});
+  motionTransitioner.request(Kick{});
   ASSERT_FALSE(startKickCalled);
 
   motionTransitioner.notifyGetupDone();
-  motionTransitioner.request(KickRequest{});
+  motionTransitioner.request(Kick{});
   ASSERT_TRUE(startKickCalled);
 }

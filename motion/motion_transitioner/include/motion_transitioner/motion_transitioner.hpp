@@ -2,26 +2,30 @@
 #define MOTION_TRANSITIONER__MOTION_TRANSITIONER_HPP_
 
 #include <functional>
-#include "motion_transitioner/requests.hpp"
+#include "motion_msgs/msg/kick.hpp"
+#include "motion_msgs/msg/getup.hpp"
+#include "motion_msgs/msg/crouch.hpp"
+
+using namespace motion_msgs::msg;
 
 class MotionTransitioner
 {
 public:
   MotionTransitioner(
-    std::function<void(GetupRequest)> startGetup,
-    std::function<void(KickRequest)> startKick,
-    std::function<void(CrouchRequest)> startCrouch);
-  void request(GetupRequest req);
-  void request(KickRequest req);
-  void request(WalkRequest req);
-  void request(CrouchRequest req);
+    std::function<void(Getup)> startGetup,
+    std::function<void(Kick)> startKick,
+    std::function<void(Crouch)> startCrouch);
+  void request(Getup req);
+  void request(Kick req);
+  // void request(WalkRequest req);
+  void request(Crouch req);
   void notifyGetupDone();
   void notifyKickDone();
 
 private:
-  std::function<void(GetupRequest)> startGetup;
-  std::function<void(KickRequest)> startKick;
-  std::function<void(CrouchRequest)> startCrouch;
+  std::function<void(Getup)> startGetup;
+  std::function<void(Kick)> startKick;
+  std::function<void(Crouch)> startCrouch;
 
   bool duringGetup = false;
   bool duringKick = false;

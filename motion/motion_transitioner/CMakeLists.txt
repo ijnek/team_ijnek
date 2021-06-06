@@ -20,13 +20,28 @@ include_directories(
 )
 
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(motion_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 
 ament_export_include_directories(include)
 
 # Build motion_transitioner
 add_library(motion_transitioner src/motion_transitioner.cpp)
+ament_target_dependencies(motion_transitioner
+  motion_msgs
+  std_msgs)
+
+# Build motion_transitioner_node
+add_executable(motion_transitioner_node src/motion_transitioner_node.cpp)
+target_link_libraries(motion_transitioner_node motion_transitioner)
+ament_target_dependencies(motion_transitioner_node
+  rclcpp)
 
 # Install
+install(TARGETS
+  motion_transitioner_node
+  DESTINATION lib/${PROJECT_NAME})
 
 install(
   TARGETS motion_transitioner
