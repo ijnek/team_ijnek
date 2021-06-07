@@ -18,7 +18,7 @@
 MotionTransitioner::MotionTransitioner(
   std::function<void(motion_msgs::msg::Getup)> startGetup,
   std::function<void(motion_msgs::msg::Kick)> startKick,
-  std::function<void(motion_msgs::msg::Crouch)> startCrouch)
+  std::function<void(std_msgs::msg::Empty)> startCrouch)
 : startGetup(startGetup), startKick(startKick), startCrouch(startCrouch)
 {
 }
@@ -37,7 +37,7 @@ void MotionTransitioner::request(motion_msgs::msg::Kick req)
   }
 }
 
-void MotionTransitioner::request(motion_msgs::msg::Crouch)
+void MotionTransitioner::request(std_msgs::msg::Empty)
 {
   std::cout << "not impelmented" << std::endl;
 }
@@ -45,11 +45,11 @@ void MotionTransitioner::request(motion_msgs::msg::Crouch)
 void MotionTransitioner::notifyGetupDone()
 {
   duringGetup = false;
-  startCrouch(motion_msgs::msg::Crouch{});
+  startCrouch(std_msgs::msg::Empty{});
 }
 
 void MotionTransitioner::notifyKickDone()
 {
   duringKick = false;
-  startCrouch(motion_msgs::msg::Crouch{});
+  startCrouch(std_msgs::msg::Empty{});
 }

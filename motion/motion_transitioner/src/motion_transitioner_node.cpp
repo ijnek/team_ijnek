@@ -58,15 +58,15 @@ public:
       });
 
     sub_crouch_request =
-      create_subscription<motion_msgs::msg::Crouch>(
+      create_subscription<std_msgs::msg::Empty>(
       "behaviour/crouch", 1,
-      [this](motion_msgs::msg::Crouch::SharedPtr request) {
+      [this](std_msgs::msg::Empty::SharedPtr request) {
         motionTransitioner.request(*request);
       });
 
     pub_start_getup = this->create_publisher<motion_msgs::msg::Getup>("motion/getup", 10);
     pub_start_kick = this->create_publisher<motion_msgs::msg::Kick>("motion/kick", 10);
-    pub_start_crouch = this->create_publisher<motion_msgs::msg::Crouch>("motion/crouch", 10);
+    pub_start_crouch = this->create_publisher<std_msgs::msg::Empty>("motion/crouch", 10);
   }
 
 private:
@@ -82,7 +82,7 @@ private:
     pub_start_kick->publish(req);
   }
 
-  void startCrouch(motion_msgs::msg::Crouch req)
+  void startCrouch(std_msgs::msg::Empty req)
   {
     pub_start_crouch->publish(req);
   }
@@ -95,8 +95,8 @@ private:
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_kick_done;
   rclcpp::Publisher<motion_msgs::msg::Kick>::SharedPtr pub_start_kick;
 
-  rclcpp::Subscription<motion_msgs::msg::Crouch>::SharedPtr sub_crouch_request;
-  rclcpp::Publisher<motion_msgs::msg::Crouch>::SharedPtr pub_start_crouch;
+  rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_crouch_request;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr pub_start_crouch;
 };
 
 int main(int argc, char * argv[])

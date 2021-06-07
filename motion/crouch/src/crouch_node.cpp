@@ -18,7 +18,6 @@
 #include "std_msgs/msg/empty.hpp"
 #include "nao_interfaces/msg/joints.hpp"
 #include "motion_msgs/msg/ik_command.hpp"
-#include "motion_msgs/msg/crouch.hpp"
 
 using namespace std::placeholders;
 

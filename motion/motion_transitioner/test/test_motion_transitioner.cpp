@@ -29,7 +29,7 @@ void startKick(motion_msgs::msg::Kick)
   startKickCalled = true;
 }
 
-void startCrouch(motion_msgs::msg::Crouch)
+void startCrouch(std_msgs::msg::Empty)
 {
   startCrouchCalled = true;
 }

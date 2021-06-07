@@ -23,7 +23,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/IKCommand.msg"
   "msg/Kick.msg"
   "msg/Getup.msg"
-  "msg/Crouch.msg"
 )
 
 if(BUILD_TESTING)

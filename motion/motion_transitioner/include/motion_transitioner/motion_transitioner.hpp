@@ -18,7 +18,7 @@
 #include <functional>
 #include "motion_msgs/msg/kick.hpp"
 #include "motion_msgs/msg/getup.hpp"
-#include "motion_msgs/msg/crouch.hpp"
+#include "std_msgs/msg/empty.hpp"
 
 class MotionTransitioner
 {
@@ -26,18 +26,18 @@ public:
   MotionTransitioner(
     std::function<void(motion_msgs::msg::Getup)> startGetup,
     std::function<void(motion_msgs::msg::Kick)> startKick,
-    std::function<void(motion_msgs::msg::Crouch)> startCrouch);
+    std::function<void(std_msgs::msg::Empty)> startCrouch);
   void request(motion_msgs::msg::Getup req);
   void request(motion_msgs::msg::Kick req);
   // void request(WalkRequest req);
-  void request(motion_msgs::msg::Crouch req);
+  void request(std_msgs::msg::Empty req);
   void notifyGetupDone();
   void notifyKickDone();
 
 private:
   std::function<void(motion_msgs::msg::Getup)> startGetup;
   std::function<void(motion_msgs::msg::Kick)> startKick;
-  std::function<void(motion_msgs::msg::Crouch)> startCrouch;
+  std::function<void(std_msgs::msg::Empty)> startCrouch;
 
   bool duringGetup = false;
   bool duringKick = false;
