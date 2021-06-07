@@ -28,6 +28,6 @@ jobs:
           required-ros-distributions: galactic
       - uses: ros-tooling/action-ros-ci@v0.2
         with:
-          package-name: motion_msgs walk_generator static_pose_publisher team_ijnek_launch
+          package-name: motion_msgs walk_generator static_pose_publisher team_ijnek_launch crouch kick motion_transitioner
           target-ros2-distro: galactic
           vcs-repo-file-url: dependencies.repos

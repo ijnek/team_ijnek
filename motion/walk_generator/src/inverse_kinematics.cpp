@@ -1,3 +1,13 @@
+// This file is based on UNSW Sydney's codebase, but has been modified significantly.
+// Both copyright notices are provided below.
+//
+// Copyright (c) 2018 UNSW Sydney.  All rights reserved.
+//
+// Licensed under Team rUNSWift's original license. See the "LICENSE-runswift"
+// file to obtain a copy of the license.
+//
+// ---------------------------------------------------------------------------------
+//
 // Copyright 2021 Kenji Brameld
 //
 // Licensed under the Apache License, Version 2.0 (the "License");

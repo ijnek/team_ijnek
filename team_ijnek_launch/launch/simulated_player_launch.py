@@ -60,4 +60,19 @@ def generate_launch_description():
                 'theta': LaunchConfiguration('theta')
             }]
         ),
+        Node(
+            package='walk_generator',
+            executable='inverse_kinematics',
+            namespace=LaunchConfiguration('namespace'),
+        ),
+        Node(
+            package='crouch',
+            executable='crouch_node',
+            namespace=LaunchConfiguration('namespace'),
+        ),
+        Node(
+            package='kick',
+            executable='kick_node',
+            namespace=LaunchConfiguration('namespace'),
+        ),
     ])
