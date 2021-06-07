@@ -35,6 +35,12 @@ private:
 
   bool duringKick = false;
   motion_msgs::msg::Kick receivedMsg;
+  float kickT = 0;
+
+  float lastKickForward;
+  float lastSide;
+  float lastFooth;
+  float lastRock;
 };
 
 #endif  // KICK__KICK_HPP_
