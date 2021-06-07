@@ -1,2 +1,1 @@
 bool use_left_foot
-float32 power
