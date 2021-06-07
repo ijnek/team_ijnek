@@ -13,28 +13,18 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include "kick/kick.hpp"
+#include "crouch/crouch.hpp"
 
-bool notifyKickDoneCalled = false;
 bool sendIKCommandCalled = false;
-
-void notifyKickDone()
-{
-  notifyKickDoneCalled = true;
-}
 
 void sendIKCommand(motion_msgs::msg::IKCommand)
 {
   sendIKCommandCalled = true;
 }
 
-TEST(TestKick, Test1)
+TEST(TestCrouch, Test1)
 {
-  Kick kick(notifyKickDone, sendIKCommand);
-  kick.notifyJoints(nao_interfaces::msg::Joints{});
-  ASSERT_FALSE(sendIKCommandCalled);
-
-  kick.start(motion_msgs::msg::Kick{});
-  kick.notifyJoints(nao_interfaces::msg::Joints{});
+  Crouch crouch(sendIKCommand);
+  crouch.start();
   ASSERT_TRUE(sendIKCommandCalled);
 }
