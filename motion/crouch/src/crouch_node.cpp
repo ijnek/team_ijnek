@@ -30,9 +30,9 @@ public:
       std::bind(&CrouchNode::sendIKCommand, this, _1))
   {
     sub_crouch_start =
-      create_subscription<motion_msgs::msg::Crouch>(
+      create_subscription<std_msgs::msg::Empty>(
       "motion/crouch", 1,
-      [this](motion_msgs::msg::Crouch::SharedPtr) {
+      [this](std_msgs::msg::Empty::SharedPtr) {
         crouch.start();
       });
 
@@ -47,7 +47,7 @@ private:
     pub_ik_command->publish(ik_command);
   }
 
-  rclcpp::Subscription<motion_msgs::msg::Crouch>::SharedPtr sub_crouch_start;
+  rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_crouch_start;
   rclcpp::Publisher<motion_msgs::msg::IKCommand>::SharedPtr pub_ik_command;
 };
 
