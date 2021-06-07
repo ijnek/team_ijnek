@@ -61,7 +61,6 @@ void Kick::start(motion_msgs::msg::Kick req)
 void Kick::notifyJoints(nao_interfaces::msg::Joints)
 {
   if (duringKick) {
-
     motion_msgs::msg::IKCommand command;
     command.hiph = 0.23;
 
@@ -80,8 +79,8 @@ void Kick::notifyJoints(nao_interfaces::msg::Joints)
 
     float swingDelayFactor = 0.2;
 
-    float &forwardDist = receivedMsg.use_left_foot ? command.forward_l : command.forward_r;
-    float &side = receivedMsg.use_left_foot ? command.left_l : command.left_r;
+    float & forwardDist = receivedMsg.use_left_foot ? command.forward_l : command.forward_r;
+    float & side = receivedMsg.use_left_foot ? command.left_l : command.left_r;
 
     if (kickT < BACK_PHASE) {
       float totalShift = SHIFT_PERIOD / 4;
@@ -107,39 +106,49 @@ void Kick::notifyJoints(nao_interfaces::msg::Joints)
         side = interpolateSmooth(0, sideAmp, kickT2, endT);
       }
     } else if (kickT < (BACK_PHASE + KICK_PHASE)) {
-        if (kickT >= BACK_PHASE + swingDelayFactor * KICK_PHASE) {
-            forwardDist = interpolateSmooth(kickBackAmp, kickAmp, kickT - BACK_PHASE - swingDelayFactor*KICK_PHASE, KICK_PHASE);
-        }
-        side = sideAmp;
-        // Hold...
+      if (kickT >= BACK_PHASE + swingDelayFactor * KICK_PHASE) {
+        forwardDist = interpolateSmooth(
+          kickBackAmp, kickAmp,
+          kickT - BACK_PHASE - swingDelayFactor * KICK_PHASE,
+          KICK_PHASE);
+      }
+      side = sideAmp;
+      // Hold...
     } else if (kickT < (BACK_PHASE + KICK_PHASE + THROUGH_PHASE)) {
-        // Keep hip balance
-        forwardDist = kickAmp;
-        side = sideAmp;
+      // Keep hip balance
+      forwardDist = kickAmp;
+      side = sideAmp;
     } else if (kickT < (TOTAL_PHASE + SHIFT_END_PERIOD / 4)) {
-        forwardDist = lastKickForward - lastKickForward * parabolicStep(kickT-TOTAL_PHASE, SHIFT_END_PERIOD/8, 0);
-        side = lastSide - lastSide * parabolicStep(kickT-TOTAL_PHASE, SHIFT_END_PERIOD/8, 0);
-        rock = lastRock - lastRock * parabolicStep(kickT-TOTAL_PHASE, SHIFT_END_PERIOD/4, 0);
-        footh = lastFooth - lastFooth * parabolicStep(kickT-TOTAL_PHASE, SHIFT_END_PERIOD/6, 0);
+      forwardDist = lastKickForward - lastKickForward * parabolicStep(
+        kickT - TOTAL_PHASE,
+        SHIFT_END_PERIOD / 8, 0);
+      side = lastSide - lastSide * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 8, 0);
+      rock = lastRock - lastRock * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 4, 0);
+      footh = lastFooth - lastFooth * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 6, 0);
     } else {
-        kickT = 0;
-        rock = 0;
-        footh = 0;
-        duringKick = false;
-        notifyKickDone();
+      kickT = 0;
+      rock = 0;
+      footh = 0;
+      duringKick = false;
+      notifyKickDone();
     }
 
     // aborting or ending a kick from these values
     if (kickT < (BACK_PHASE + KICK_PHASE + THROUGH_PHASE)) {
-        lastKickForward = forwardDist;
-        lastSide = side;
-        lastFooth = footh;
-        lastRock = rock;
+      lastKickForward = forwardDist;
+      lastSide = side;
+      lastFooth = footh;
+      lastRock = rock;
     }
 
     // hack because rock isn't properly supported yet.
-    command.left_l -= rock / 8;
-    command.left_r -= rock / 8;
+    if (receivedMsg.use_left_foot) {
+      command.left_l += rock / 8;
+      command.left_r += rock / 8;
+    } else {
+      command.left_l -= rock / 8;
+      command.left_r -= rock / 8;
+    }
 
     sendIKCommand(command);
   }
@@ -162,7 +171,7 @@ float parabolicStep(float dt, float time, float period, float deadTimeFraction)
   return 4 * timeFraction - 2 * timeFraction * timeFraction - 1;
 }
 
-float parabolicReturn(float f)   //normalised [0,1] up and down
+float parabolicReturn(float f)   // normalised [0,1] up and down
 {
   double x = 0;
   double y = 0;
@@ -194,10 +203,12 @@ float interpolateSmooth(float start, float end, float tCurrent, float tEnd)
 static const float DEG_OVER_RAD = 180 / M_PI;
 static const float RAD_OVER_DEG = M_PI / 180;
 
-inline static float RAD2DEG(const float x) {
-   return ((x) * DEG_OVER_RAD);
+inline static float RAD2DEG(const float x)
+{
+  return (x) * DEG_OVER_RAD;
 }
 
-inline static float DEG2RAD(const float x) {
-   return ((x) * RAD_OVER_DEG);
+inline static float DEG2RAD(const float x)
+{
+  return (x) * RAD_OVER_DEG;
 }
