@@ -5,21 +5,5 @@
 Sample "team" package
 
 These packages show how a team would use other packages to get a robot up and running.
-This allows teams to "use" the packages rather than be "used" by the packages :D
 
-Launch the robot for simulation using 
-
-`ros2 launch team_ijnek_launch simulated_player_launch.py`
-
-To see launch arguments, use
-
-`ros2 launch team_ijnek_launch simulated_player_launch.py --show-args`
-
-Currently the supported arguments are:
-
-* **namespace** - string (default: '')
-* **team** - string (default: 'ijnek')
-* **number** - int (default: '2')
-* **x** - double (default: '0.0')
-* **y** - double (default: '0.0')
-* **theta** - double (default: '0.0')
+For more information, see our [Documentation](https://team-ijnek.readthedocs.io/en/latest/).
