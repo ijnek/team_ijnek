@@ -22,7 +22,8 @@ include_directories(
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(nao_interfaces REQUIRED)
+find_package(nao_command_msgs REQUIRED)
+find_package(nao_sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(motion_msgs REQUIRED)
 
@@ -38,7 +39,7 @@ add_executable(crouch_generator
 
 ament_target_dependencies(crouch_generator
   rclcpp
-  nao_interfaces
+  nao_sensor_msgs
   geometry_msgs
   motion_msgs)
 
@@ -53,7 +54,7 @@ add_executable(walk_generator
 
 ament_target_dependencies(walk_generator
   rclcpp
-  nao_interfaces
+  nao_sensor_msgs
   geometry_msgs
   motion_msgs)
 
@@ -68,7 +69,7 @@ add_executable(inverse_kinematics
 
 ament_target_dependencies(inverse_kinematics
   rclcpp
-  nao_interfaces
+  nao_command_msgs
   motion_msgs
   geometry_msgs)
 

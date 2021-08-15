@@ -37,9 +37,9 @@ WalkGenerator::WalkGenerator()
     });
 
   sub_joint_states =
-    create_subscription<nao_interfaces::msg::Joints>(
+    create_subscription<nao_sensor_msgs::msg::JointPositions>(
     "sensors/joints", 1,
-    [this](nao_interfaces::msg::Joints::SharedPtr sensor_joints) {
+    [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
       motion_msgs::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
       pub_ik_command->publish(ikCommand);
     });
@@ -48,7 +48,7 @@ WalkGenerator::WalkGenerator()
 }
 
 motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
-  nao_interfaces::msg::Joints &)
+  nao_sensor_msgs::msg::JointPositions &)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
   if (twist.linear.z == 0.0) {

@@ -16,7 +16,7 @@
 #define WALK_GENERATOR__WALK_GENERATOR_HPP_
 
 #include "rclcpp/rclcpp.hpp"
-#include "nao_interfaces/msg/joints.hpp"
+#include "nao_sensor_msgs/msg/joint_positions.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "motion_msgs/msg/ik_command.hpp"
 
@@ -44,9 +44,10 @@ private:
   bool isLeftPhase = false;
   bool weightHasShifted = true;
 
-  motion_msgs::msg::IKCommand generate_ik_command(nao_interfaces::msg::Joints & sensor_joints);
+  motion_msgs::msg::IKCommand generate_ik_command(
+    nao_sensor_msgs::msg::JointPositions & sensor_joints);
 
-  rclcpp::Subscription<nao_interfaces::msg::Joints>::SharedPtr sub_joint_states;
+  rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;
   rclcpp::Publisher<motion_msgs::msg::IKCommand>::SharedPtr pub_ik_command;
 
