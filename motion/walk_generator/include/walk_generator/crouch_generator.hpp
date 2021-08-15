@@ -40,7 +40,8 @@ private:
   float dt = 0.02;    // make sure to change this for real robot
   float t = 0.0;
 
-  motion_msgs::msg::IKCommand generate_ik_command(nao_sensor_msgs::msg::JointPositions & sensor_joints);
+  motion_msgs::msg::IKCommand generate_ik_command(
+    nao_sensor_msgs::msg::JointPositions & sensor_joints);
 
   rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;

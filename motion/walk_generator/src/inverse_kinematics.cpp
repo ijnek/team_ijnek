@@ -39,7 +39,8 @@ InverseKinematics::InverseKinematics()
       pub_joints->publish(joints);
     });
 
-  pub_joints = this->create_publisher<nao_command_msgs::msg::JointPositions>("effectors/joints", 10);
+  pub_joints =
+    this->create_publisher<nao_command_msgs::msg::JointPositions>("effectors/joints", 10);
 }
 
 nao_command_msgs::msg::JointPositions InverseKinematics::calculate_joints(
@@ -176,27 +177,27 @@ nao_command_msgs::msg::JointPositions InverseKinematics::calculate_joints(
   ArR = -Ar;
 
   // 10. Set joint values
-  nao_command_msgs::msg::JointPositions j;
+  nao_command_msgs::msg::JointPositions msg;
   // 10.2 Turn
-  j.angles[nao_command_msgs::msg::JointPositions::LHIPYAWPITCH] = -turnRL;
+  insert(msg, nao_command_msgs::msg::JointIndexes::LHIPYAWPITCH, -turnRL);
 
   // 10.3 Sagittal Joints
-  j.angles[nao_command_msgs::msg::JointPositions::LHIPPITCH] = -HpL;
-  j.angles[nao_command_msgs::msg::JointPositions::RHIPPITCH] = -HpR;
-  j.angles[nao_command_msgs::msg::JointPositions::LKNEEPITCH] = KpL;
-  j.angles[nao_command_msgs::msg::JointPositions::RKNEEPITCH] = KpR;
+  insert(msg, nao_command_msgs::msg::JointIndexes::LHIPPITCH, -HpL);
+  insert(msg, nao_command_msgs::msg::JointIndexes::RHIPPITCH, -HpR);
+  insert(msg, nao_command_msgs::msg::JointIndexes::LKNEEPITCH, KpL);
+  insert(msg, nao_command_msgs::msg::JointIndexes::RKNEEPITCH, KpR);
 
   // Only activate balance control if foot is on the ground
-  j.angles[nao_command_msgs::msg::JointPositions::LANKLEPITCH] = -ApL;
-  j.angles[nao_command_msgs::msg::JointPositions::RANKLEPITCH] = -ApR;
+  insert(msg, nao_command_msgs::msg::JointIndexes::LANKLEPITCH, -ApL);
+  insert(msg, nao_command_msgs::msg::JointIndexes::RANKLEPITCH, -ApR);
 
   // 10.4 Coronal Joints
-  j.angles[nao_command_msgs::msg::JointPositions::LHIPROLL] = HrL;
-  j.angles[nao_command_msgs::msg::JointPositions::RHIPROLL] = HrR;
-  j.angles[nao_command_msgs::msg::JointPositions::LANKLEROLL] = ArL;
-  j.angles[nao_command_msgs::msg::JointPositions::RANKLEROLL] = ArR;
+  insert(msg, nao_command_msgs::msg::JointIndexes::LHIPROLL, HrL);
+  insert(msg, nao_command_msgs::msg::JointIndexes::RHIPROLL, HrR);
+  insert(msg, nao_command_msgs::msg::JointIndexes::LANKLEROLL, ArL);
+  insert(msg, nao_command_msgs::msg::JointIndexes::RANKLEROLL, ArR);
 
-  return j;
+  return msg;
 }
 
 geometry_msgs::msg::Point InverseKinematics::mf2b(
@@ -482,4 +483,13 @@ Hpr InverseKinematics::hipAngles(
     sigma * ybe * (j112 * j22 + j22 * j312 + j22 * la2 - j11 * j12 * j21 - j21 * j31 * j32) +
     sigma * zbe * (j112 * j32 + j212 * j32 + j32 * la2 - j11 * j12 * j31 - j21 * j22 * j31);
   return result;
+}
+
+void InverseKinematics::insert(
+  nao_command_msgs::msg::JointPositions & msg,
+  const uint8_t & jointIndex,
+  const float & jointPosition)
+{
+  msg.indexes.push_back(jointIndex);
+  msg.positions.push_back(jointPosition);
 }

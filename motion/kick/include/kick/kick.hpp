@@ -18,7 +18,7 @@
 #include <functional>
 #include "motion_msgs/msg/kick.hpp"
 #include "motion_msgs/msg/ik_command.hpp"
-#include "nao_command_msgs/msg/joint_positions.hpp"
+#include "nao_sensor_msgs/msg/joint_positions.hpp"
 
 class Kick
 {

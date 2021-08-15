@@ -18,6 +18,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "motion_msgs/msg/ik_command.hpp"
 #include "nao_command_msgs/msg/joint_positions.hpp"
+#include "nao_command_msgs/msg/joint_indexes.hpp"
 #include "geometry_msgs/msg/point.hpp"
 
 // Use for iterative inverse kinematics for turning (see documentation BH 2010)
@@ -43,6 +44,11 @@ private:
 
   rclcpp::Subscription<motion_msgs::msg::IKCommand>::SharedPtr sub_ik_command;
   rclcpp::Publisher<nao_command_msgs::msg::JointPositions>::SharedPtr pub_joints;
+
+  void insert(
+    nao_command_msgs::msg::JointPositions & msg,
+    const uint8_t & jointIndex,
+    const float & jointPosition);
 };
 
 #endif  // WALK_GENERATOR__INVERSE_KINEMATICS_HPP_

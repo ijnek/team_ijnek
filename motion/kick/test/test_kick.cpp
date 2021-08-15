@@ -31,10 +31,10 @@ void sendIKCommand(motion_msgs::msg::IKCommand)
 TEST(TestKick, Test1)
 {
   Kick kick(notifyKickDone, sendIKCommand);
-  kick.notifyJoints(nao_command_msgs::msg::JointPositions{});
+  kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
   ASSERT_FALSE(sendIKCommandCalled);
 
   kick.start(motion_msgs::msg::Kick{});
-  kick.notifyJoints(nao_command_msgs::msg::JointPositions{});
+  kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
   ASSERT_TRUE(sendIKCommandCalled);
 }
