@@ -23,7 +23,6 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(motion_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(nao_interfaces REQUIRED)
 
 ament_export_include_directories(include)
 
@@ -31,8 +30,7 @@ ament_export_include_directories(include)
 add_library(crouch src/crouch.cpp)
 ament_target_dependencies(crouch
   motion_msgs
-  std_msgs
-  nao_interfaces)
+  std_msgs)
 
 # Build crouch_node
 add_executable(crouch_node src/crouch_node.cpp)

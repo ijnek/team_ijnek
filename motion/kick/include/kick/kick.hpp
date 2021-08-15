@@ -18,7 +18,7 @@
 #include <functional>
 #include "motion_msgs/msg/kick.hpp"
 #include "motion_msgs/msg/ik_command.hpp"
-#include "nao_interfaces/msg/joints.hpp"
+#include "nao_command_msgs/msg/joint_positions.hpp"
 
 class Kick
 {
@@ -27,7 +27,7 @@ public:
     std::function<void(void)> notifyKickDone,
     std::function<void(motion_msgs::msg::IKCommand)> sendIKCommand);
   void start(motion_msgs::msg::Kick req);
-  void notifyJoints(nao_interfaces::msg::Joints joints);
+  void notifyJoints(nao_sensor_msgs::msg::JointPositions joints);
 
 private:
   std::function<void(void)> notifyKickDone;

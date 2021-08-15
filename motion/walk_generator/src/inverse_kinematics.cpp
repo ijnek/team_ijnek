@@ -35,14 +35,14 @@ InverseKinematics::InverseKinematics()
     create_subscription<motion_msgs::msg::IKCommand>(
     "motion/ik_command", 1,
     [this](motion_msgs::msg::IKCommand::SharedPtr ik_command) {
-      nao_interfaces::msg::Joints joints = calculate_joints(*ik_command);
+      nao_command_msgs::msg::JointPositions joints = calculate_joints(*ik_command);
       pub_joints->publish(joints);
     });
 
-  pub_joints = this->create_publisher<nao_interfaces::msg::Joints>("effectors/joints", 10);
+  pub_joints = this->create_publisher<nao_command_msgs::msg::JointPositions>("effectors/joints", 10);
 }
 
-nao_interfaces::msg::Joints InverseKinematics::calculate_joints(
+nao_command_msgs::msg::JointPositions InverseKinematics::calculate_joints(
   motion_msgs::msg::IKCommand & ik_command)
 {
   // 9. Work out joint angles from walk variables above
@@ -176,25 +176,25 @@ nao_interfaces::msg::Joints InverseKinematics::calculate_joints(
   ArR = -Ar;
 
   // 10. Set joint values
-  nao_interfaces::msg::Joints j;
+  nao_command_msgs::msg::JointPositions j;
   // 10.2 Turn
-  j.angles[nao_interfaces::msg::Joints::LHIPYAWPITCH] = -turnRL;
+  j.angles[nao_command_msgs::msg::JointPositions::LHIPYAWPITCH] = -turnRL;
 
   // 10.3 Sagittal Joints
-  j.angles[nao_interfaces::msg::Joints::LHIPPITCH] = -HpL;
-  j.angles[nao_interfaces::msg::Joints::RHIPPITCH] = -HpR;
-  j.angles[nao_interfaces::msg::Joints::LKNEEPITCH] = KpL;
-  j.angles[nao_interfaces::msg::Joints::RKNEEPITCH] = KpR;
+  j.angles[nao_command_msgs::msg::JointPositions::LHIPPITCH] = -HpL;
+  j.angles[nao_command_msgs::msg::JointPositions::RHIPPITCH] = -HpR;
+  j.angles[nao_command_msgs::msg::JointPositions::LKNEEPITCH] = KpL;
+  j.angles[nao_command_msgs::msg::JointPositions::RKNEEPITCH] = KpR;
 
   // Only activate balance control if foot is on the ground
-  j.angles[nao_interfaces::msg::Joints::LANKLEPITCH] = -ApL;
-  j.angles[nao_interfaces::msg::Joints::RANKLEPITCH] = -ApR;
+  j.angles[nao_command_msgs::msg::JointPositions::LANKLEPITCH] = -ApL;
+  j.angles[nao_command_msgs::msg::JointPositions::RANKLEPITCH] = -ApR;
 
   // 10.4 Coronal Joints
-  j.angles[nao_interfaces::msg::Joints::LHIPROLL] = HrL;
-  j.angles[nao_interfaces::msg::Joints::RHIPROLL] = HrR;
-  j.angles[nao_interfaces::msg::Joints::LANKLEROLL] = ArL;
-  j.angles[nao_interfaces::msg::Joints::RANKLEROLL] = ArR;
+  j.angles[nao_command_msgs::msg::JointPositions::LHIPROLL] = HrL;
+  j.angles[nao_command_msgs::msg::JointPositions::RHIPROLL] = HrR;
+  j.angles[nao_command_msgs::msg::JointPositions::LANKLEROLL] = ArL;
+  j.angles[nao_command_msgs::msg::JointPositions::RANKLEROLL] = ArR;
 
   return j;
 }

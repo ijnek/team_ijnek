@@ -9,7 +9,8 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>nao_interfaces</depend>
+  <depend>nao_sensor_msgs</depend>
+  <depend>nao_command_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>motion_msgs</depend>
   <depend>rclcpp</depend>

@@ -16,7 +16,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "crouch/crouch.hpp"
 #include "std_msgs/msg/empty.hpp"
-#include "nao_interfaces/msg/joints.hpp"
 #include "motion_msgs/msg/ik_command.hpp"
 
 using namespace std::placeholders;

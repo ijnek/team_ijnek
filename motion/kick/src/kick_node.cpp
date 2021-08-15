@@ -16,7 +16,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "kick/kick.hpp"
 #include "std_msgs/msg/empty.hpp"
-#include "nao_interfaces/msg/joints.hpp"
+#include "nao_command_msgs/msg/joint_positions.hpp"
 #include "motion_msgs/msg/ik_command.hpp"
 #include "motion_msgs/msg/kick.hpp"
 
@@ -32,9 +32,9 @@ public:
       std::bind(&KickNode::sendIKCommand, this, _1))
   {
     sub_joint_states =
-      create_subscription<nao_interfaces::msg::Joints>(
+      create_subscription<nao_command_msgs::msg::JointPositions>(
       "sensors/joints", 1,
-      [this](nao_interfaces::msg::Joints::SharedPtr sensor_joints) {
+      [this](nao_command_msgs::msg::JointPositions::SharedPtr sensor_joints) {
         kick.notifyJoints(*sensor_joints);
       });
 
@@ -62,7 +62,7 @@ private:
     pub_ik_command->publish(ik_command);
   }
 
-  rclcpp::Subscription<nao_interfaces::msg::Joints>::SharedPtr sub_joint_states;
+  rclcpp::Subscription<nao_command_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<motion_msgs::msg::Kick>::SharedPtr sub_kick_start;
   rclcpp::Publisher<motion_msgs::msg::IKCommand>::SharedPtr pub_ik_command;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr pub_kick_done;

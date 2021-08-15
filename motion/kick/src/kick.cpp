@@ -58,7 +58,7 @@ void Kick::start(motion_msgs::msg::Kick req)
   }
 }
 
-void Kick::notifyJoints(nao_interfaces::msg::Joints)
+void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 {
   if (duringKick) {
     motion_msgs::msg::IKCommand command;
