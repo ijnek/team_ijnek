@@ -3,3 +3,15 @@ repositories:
     type: git
     url: https://github.com/ijnek/nao_interfaces.git
     version: rolling
+  soccer_interfaces:
+    type: git
+    url: https://github.com/ijnek/soccer_interfaces.git
+    version: rolling
+  ros2_rcss3d:
+    type: git
+    url: https://gitlab.com/ijnek/ros2_rcss3d.git
+    version: kenji-rolling
+  naosoccer_sim:
+    type: git
+    url: https://github.com/ijnek/naosoccer_sim.git
+    version: rolling
