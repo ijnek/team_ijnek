@@ -40,7 +40,7 @@ InverseKinematics::InverseKinematics()
     });
 
   pub_joints =
-    this->create_publisher<nao_command_msgs::msg::JointPositions>("effectors/joints", 10);
+    this->create_publisher<nao_command_msgs::msg::JointPositions>("effectors/joint_positions", 10);
 }
 
 nao_command_msgs::msg::JointPositions InverseKinematics::calculate_joints(

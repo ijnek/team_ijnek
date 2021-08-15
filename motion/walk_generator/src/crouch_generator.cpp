@@ -36,7 +36,7 @@ CrouchGenerator::CrouchGenerator()
 
   sub_joint_states =
     create_subscription<nao_sensor_msgs::msg::JointPositions>(
-    "sensors/joints", 1,
+    "sensors/joint_positions", 1,
     [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
       motion_msgs::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
       pub_ik_command->publish(ikCommand);

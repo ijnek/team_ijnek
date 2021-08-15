@@ -33,7 +33,7 @@ public:
   {
     sub_joint_states =
       create_subscription<nao_sensor_msgs::msg::JointPositions>(
-      "sensors/joints", 1,
+      "sensors/joint_positions", 1,
       [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
         kick.notifyJoints(*sensor_joints);
       });

@@ -27,17 +27,17 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('namespace', default_value=''),
         DeclareLaunchArgument('team', default_value='ijnek'),
-        DeclareLaunchArgument('number', default_value='2'),
+        DeclareLaunchArgument('unum', default_value='2'),
         DeclareLaunchArgument('x', default_value='0.0'),
         DeclareLaunchArgument('y', default_value='0.0'),
         DeclareLaunchArgument('theta', default_value='0.0'),
         Node(
-            package='rcss3d_agent',
-            executable='rcss3d_agent',
+            package='rcss3d_nao',
+            executable='rcss3d_nao',
             namespace=LaunchConfiguration('namespace'),
             parameters=[{
                 'team': LaunchConfiguration('team'),
-                'number': LaunchConfiguration('number'),
+                'unum': LaunchConfiguration('unum'),
                 'x': LaunchConfiguration('x'),
                 'y': LaunchConfiguration('y'),
                 'theta': LaunchConfiguration('theta')

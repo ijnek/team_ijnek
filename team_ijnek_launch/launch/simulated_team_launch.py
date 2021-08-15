@@ -54,7 +54,7 @@ def generate_launch_description():
                         launch_arguments={
                             'namespace': str(team) + '/player' + str(player),
                             'team': str(team),
-                            'number': str(player),
+                            'unum': str(player),
                             'x': str(player_params['x']),
                             'y': str(player_params['y']),
                             'theta': str(player_params['theta']),
