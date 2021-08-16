@@ -34,7 +34,7 @@ TEST(TestKick, Test1)
   kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
   ASSERT_FALSE(sendIKCommandCalled);
 
-  kick.start(motion_interfaces::msg::Kick{});
+  kick.start(true);
   kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
   ASSERT_TRUE(sendIKCommandCalled);
 }

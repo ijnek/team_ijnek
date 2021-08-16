@@ -21,6 +21,7 @@ include_directories(
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(motion_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nao_sensor_msgs REQUIRED)
@@ -38,7 +39,8 @@ ament_target_dependencies(kick
 add_executable(kick_node src/kick_node.cpp)
 target_link_libraries(kick_node kick)
 ament_target_dependencies(kick_node
-  rclcpp)
+  rclcpp
+  rclcpp_action)
 
 # Install
 install(TARGETS

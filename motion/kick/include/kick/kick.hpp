@@ -26,7 +26,7 @@ public:
   Kick(
     std::function<void(void)> notifyKickDone,
     std::function<void(motion_interfaces::msg::IKCommand)> sendIKCommand);
-  void start(motion_interfaces::msg::Kick req);
+  void start(bool use_left_foot);
   void notifyJoints(nao_sensor_msgs::msg::JointPositions joints);
 
 private:
@@ -34,7 +34,8 @@ private:
   std::function<void(motion_interfaces::msg::IKCommand)> sendIKCommand;
 
   bool duringKick = false;
-  motion_interfaces::msg::Kick receivedMsg;
+  // motion_interfaces::msg::Kick receivedMsg;
+  bool use_left_foot;
   float kickT = 0;
 
   float lastKickForward;

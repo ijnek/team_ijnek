@@ -49,11 +49,12 @@ Kick::Kick(
 {
 }
 
-void Kick::start(motion_interfaces::msg::Kick req)
+void Kick::start(bool use_left_foot)
 {
   if (!duringKick) {
     duringKick = true;
-    receivedMsg = req;
+    // receivedMsg = req;
+    this->use_left_foot = use_left_foot;
     kickT = 0;
   }
 }
@@ -79,8 +80,8 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 
     float swingDelayFactor = 0.2;
 
-    float & forwardDist = receivedMsg.use_left_foot ? command.forward_l : command.forward_r;
-    float & side = receivedMsg.use_left_foot ? command.left_l : command.left_r;
+    float & forwardDist = use_left_foot ? command.forward_l : command.forward_r;
+    float & side = use_left_foot ? command.left_l : command.left_r;
 
     if (kickT < BACK_PHASE) {
       float totalShift = SHIFT_PERIOD / 4;
@@ -142,7 +143,7 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
     }
 
     // hack because rock isn't properly supported yet.
-    if (receivedMsg.use_left_foot) {
+    if (use_left_foot) {
       command.left_l += rock / 8;
       command.left_r += rock / 8;
     } else {
