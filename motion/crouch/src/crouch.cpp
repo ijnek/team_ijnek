@@ -16,7 +16,7 @@
 #include <iostream>
 
 Crouch::Crouch(
-  std::function<void(motion_msgs::msg::IKCommand)> sendIKCommand)
+  std::function<void(motion_interfaces::msg::IKCommand)> sendIKCommand)
 : sendIKCommand(sendIKCommand)
 {
   command.hiph = 0.23;

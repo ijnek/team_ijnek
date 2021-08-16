@@ -18,7 +18,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
 #include "geometry_msgs/msg/twist.hpp"
-#include "motion_msgs/msg/ik_command.hpp"
+#include "motion_interfaces/msg/ik_command.hpp"
 
 
 class CrouchGenerator : public rclcpp::Node
@@ -40,12 +40,12 @@ private:
   float dt = 0.02;    // make sure to change this for real robot
   float t = 0.0;
 
-  motion_msgs::msg::IKCommand generate_ik_command(
+  motion_interfaces::msg::IKCommand generate_ik_command(
     nao_sensor_msgs::msg::JointPositions & sensor_joints);
 
   rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;
-  rclcpp::Publisher<motion_msgs::msg::IKCommand>::SharedPtr pub_ik_command;
+  rclcpp::Publisher<motion_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
 
   geometry_msgs::msg::Twist twist;
 };

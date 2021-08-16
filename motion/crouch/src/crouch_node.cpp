@@ -16,7 +16,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "crouch/crouch.hpp"
 #include "std_msgs/msg/empty.hpp"
-#include "motion_msgs/msg/ik_command.hpp"
+#include "motion_interfaces/msg/ik_command.hpp"
 
 using namespace std::placeholders;
 
@@ -35,19 +35,19 @@ public:
         crouch.start();
       });
 
-    pub_ik_command = create_publisher<motion_msgs::msg::IKCommand>("motion/ik_command", 1);
+    pub_ik_command = create_publisher<motion_interfaces::msg::IKCommand>("motion/ik_command", 1);
   }
 
 private:
   Crouch crouch;
 
-  void sendIKCommand(motion_msgs::msg::IKCommand ik_command)
+  void sendIKCommand(motion_interfaces::msg::IKCommand ik_command)
   {
     pub_ik_command->publish(ik_command);
   }
 
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_crouch_start;
-  rclcpp::Publisher<motion_msgs::msg::IKCommand>::SharedPtr pub_ik_command;
+  rclcpp::Publisher<motion_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
 };
 
 int main(int argc, char * argv[])

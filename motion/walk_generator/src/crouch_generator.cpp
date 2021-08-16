@@ -38,14 +38,14 @@ CrouchGenerator::CrouchGenerator()
     create_subscription<nao_sensor_msgs::msg::JointPositions>(
     "sensors/joint_positions", 1,
     [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
-      motion_msgs::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
+      motion_interfaces::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
       pub_ik_command->publish(ikCommand);
     });
 
-  pub_ik_command = create_publisher<motion_msgs::msg::IKCommand>("motion/ik_command", 1);
+  pub_ik_command = create_publisher<motion_interfaces::msg::IKCommand>("motion/ik_command", 1);
 }
 
-motion_msgs::msg::IKCommand CrouchGenerator::generate_ik_command(
+motion_interfaces::msg::IKCommand CrouchGenerator::generate_ik_command(
   nao_sensor_msgs::msg::JointPositions &)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
@@ -82,7 +82,7 @@ motion_msgs::msg::IKCommand CrouchGenerator::generate_ik_command(
       CROUCH_STAND_PERIOD);
   }
 
-  motion_msgs::msg::IKCommand ikCommand;
+  motion_interfaces::msg::IKCommand ikCommand;
   ikCommand.hiph = hiph;
 
   RCLCPP_DEBUG(get_logger(), "hiph is: %.5f", hiph);

@@ -44,12 +44,12 @@ inline static float DEG2RAD(const float x);
 
 Kick::Kick(
   std::function<void(void)> notifyKickDone,
-  std::function<void(motion_msgs::msg::IKCommand)> sendIKCommand)
+  std::function<void(motion_interfaces::msg::IKCommand)> sendIKCommand)
 : notifyKickDone(notifyKickDone), sendIKCommand(sendIKCommand)
 {
 }
 
-void Kick::start(motion_msgs::msg::Kick req)
+void Kick::start(motion_interfaces::msg::Kick req)
 {
   if (!duringKick) {
     duringKick = true;
@@ -61,7 +61,7 @@ void Kick::start(motion_msgs::msg::Kick req)
 void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 {
   if (duringKick) {
-    motion_msgs::msg::IKCommand command;
+    motion_interfaces::msg::IKCommand command;
     command.hiph = 0.23;
 
     kickT += 0.02;

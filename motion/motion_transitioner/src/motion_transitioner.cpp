@@ -16,20 +16,20 @@
 #include <iostream>
 
 MotionTransitioner::MotionTransitioner(
-  std::function<void(motion_msgs::msg::Getup)> startGetup,
-  std::function<void(motion_msgs::msg::Kick)> startKick,
+  std::function<void(motion_interfaces::msg::Getup)> startGetup,
+  std::function<void(motion_interfaces::msg::Kick)> startKick,
   std::function<void(std_msgs::msg::Empty)> startCrouch)
 : startGetup(startGetup), startKick(startKick), startCrouch(startCrouch)
 {
 }
 
-void MotionTransitioner::request(motion_msgs::msg::Getup req)
+void MotionTransitioner::request(motion_interfaces::msg::Getup req)
 {
   duringGetup = true;
   startGetup(req);
 }
 
-void MotionTransitioner::request(motion_msgs::msg::Kick req)
+void MotionTransitioner::request(motion_interfaces::msg::Kick req)
 {
   if (!duringGetup) {
     duringKick = true;

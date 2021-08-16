@@ -30,9 +30,9 @@ public:
       std::bind(&MotionTransitionerNode::startCrouch, this, _1))
   {
     sub_getup_request =
-      create_subscription<motion_msgs::msg::Getup>(
+      create_subscription<motion_interfaces::msg::Getup>(
       "behaviour/getup", 1,
-      [this](motion_msgs::msg::Getup::SharedPtr request) {
+      [this](motion_interfaces::msg::Getup::SharedPtr request) {
         motionTransitioner.request(*request);
       });
 
@@ -44,9 +44,9 @@ public:
       });
 
     sub_kick_request =
-      create_subscription<motion_msgs::msg::Kick>(
+      create_subscription<motion_interfaces::msg::Kick>(
       "behaviour/kick", 1,
-      [this](motion_msgs::msg::Kick::SharedPtr request) {
+      [this](motion_interfaces::msg::Kick::SharedPtr request) {
         motionTransitioner.request(*request);
       });
 
@@ -64,20 +64,20 @@ public:
         motionTransitioner.request(*request);
       });
 
-    pub_start_getup = this->create_publisher<motion_msgs::msg::Getup>("motion/getup", 10);
-    pub_start_kick = this->create_publisher<motion_msgs::msg::Kick>("motion/kick", 10);
+    pub_start_getup = this->create_publisher<motion_interfaces::msg::Getup>("motion/getup", 10);
+    pub_start_kick = this->create_publisher<motion_interfaces::msg::Kick>("motion/kick", 10);
     pub_start_crouch = this->create_publisher<std_msgs::msg::Empty>("motion/crouch", 10);
   }
 
 private:
   MotionTransitioner motionTransitioner;
 
-  void startGetup(motion_msgs::msg::Getup req)
+  void startGetup(motion_interfaces::msg::Getup req)
   {
     pub_start_getup->publish(req);
   }
 
-  void startKick(motion_msgs::msg::Kick req)
+  void startKick(motion_interfaces::msg::Kick req)
   {
     pub_start_kick->publish(req);
   }
@@ -87,13 +87,13 @@ private:
     pub_start_crouch->publish(req);
   }
 
-  rclcpp::Subscription<motion_msgs::msg::Getup>::SharedPtr sub_getup_request;
+  rclcpp::Subscription<motion_interfaces::msg::Getup>::SharedPtr sub_getup_request;
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_getup_done;
-  rclcpp::Publisher<motion_msgs::msg::Getup>::SharedPtr pub_start_getup;
+  rclcpp::Publisher<motion_interfaces::msg::Getup>::SharedPtr pub_start_getup;
 
-  rclcpp::Subscription<motion_msgs::msg::Kick>::SharedPtr sub_kick_request;
+  rclcpp::Subscription<motion_interfaces::msg::Kick>::SharedPtr sub_kick_request;
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_kick_done;
-  rclcpp::Publisher<motion_msgs::msg::Kick>::SharedPtr pub_start_kick;
+  rclcpp::Publisher<motion_interfaces::msg::Kick>::SharedPtr pub_start_kick;
 
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_crouch_request;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr pub_start_crouch;

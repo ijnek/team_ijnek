@@ -17,7 +17,7 @@
 
 bool sendIKCommandCalled = false;
 
-void sendIKCommand(motion_msgs::msg::IKCommand)
+void sendIKCommand(motion_interfaces::msg::IKCommand)
 {
   sendIKCommandCalled = true;
 }

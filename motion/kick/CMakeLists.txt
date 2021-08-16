@@ -21,7 +21,7 @@ include_directories(
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(motion_msgs REQUIRED)
+find_package(motion_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nao_sensor_msgs REQUIRED)
 
@@ -30,7 +30,7 @@ ament_export_include_directories(include)
 # Build kick
 add_library(kick src/kick.cpp)
 ament_target_dependencies(kick
-  motion_msgs
+  motion_interfaces
   std_msgs
   nao_sensor_msgs)
 

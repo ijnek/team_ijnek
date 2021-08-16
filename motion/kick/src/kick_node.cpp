@@ -17,8 +17,8 @@
 #include "kick/kick.hpp"
 #include "std_msgs/msg/empty.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
-#include "motion_msgs/msg/ik_command.hpp"
-#include "motion_msgs/msg/kick.hpp"
+#include "motion_interfaces/msg/ik_command.hpp"
+#include "motion_interfaces/msg/kick.hpp"
 
 using namespace std::placeholders;
 
@@ -39,13 +39,13 @@ public:
       });
 
     sub_kick_start =
-      create_subscription<motion_msgs::msg::Kick>(
+      create_subscription<motion_interfaces::msg::Kick>(
       "motion/kick", 1,
-      [this](motion_msgs::msg::Kick::SharedPtr kick_msg) {
+      [this](motion_interfaces::msg::Kick::SharedPtr kick_msg) {
         kick.start(*kick_msg);
       });
 
-    pub_ik_command = create_publisher<motion_msgs::msg::IKCommand>("motion/ik_command", 1);
+    pub_ik_command = create_publisher<motion_interfaces::msg::IKCommand>("motion/ik_command", 1);
     pub_kick_done = create_publisher<std_msgs::msg::Empty>("motion/kick_done", 1);
   }
 
@@ -57,14 +57,14 @@ private:
     pub_kick_done->publish(std_msgs::msg::Empty{});
   }
 
-  void sendIKCommand(motion_msgs::msg::IKCommand ik_command)
+  void sendIKCommand(motion_interfaces::msg::IKCommand ik_command)
   {
     pub_ik_command->publish(ik_command);
   }
 
   rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
-  rclcpp::Subscription<motion_msgs::msg::Kick>::SharedPtr sub_kick_start;
-  rclcpp::Publisher<motion_msgs::msg::IKCommand>::SharedPtr pub_ik_command;
+  rclcpp::Subscription<motion_interfaces::msg::Kick>::SharedPtr sub_kick_start;
+  rclcpp::Publisher<motion_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr pub_kick_done;
 };
 

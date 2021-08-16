@@ -19,12 +19,12 @@ bool startGetupCalled = false;
 bool startKickCalled = false;
 bool startCrouchCalled = false;
 
-void startGetup(motion_msgs::msg::Getup)
+void startGetup(motion_interfaces::msg::Getup)
 {
   startGetupCalled = true;
 }
 
-void startKick(motion_msgs::msg::Kick)
+void startKick(motion_interfaces::msg::Kick)
 {
   startKickCalled = true;
 }
@@ -37,7 +37,7 @@ void startCrouch(std_msgs::msg::Empty)
 TEST(TestMotionTransitioner, Test1)
 {
   MotionTransitioner motionTransitioner(startGetup, startKick, startCrouch);
-  motionTransitioner.request(motion_msgs::msg::Getup{});
+  motionTransitioner.request(motion_interfaces::msg::Getup{});
   ASSERT_TRUE(startGetupCalled);
 
   motionTransitioner.notifyGetupDone();
@@ -47,11 +47,11 @@ TEST(TestMotionTransitioner, Test1)
 TEST(TestMotionTransitioner, Test2)
 {
   MotionTransitioner motionTransitioner(startGetup, startKick, startCrouch);
-  motionTransitioner.request(motion_msgs::msg::Getup{});
-  motionTransitioner.request(motion_msgs::msg::Kick{});
+  motionTransitioner.request(motion_interfaces::msg::Getup{});
+  motionTransitioner.request(motion_interfaces::msg::Kick{});
   ASSERT_FALSE(startKickCalled);
 
   motionTransitioner.notifyGetupDone();
-  motionTransitioner.request(motion_msgs::msg::Kick{});
+  motionTransitioner.request(motion_interfaces::msg::Kick{});
   ASSERT_TRUE(startKickCalled);
 }

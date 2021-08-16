@@ -32,9 +32,9 @@ InverseKinematics::InverseKinematics()
 : Node("InverseKinematics")
 {
   sub_ik_command =
-    create_subscription<motion_msgs::msg::IKCommand>(
+    create_subscription<motion_interfaces::msg::IKCommand>(
     "motion/ik_command", 1,
-    [this](motion_msgs::msg::IKCommand::SharedPtr ik_command) {
+    [this](motion_interfaces::msg::IKCommand::SharedPtr ik_command) {
       nao_command_msgs::msg::JointPositions joints = calculate_joints(*ik_command);
       pub_joints->publish(joints);
     });
@@ -44,7 +44,7 @@ InverseKinematics::InverseKinematics()
 }
 
 nao_command_msgs::msg::JointPositions InverseKinematics::calculate_joints(
-  motion_msgs::msg::IKCommand & ik_command)
+  motion_interfaces::msg::IKCommand & ik_command)
 {
   // 9. Work out joint angles from walk variables above
   float & hiph = ik_command.hiph;

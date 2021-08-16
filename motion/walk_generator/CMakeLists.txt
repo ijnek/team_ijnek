@@ -25,7 +25,7 @@ find_package(rclcpp REQUIRED)
 find_package(nao_command_msgs REQUIRED)
 find_package(nao_sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(motion_msgs REQUIRED)
+find_package(motion_interfaces REQUIRED)
 
 # Build maths_functions lib
 add_library(maths_functions SHARED
@@ -41,7 +41,7 @@ ament_target_dependencies(crouch_generator
   rclcpp
   nao_sensor_msgs
   geometry_msgs
-  motion_msgs)
+  motion_interfaces)
 
 target_link_libraries(
   crouch_generator maths_functions
@@ -56,7 +56,7 @@ ament_target_dependencies(walk_generator
   rclcpp
   nao_sensor_msgs
   geometry_msgs
-  motion_msgs)
+  motion_interfaces)
 
 target_link_libraries(
   walk_generator maths_functions
@@ -70,7 +70,7 @@ add_executable(inverse_kinematics
 ament_target_dependencies(inverse_kinematics
   rclcpp
   nao_command_msgs
-  motion_msgs
+  motion_interfaces
   geometry_msgs)
 
 # Install
