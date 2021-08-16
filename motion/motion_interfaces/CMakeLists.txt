@@ -18,11 +18,15 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/IKCommand.msg"
   "msg/Kick.msg"
   "msg/Getup.msg"
+  "action/Walk.action"
+  "action/Kick.action"
+  DEPENDENCIES geometry_msgs
 )
 
 if(BUILD_TESTING)

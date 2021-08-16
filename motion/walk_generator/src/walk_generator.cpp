@@ -25,33 +25,49 @@ WalkGenerator::WalkGenerator()
 : Node("WalkGenerator"),
   hiph(STAND_HIP_HEIGHT)
 {
-  sub_twist =
-    create_subscription<geometry_msgs::msg::Twist>(
-    "cmd_vel", 1,
-    [this](geometry_msgs::msg::Twist::SharedPtr twist) {
-      RCLCPP_DEBUG(
-        get_logger(), "Recevied twist: %g, %g, %g, %g, %g, %g",
-        twist->linear.x, twist->linear.y, twist->linear.z,
-        twist->angular.x, twist->angular.y, twist->angular.z);
-      this->twist = *twist;
-    });
-
   sub_joint_states =
     create_subscription<nao_sensor_msgs::msg::JointPositions>(
     "sensors/joint_positions", 1,
     [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
-      motion_interfaces::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
-      pub_ik_command->publish(ikCommand);
+      if (walk_goal_handle_) {
+        if (walk_goal_handle_->is_canceling()) {
+          RCLCPP_DEBUG(get_logger(), "Goal Cancelled");
+          walk_goal_handle_->canceled(walk_result_);
+          walk_goal_handle_ = nullptr;
+          target_ = nullptr;
+        } else {
+          RCLCPP_DEBUG(get_logger(), "Generating joints");
+          motion_interfaces::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
+          pub_ik_command->publish(ikCommand);
+        }
+      }
     });
 
   pub_ik_command = create_publisher<motion_interfaces::msg::IKCommand>("motion/ik_command", 1);
+
+  this->action_server_ = rclcpp_action::create_server<motion_interfaces::action::Walk>(
+    this,
+    "walk",
+    [this](const rclcpp_action::GoalUUID &, std::shared_ptr<const WalkGoal>)
+    {
+      RCLCPP_DEBUG(get_logger(), "Received goal request");
+      // Accept all goals
+      return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+    },
+    [this](const std::shared_ptr<WalkGoalHandle>)
+    {
+      RCLCPP_INFO(get_logger(), "Received request to cancel goal");
+      // Accept all cancel requests
+      return rclcpp_action::CancelResponse::ACCEPT;
+    },
+    std::bind(&WalkGenerator::handleAccepted, this, std::placeholders::_1));
 }
 
 motion_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
   nao_sensor_msgs::msg::JointPositions &)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
-  if (twist.linear.z == 0.0) {
+  if (target_->linear.z == 0.0) {
     if (abs(hiph - STAND_HIP_HEIGHT) < .0001) {
       walkOption = STAND;
       t = 0;
@@ -60,7 +76,7 @@ motion_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
     }
   } else {
     if (abs(hiph - WALK_HIP_HEIGHT) < .0001) {
-      if (twist.linear.x != 0.0 || twist.linear.y != 0.0 || twist.angular.z != 0.0) {
+      if (target_->linear.x != 0.0 || target_->linear.y != 0.0 || target_->angular.z != 0.0) {
         walkOption = WALK;
         if (t >= BASE_WALK_PERIOD) {
           t = 0;
@@ -93,9 +109,9 @@ motion_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
       dt, t,
       CROUCH_STAND_PERIOD);
   } else if (walkOption == WALK) {
-    float forward = twist.linear.x;
-    float left = twist.linear.y;
-    float turn = twist.angular.z;
+    float forward = target_->linear.x;
+    float left = target_->linear.y;
+    float turn = target_->angular.z;
 
     // 5.1 Calculate the height to lift each swing foot
     float maxFootHeight = BASE_LEG_LIFT + abs(forward) * 0.01 + abs(left) * 0.03;
@@ -111,7 +127,7 @@ motion_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
         // swing-foot follow-through
         forwardL = forwardL0 +
           parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardL0);
-        // 5.3.2L Jab kick with left foot - removed
+        // 5.3.2L Jab walk with left foot - removed
         // 5.3.3L Determine how much to lean from side to side - removed
         // 5.3.4L left
         if (left > 0) {
@@ -142,7 +158,7 @@ motion_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
         // swing-foot follow-through
         forwardR = forwardR0 +
           parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardR0);
-        // 5.3.2R Jab-Kick with right foot - removed
+        // 5.3.2R Jab-Walk with right foot - removed
         // 5.3.3R lean - not used
         // 5.3.4R left
         if (left < 0) {
@@ -186,4 +202,21 @@ motion_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
   ikCommand.footh_r = foothR;
 
   return ikCommand;
+}
+
+void WalkGenerator::handleAccepted(
+  const std::shared_ptr<WalkGoalHandle> goal_handle)
+{
+  // Abort any existing goal
+  if (walk_goal_handle_) {
+    RCLCPP_WARN(
+      get_logger(),
+      "Walk goal received before a previous goal finished. Aborting previous goal");
+    walk_goal_handle_->abort(walk_result_);
+  }
+  walk_goal_handle_ = goal_handle;
+  walk_feedback_ = std::make_shared<motion_interfaces::action::Walk::Feedback>();
+  walk_result_ = std::make_shared<motion_interfaces::action::Walk::Result>();
+  target_ = std::make_shared<geometry_msgs::msg::Twist>(
+    goal_handle->get_goal()->target);
 }

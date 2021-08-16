@@ -22,6 +22,7 @@ include_directories(
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(nao_command_msgs REQUIRED)
 find_package(nao_sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -54,6 +55,7 @@ add_executable(walk_generator
 
 ament_target_dependencies(walk_generator
   rclcpp
+  rclcpp_action  
   nao_sensor_msgs
   geometry_msgs
   motion_interfaces)

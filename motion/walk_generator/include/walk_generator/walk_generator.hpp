@@ -16,14 +16,17 @@
 #define WALK_GENERATOR__WALK_GENERATOR_HPP_
 
 #include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
-#include "geometry_msgs/msg/twist.hpp"
 #include "motion_interfaces/msg/ik_command.hpp"
+#include "motion_interfaces/action/walk.hpp"
 
 
 class WalkGenerator : public rclcpp::Node
 {
 public:
+  using WalkGoal = motion_interfaces::action::Walk::Goal;
+  using WalkGoalHandle = rclcpp_action::ServerGoalHandle<motion_interfaces::action::Walk>;
   WalkGenerator();
 
 private:
@@ -47,11 +50,17 @@ private:
   motion_interfaces::msg::IKCommand generate_ik_command(
     nao_sensor_msgs::msg::JointPositions & sensor_joints);
 
-  rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
-  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;
-  rclcpp::Publisher<motion_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
+  void handleAccepted(
+    const std::shared_ptr<WalkGoalHandle> goal_handle);
 
-  geometry_msgs::msg::Twist twist;
+  rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
+  rclcpp::Publisher<motion_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
+  rclcpp_action::Server<motion_interfaces::action::Walk>::SharedPtr action_server_;
+
+  std::shared_ptr<WalkGoalHandle> walk_goal_handle_;
+  std::shared_ptr<motion_interfaces::action::Walk::Feedback> walk_feedback_;
+  std::shared_ptr<motion_interfaces::action::Walk::Result> walk_result_;
+  std::shared_ptr<geometry_msgs::msg::Twist> target_;
 };
 
 #endif  // WALK_GENERATOR__WALK_GENERATOR_HPP_
