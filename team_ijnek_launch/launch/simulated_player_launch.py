@@ -61,8 +61,8 @@ def generate_launch_description():
             }]
         ),
         Node(
-            package='walk_generator',
-            executable='inverse_kinematics',
+            package='ik_bhuman',
+            executable='ik_node',
             namespace=LaunchConfiguration('namespace'),
         ),
         Node(

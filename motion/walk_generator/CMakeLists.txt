@@ -54,6 +54,7 @@ add_executable(walk_generator
 
 ament_target_dependencies(walk_generator
   rclcpp
+  rclcpp_action  
   nao_sensor_msgs
   geometry_msgs
   motion_interfaces)
@@ -62,22 +63,10 @@ target_link_libraries(
   walk_generator maths_functions
 )
 
-# Build inverse_kinematics
-add_executable(inverse_kinematics
-  src/inverse_kinematics_node.cpp
-  src/inverse_kinematics.cpp)
-
-ament_target_dependencies(inverse_kinematics
-  rclcpp
-  nao_command_msgs
-  motion_interfaces
-  geometry_msgs)
-
 # Install
 install(TARGETS
   crouch_generator
   walk_generator
-  inverse_kinematics
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch/

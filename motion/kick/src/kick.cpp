@@ -25,6 +25,7 @@
 #include "kick/kick.hpp"
 #include <iostream>
 #include <cmath>
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
 #define SHIFT_PERIOD 2.6
 #define SHIFT_END_PERIOD 2.5
@@ -41,6 +42,8 @@ float parabolicStep(float dt, float time, float period, float deadTimeFraction =
 float interpolateSmooth(float start, float end, float tCurrent, float tEnd);
 inline static float RAD2DEG(const float x);
 inline static float DEG2RAD(const float x);
+inline static geometry_msgs::msg::Quaternion rpy_to_geometry_quat(
+  double roll, double pitch, double yaw);
 
 Kick::Kick(
   std::function<void(void)> notifyKickDone,
@@ -61,8 +64,7 @@ void Kick::start(motion_interfaces::msg::Kick req)
 void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 {
   if (duringKick) {
-    motion_interfaces::msg::IKCommand command;
-    command.hiph = 0.23;
+    float hiph = 0.18;
 
     kickT += 0.02;
 
@@ -74,13 +76,20 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 
     float rock = 0;
     float kickingLean = 20.5;
-    float footh = 0;
     float kickStepH = KICK_STEP_HEIGHT;
 
     float swingDelayFactor = 0.2;
 
-    float & forwardDist = receivedMsg.use_left_foot ? command.forward_l : command.forward_r;
-    float & side = receivedMsg.use_left_foot ? command.left_l : command.left_r;
+    float forward_l = 0;
+    float forward_r = 0;
+    float left_l = 0;
+    float left_r = 0;
+    float footh_l = 0;
+    float footh_r = 0;
+
+    float & forwardDist = use_left_foot ? forward_l : forward_r;
+    float & side = use_left_foot ? left_l : left_r;
+    float & footh = use_left_foot ? footh_l : footh_r;
 
     if (kickT < BACK_PHASE) {
       float totalShift = SHIFT_PERIOD / 4;
@@ -142,14 +151,19 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
     }
 
     // hack because rock isn't properly supported yet.
-    if (receivedMsg.use_left_foot) {
-      command.left_l += rock / 8;
-      command.left_r += rock / 8;
-    } else {
-      command.left_l -= rock / 8;
-      command.left_r -= rock / 8;
+    if (!use_left_foot) {
+      rock *= -1;
     }
 
+    motion_interfaces::msg::IKCommand command;
+    command.left_ankle.position.x = forward_l;
+    command.left_ankle.position.y = left_l + 0.050;
+    command.left_ankle.position.z = -hiph + footh_l;
+    command.left_ankle.orientation = rpy_to_geometry_quat(rock, 0, 0);
+    command.right_ankle.position.x = forward_r;
+    command.right_ankle.position.y = left_r - 0.050;
+    command.right_ankle.position.z = -hiph + footh_r;
+    command.right_ankle.orientation = rpy_to_geometry_quat(rock, 0, 0);
     sendIKCommand(command);
   }
 }
@@ -211,4 +225,14 @@ inline static float RAD2DEG(const float x)
 inline static float DEG2RAD(const float x)
 {
   return (x) * RAD_OVER_DEG;
+}
+
+inline static geometry_msgs::msg::Quaternion rpy_to_geometry_quat(
+  double roll, double pitch, double yaw)
+{
+  tf2::Quaternion quat_tf;
+  quat_tf.setRPY(roll, pitch, yaw);
+  geometry_msgs::msg::Quaternion quat_msg;
+  tf2::convert(quat_tf, quat_msg);
+  return quat_msg;
 }

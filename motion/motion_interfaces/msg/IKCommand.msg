@@ -1,9 +1,2 @@
-float32 hiph
-float32 footh_l
-float32 footh_r
-float32 forward_l
-float32 forward_r
-float32 left_l
-float32 left_r
-float32 turn_rl
-float32 com_offset
+geometry_msgs/Pose left_ankle
+geometry_msgs/Pose right_ankle

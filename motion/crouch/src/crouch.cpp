@@ -19,7 +19,11 @@ Crouch::Crouch(
   std::function<void(motion_interfaces::msg::IKCommand)> sendIKCommand)
 : sendIKCommand(sendIKCommand)
 {
-  command.hiph = 0.23;
+  command.left_ankle.position.y = 0.05;
+  command.left_ankle.position.z = -0.18;
+  
+  command.right_ankle.position.y = -0.05;
+  command.right_ankle.position.z = -0.18;
 }
 
 void Crouch::start()

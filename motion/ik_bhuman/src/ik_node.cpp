@@ -13,12 +13,12 @@
 // limitations under the License.
 
 #include <memory>
-#include "walk_generator/inverse_kinematics.hpp"
+#include "ik_bhuman/ik.hpp"
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<InverseKinematics>());
+  rclcpp::spin(std::make_shared<IK>());
   rclcpp::shutdown();
   return 0;
 }
