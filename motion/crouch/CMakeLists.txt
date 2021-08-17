@@ -22,6 +22,7 @@ include_directories(
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(motion_interfaces REQUIRED)
+find_package(nao_ik_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 
 ament_export_include_directories(include)
@@ -30,6 +31,7 @@ ament_export_include_directories(include)
 add_library(crouch src/crouch.cpp)
 ament_target_dependencies(crouch
   motion_interfaces
+  nao_ik_interfaces
   std_msgs)
 
 # Build crouch_node

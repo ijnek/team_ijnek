@@ -47,7 +47,7 @@ inline static geometry_msgs::msg::Quaternion rpy_to_geometry_quat(
 
 Kick::Kick(
   std::function<void(void)> notifyKickDone,
-  std::function<void(motion_interfaces::msg::IKCommand)> sendIKCommand)
+  std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand)
 : notifyKickDone(notifyKickDone), sendIKCommand(sendIKCommand)
 {
 }
@@ -56,7 +56,7 @@ void Kick::start(motion_interfaces::msg::Kick req)
 {
   if (!duringKick) {
     duringKick = true;
-    receivedMsg = req;
+    use_left_foot = req.use_left_foot;
     kickT = 0;
   }
 }
@@ -155,7 +155,7 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
       rock *= -1;
     }
 
-    motion_interfaces::msg::IKCommand command;
+    nao_ik_interfaces::msg::IKCommand command;
     command.left_ankle.position.x = forward_l;
     command.left_ankle.position.y = left_l + 0.050;
     command.left_ankle.position.z = -hiph + footh_l;

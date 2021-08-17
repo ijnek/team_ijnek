@@ -61,8 +61,8 @@ def generate_launch_description():
             }]
         ),
         Node(
-            package='ik_bhuman',
-            executable='ik_node',
+            package='nao_ik',
+            executable='nao_ik',
             namespace=LaunchConfiguration('namespace'),
         ),
         Node(

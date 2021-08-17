@@ -23,7 +23,7 @@ void notifyKickDone()
   notifyKickDoneCalled = true;
 }
 
-void sendIKCommand(motion_interfaces::msg::IKCommand)
+void sendIKCommand(nao_ik_interfaces::msg::IKCommand)
 {
   sendIKCommandCalled = true;
 }

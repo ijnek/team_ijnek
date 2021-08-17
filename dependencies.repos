@@ -15,3 +15,7 @@ repositories:
     type: git
     url: https://github.com/ijnek/naosoccer_sim.git
     version: rolling
+  nao_ik:
+    type: git
+    url: https://github.com/ijnek/nao_ik.git
+    version: rolling

@@ -26,25 +26,11 @@ find_package(nao_command_msgs REQUIRED)
 find_package(nao_sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(motion_interfaces REQUIRED)
+find_package(nao_ik_interfaces REQUIRED)
 
 # Build maths_functions lib
 add_library(maths_functions SHARED
   src/maths_functions.cpp
-)
-
-# Build crouch_generator
-add_executable(crouch_generator
-  src/crouch_generator_node.cpp
-  src/crouch_generator.cpp)
-
-ament_target_dependencies(crouch_generator
-  rclcpp
-  nao_sensor_msgs
-  geometry_msgs
-  motion_interfaces)
-
-target_link_libraries(
-  crouch_generator maths_functions
 )
 
 # Build walk_generator
@@ -54,10 +40,10 @@ add_executable(walk_generator
 
 ament_target_dependencies(walk_generator
   rclcpp
-  rclcpp_action  
   nao_sensor_msgs
   geometry_msgs
-  motion_interfaces)
+  motion_interfaces
+  nao_ik_interfaces)
 
 target_link_libraries(
   walk_generator maths_functions
@@ -65,12 +51,8 @@ target_link_libraries(
 
 # Install
 install(TARGETS
-  crouch_generator
   walk_generator
   DESTINATION lib/${PROJECT_NAME})
-
-install(DIRECTORY launch/
-  DESTINATION share/${PROJECT_NAME}/launch/)
 
 install(
   TARGETS maths_functions
