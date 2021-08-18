@@ -41,6 +41,8 @@ private:
   float lastSide;
   float lastFooth;
   float lastRock;
+  float lastAnklesHeightChange;
+  float lastAnklesSideChange;
 };
 
 #endif  // KICK__KICK_HPP_
