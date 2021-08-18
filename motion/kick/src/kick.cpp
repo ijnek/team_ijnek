@@ -36,9 +36,14 @@
 #define TOTAL_PHASE (BACK_PHASE + KICK_PHASE + THROUGH_PHASE + END_PHASE)
 
 #define KICK_STEP_HEIGHT 0.065  // how far to lift kicking foot
+#define BASE_ANKLE_HEIGHT -0.185
+#define ANKLES_HEIGHT_CHANGE_MAG 0.012
+#define ANKLES_SIDE_CHANGE_MAG 0.065
+
+#define Y_HIP_OFFSET 0.050
 
 float parabolicReturn(float f);
-float parabolicStep(float dt, float time, float period, float deadTimeFraction = 0);
+float parabolicStep(float time, float period, float deadTimeFraction = 0, float dt = 0.02);
 float interpolateSmooth(float start, float end, float tCurrent, float tEnd);
 inline static float RAD2DEG(const float x);
 inline static float DEG2RAD(const float x);
@@ -64,18 +69,16 @@ void Kick::start(motion_interfaces::msg::Kick req)
 void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 {
   if (duringKick) {
-    float hiph = 0.18;
-
     kickT += 0.02;
 
     float sideAmp = 0;
-    float kickAmp = -0.07;
+    float kickAmp = 0.07;
     float power = 1.0;
     float kickPower = pow(power, 1.7);
     float kickBackAmp = -kickAmp * kickPower;
 
-    float rock = 0;
-    float kickingLean = 20.5;
+    float anklesHeightChange = 0;
+    float anklesSideChange = 0;
     float kickStepH = KICK_STEP_HEIGHT;
 
     float swingDelayFactor = 0.2;
@@ -97,9 +100,12 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 
       // shift weight sideways
       if (kickT < totalShift) {
-        rock = DEG2RAD(kickingLean) * parabolicStep(kickT, totalShift, 0);
+        anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG * parabolicStep(kickT, totalShift, 0);
+        anklesSideChange = ANKLES_SIDE_CHANGE_MAG * parabolicStep(kickT, totalShift, 0);
+      } else {
+        anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG;
+        anklesSideChange = ANKLES_SIDE_CHANGE_MAG;
       }
-
       // only start lifting the kicking at 1/3
       if (kickT >= totalShift / 3) {
         float t3 = kickT - totalShift / 3;
@@ -122,21 +128,31 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
           KICK_PHASE);
       }
       side = sideAmp;
+      anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG;
+      anklesSideChange = ANKLES_SIDE_CHANGE_MAG;
+      footh = kickStepH;
       // Hold...
     } else if (kickT < (BACK_PHASE + KICK_PHASE + THROUGH_PHASE)) {
       // Keep hip balance
       forwardDist = kickAmp;
       side = sideAmp;
+      anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG;
+      anklesSideChange = ANKLES_SIDE_CHANGE_MAG;
+      footh = kickStepH;
     } else if (kickT < (TOTAL_PHASE + SHIFT_END_PERIOD / 4)) {
       forwardDist = lastKickForward - lastKickForward * parabolicStep(
         kickT - TOTAL_PHASE,
         SHIFT_END_PERIOD / 8, 0);
       side = lastSide - lastSide * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 8, 0);
-      rock = lastRock - lastRock * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 4, 0);
+      anklesSideChange = lastAnklesSideChange - lastAnklesSideChange * parabolicStep(
+        kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 4, 0);
+      anklesHeightChange = lastAnklesHeightChange - lastAnklesHeightChange * parabolicStep(
+        kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 4, 0);
       footh = lastFooth - lastFooth * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 6, 0);
     } else {
       kickT = 0;
-      rock = 0;
+      anklesSideChange = 0;
+      anklesHeightChange = 0;
       footh = 0;
       duringKick = false;
       notifyKickDone();
@@ -147,28 +163,29 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
       lastKickForward = forwardDist;
       lastSide = side;
       lastFooth = footh;
-      lastRock = rock;
+      lastAnklesSideChange = anklesSideChange;
+      lastAnklesHeightChange = anklesHeightChange;
     }
 
-    // hack because rock isn't properly supported yet.
     if (!use_left_foot) {
-      rock *= -1;
+      anklesSideChange *= -1.0;
     }
+
+    std::cout << "anklesSideChange: " << anklesSideChange << std::endl;
+    std::cout << "anklesHeightChange: " << anklesHeightChange << std::endl;
 
     nao_ik_interfaces::msg::IKCommand command;
     command.left_ankle.position.x = forward_l;
-    command.left_ankle.position.y = left_l + 0.050;
-    command.left_ankle.position.z = -hiph + footh_l;
-    command.left_ankle.orientation = rpy_to_geometry_quat(rock, 0, 0);
+    command.left_ankle.position.y = Y_HIP_OFFSET + left_l + anklesSideChange;
+    command.left_ankle.position.z = BASE_ANKLE_HEIGHT + footh_l + anklesHeightChange;
     command.right_ankle.position.x = forward_r;
-    command.right_ankle.position.y = left_r - 0.050;
-    command.right_ankle.position.z = -hiph + footh_r;
-    command.right_ankle.orientation = rpy_to_geometry_quat(rock, 0, 0);
+    command.right_ankle.position.y = -Y_HIP_OFFSET + left_r + anklesSideChange;
+    command.right_ankle.position.z = BASE_ANKLE_HEIGHT + footh_r + anklesHeightChange;
     sendIKCommand(command);
   }
 }
 
-float parabolicStep(float dt, float time, float period, float deadTimeFraction)
+float parabolicStep(float time, float period, float deadTimeFraction, float dt)
 {
   // normalised [0,1] step up
   float deadTime = period * deadTimeFraction / 2;
