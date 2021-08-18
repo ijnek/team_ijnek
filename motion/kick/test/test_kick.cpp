@@ -23,7 +23,7 @@ void notifyKickDone()
   notifyKickDoneCalled = true;
 }
 
-void sendIKCommand(motion_msgs::msg::IKCommand)
+void sendIKCommand(nao_ik_interfaces::msg::IKCommand)
 {
   sendIKCommandCalled = true;
 }
@@ -34,7 +34,7 @@ TEST(TestKick, Test1)
   kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
   ASSERT_FALSE(sendIKCommandCalled);
 
-  kick.start(motion_msgs::msg::Kick{});
+  kick.start(motion_interfaces::msg::Kick{});
   kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
   ASSERT_TRUE(sendIKCommandCalled);
 }

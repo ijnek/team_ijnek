@@ -40,14 +40,14 @@ WalkGenerator::WalkGenerator()
     create_subscription<nao_sensor_msgs::msg::JointPositions>(
     "sensors/joint_positions", 1,
     [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
-      motion_msgs::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
+      nao_ik_interfaces::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
       pub_ik_command->publish(ikCommand);
     });
 
-  pub_ik_command = create_publisher<motion_msgs::msg::IKCommand>("motion/ik_command", 1);
+  pub_ik_command = create_publisher<nao_ik_interfaces::msg::IKCommand>("motion/ik_command", 1);
 }
 
-motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
+nao_ik_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
   nao_sensor_msgs::msg::JointPositions &)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
@@ -175,15 +175,13 @@ motion_msgs::msg::IKCommand WalkGenerator::generate_ik_command(
     }
   }
 
-  motion_msgs::msg::IKCommand ikCommand;
-  ikCommand.hiph = hiph;
-  ikCommand.forward_l = forwardL;
-  ikCommand.forward_r = forwardR;
-  ikCommand.left_l = leftL;
-  ikCommand.left_r = leftR;
-  ikCommand.turn_rl = turnRL;
-  ikCommand.footh_l = foothL;
-  ikCommand.footh_r = foothR;
+  nao_ik_interfaces::msg::IKCommand command;
+  command.left_ankle.position.x = forwardL;
+  command.left_ankle.position.y = leftL + 0.050;
+  command.left_ankle.position.z = -hiph + foothL;
+  command.right_ankle.position.x = forwardR;
+  command.right_ankle.position.y = leftR - 0.050;
+  command.right_ankle.position.z = -hiph + foothR;
 
-  return ikCommand;
+  return command;
 }

@@ -61,8 +61,8 @@ def generate_launch_description():
             }]
         ),
         Node(
-            package='walk_generator',
-            executable='inverse_kinematics',
+            package='nao_ik',
+            executable='nao_ik',
             namespace=LaunchConfiguration('namespace'),
         ),
         Node(

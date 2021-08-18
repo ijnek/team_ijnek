@@ -18,7 +18,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
 #include "geometry_msgs/msg/twist.hpp"
-#include "motion_msgs/msg/ik_command.hpp"
+#include "nao_ik_interfaces/msg/ik_command.hpp"
 
 
 class WalkGenerator : public rclcpp::Node
@@ -44,12 +44,12 @@ private:
   bool isLeftPhase = false;
   bool weightHasShifted = true;
 
-  motion_msgs::msg::IKCommand generate_ik_command(
+  nao_ik_interfaces::msg::IKCommand generate_ik_command(
     nao_sensor_msgs::msg::JointPositions & sensor_joints);
 
   rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;
-  rclcpp::Publisher<motion_msgs::msg::IKCommand>::SharedPtr pub_ik_command;
+  rclcpp::Publisher<nao_ik_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
 
   geometry_msgs::msg::Twist twist;
 };
