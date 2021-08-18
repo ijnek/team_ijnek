@@ -62,7 +62,7 @@ def generate_launch_description():
         ),
         Node(
             package='nao_ik',
-            executable='nao_ik',
+            executable='ik_node',
             namespace=LaunchConfiguration('namespace'),
         ),
         Node(
