@@ -27,6 +27,7 @@ find_package(nao_sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(motion_interfaces REQUIRED)
 find_package(nao_ik_interfaces REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
 # Build maths_functions lib
 add_library(maths_functions SHARED
@@ -34,32 +35,40 @@ add_library(maths_functions SHARED
 )
 
 # Build walk
-add_executable(walk
-  src/walk_node.cpp
-  src/walk.cpp)
-
+add_library(walk src/walk.cpp)
 ament_target_dependencies(walk
   rclcpp
   nao_sensor_msgs
   geometry_msgs
-  motion_interfaces
-  nao_ik_interfaces)
-
-target_link_libraries(
-  walk maths_functions
+  nao_ik_interfaces
 )
+target_link_libraries(walk
+  maths_functions)
+
+# Build walk_node
+add_executable(walk_node src/walk_node.cpp)
+target_link_libraries(walk_node walk)
+ament_target_dependencies(walk_node
+  rclcpp
+  rclcpp_action
+  motion_interfaces)
 
 # Install
 install(TARGETS
-  walk
+  walk_node
   DESTINATION lib/${PROJECT_NAME})
 
 install(
-  TARGETS maths_functions
+  TARGETS maths_functions walk
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
 )
 
 if(BUILD_TESTING)

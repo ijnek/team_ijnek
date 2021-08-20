@@ -21,12 +21,20 @@
 #include "nao_ik_interfaces/msg/ik_command.hpp"
 
 
-class Walk : public rclcpp::Node
+class Walk
 {
 public:
-  Walk();
+  Walk(
+    std::function<void(void)> notifyGoalAchieved,
+    std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand);
+  void notifyJoints(nao_sensor_msgs::msg::JointPositions & sensor_joints);
+  void abort();
+  void setTarget(const geometry_msgs::msg::Twist & target);
 
 private:
+  std::function<void(void)> notifyGoalAchieved;
+  std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand;
+
   enum WalkOption
   {
     STAND = 0,      // with knees straight
@@ -37,21 +45,16 @@ private:
   };
 
   WalkOption walkOption = STAND;
-  float hiph;
+  float ankle_z;
   float dt = 0.02;    // make sure to change this for real robot
   float t = 0.0;
   float forwardL0, forwardR0, leftL0, leftR0, turnRL0;
   bool isLeftPhase = false;
   bool weightHasShifted = true;
 
-  nao_ik_interfaces::msg::IKCommand generate_ik_command(
-    nao_sensor_msgs::msg::JointPositions & sensor_joints);
+  geometry_msgs::msg::Twist target;
 
-  rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
-  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;
-  rclcpp::Publisher<nao_ik_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
-
-  geometry_msgs::msg::Twist twist;
+  rclcpp::Logger logger;
 };
 
 #endif  // WALK__WALK_HPP_

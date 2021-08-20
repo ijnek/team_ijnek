@@ -75,4 +75,9 @@ def generate_launch_description():
             executable='kick_node',
             namespace=LaunchConfiguration('namespace'),
         ),
+        Node(
+            package='walk',
+            executable='walk_node',
+            namespace=LaunchConfiguration('namespace'),
+        ),        
     ])

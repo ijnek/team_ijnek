@@ -1,3 +1,13 @@
+// This file is based on UNSW Sydney's codebase, but has been modified significantly.
+// Both copyright notices are provided below.
+//
+// Copyright (c) 2018 UNSW Sydney.  All rights reserved.
+//
+// Licensed under Team rUNSWift's original license. See the "LICENSE-runswift"
+// file to obtain a copy of the license.
+//
+// ---------------------------------------------------------------------------------
+//
 // Copyright 2021 Kenji Brameld
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,65 +25,39 @@
 #include "walk/walk.hpp"
 #include "walk/maths_functions.hpp"
 
-#define STAND_HIP_HEIGHT 0.248
-#define WALK_HIP_HEIGHT 0.23
+#define STAND_ANKLE_Z -0.198
+#define WALK_ANKLE_Z -0.18
 #define CROUCH_STAND_PERIOD 0.5
 #define BASE_WALK_PERIOD 0.25
 #define BASE_LEG_LIFT 0.012
 
-Walk::Walk()
-: Node("Walk"),
-  hiph(STAND_HIP_HEIGHT)
+Walk::Walk(
+  std::function<void(void)> notifyGoalAchieved,
+  std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand)
+: notifyGoalAchieved(notifyGoalAchieved),
+  sendIKCommand(sendIKCommand),
+  ankle_z(STAND_ANKLE_Z),
+  logger(rclcpp::get_logger("walk"))
 {
-  sub_twist =
-    create_subscription<geometry_msgs::msg::Twist>(
-    "cmd_vel", 1,
-    [this](geometry_msgs::msg::Twist::SharedPtr twist) {
-      RCLCPP_DEBUG(
-        get_logger(), "Recevied twist: %g, %g, %g, %g, %g, %g",
-        twist->linear.x, twist->linear.y, twist->linear.z,
-        twist->angular.x, twist->angular.y, twist->angular.z);
-      this->twist = *twist;
-    });
-
-  sub_joint_states =
-    create_subscription<nao_sensor_msgs::msg::JointPositions>(
-    "sensors/joint_positions", 1,
-    [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
-      nao_ik_interfaces::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
-      pub_ik_command->publish(ikCommand);
-    });
-
-  pub_ik_command = create_publisher<nao_ik_interfaces::msg::IKCommand>("motion/ik_command", 1);
 }
 
-nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
-  nao_sensor_msgs::msg::JointPositions &)
+void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions &)
 {
-  RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
-  if (twist.linear.z == 0.0) {
-    if (abs(hiph - STAND_HIP_HEIGHT) < .0001) {
-      walkOption = STAND;
-      t = 0;
-    } else {
-      walkOption = STANDUP;
-    }
-  } else {
-    if (abs(hiph - WALK_HIP_HEIGHT) < .0001) {
-      if (twist.linear.x != 0.0 || twist.linear.y != 0.0 || twist.angular.z != 0.0) {
-        walkOption = WALK;
-        if (t >= BASE_WALK_PERIOD) {
-          t = 0;
-        }
-      } else {
-        walkOption = READY;
+  RCLCPP_DEBUG(logger, "notifyJoints called");
+  if (abs(ankle_z - WALK_ANKLE_Z) < .0001) {
+    if (target.linear.x != 0.0 || target.linear.y != 0.0 || target.angular.z != 0.0) {
+      walkOption = WALK;
+      if (t >= BASE_WALK_PERIOD) {
         t = 0;
       }
     } else {
-      walkOption = CROUCH;
+      walkOption = READY;
+      t = 0;
     }
+  } else {
+    walkOption = CROUCH;
   }
-  RCLCPP_DEBUG(get_logger(), ("walkOption: " + std::to_string(walkOption)).c_str());
+  RCLCPP_DEBUG(logger, ("walkOption: " + std::to_string(walkOption)).c_str());
 
   t += dt;
 
@@ -81,21 +65,21 @@ nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
     foothL = 0, foothR = 0, turnRL = 0;
 
   if (walkOption == STAND) {
-    hiph = STAND_HIP_HEIGHT;
+    ankle_z = STAND_ANKLE_Z;
   } else if (walkOption == READY) {
-    hiph = WALK_HIP_HEIGHT;
+    ankle_z = WALK_ANKLE_Z;
   } else if (walkOption == CROUCH) {
-    hiph = STAND_HIP_HEIGHT + (WALK_HIP_HEIGHT - STAND_HIP_HEIGHT) * parabolicStep(
+    ankle_z = STAND_ANKLE_Z + (WALK_ANKLE_Z - STAND_ANKLE_Z) * parabolicStep(
       dt, t,
       CROUCH_STAND_PERIOD);
   } else if (walkOption == STANDUP) {
-    hiph = WALK_HIP_HEIGHT + (STAND_HIP_HEIGHT - WALK_HIP_HEIGHT) * parabolicStep(
+    ankle_z = WALK_ANKLE_Z + (STAND_ANKLE_Z - WALK_ANKLE_Z) * parabolicStep(
       dt, t,
       CROUCH_STAND_PERIOD);
   } else if (walkOption == WALK) {
-    float forward = twist.linear.x;
-    float left = twist.linear.y;
-    float turn = twist.angular.z;
+    float forward = target.linear.x;
+    float left = target.linear.y;
+    float turn = target.angular.z;
 
     // 5.1 Calculate the height to lift each swing foot
     float maxFootHeight = BASE_LEG_LIFT + abs(forward) * 0.01 + abs(left) * 0.03;
@@ -107,10 +91,10 @@ nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
     if (isLeftPhase) {                 // if the support foot is right
       if (weightHasShifted) {
         // 5.3.1L forward (the / by 2 is because the CoM moves as well and forwardL is wrt the CoM
-        forwardR = forwardR0 + ((forward) / 2 - forwardR0) * linearStep(t, BASE_WALK_PERIOD);
+        forwardR = forwardR0 + (-(forward / 2) - forwardR0) * linearStep(t, BASE_WALK_PERIOD);
         // swing-foot follow-through
         forwardL = forwardL0 +
-          parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardL0);
+          parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (forward / 2 - forwardL0);
         // 5.3.2L Jab kick with left foot - removed
         // 5.3.3L Determine how much to lean from side to side - removed
         // 5.3.4L left
@@ -129,6 +113,7 @@ nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
           // turn back to restore previous turn angle
           turnRL = turnRL0 + (-0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
         }
+        RCLCPP_DEBUG(logger, "(LeftPhase) forwardR, forwardL: %f, %f", forwardR, forwardL);
       }
       // 5.3.6L determine how high to lift the swing foot off the ground
       foothL = varfootHeight;                            // lift left swing foot
@@ -138,10 +123,10 @@ nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
     if (!isLeftPhase) {              // if the support foot is left
       if (weightHasShifted) {
         // 5.3.1R forward
-        forwardL = forwardL0 + ((forward) / 2 - forwardL0) * linearStep(t, BASE_WALK_PERIOD);
+        forwardL = forwardL0 + (-(forward / 2) - forwardL0) * linearStep(t, BASE_WALK_PERIOD);
         // swing-foot follow-through
         forwardR = forwardR0 +
-          parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (-(forward) / 2 - forwardR0);
+          parabolicStep(dt, t, BASE_WALK_PERIOD, 0) * (forward / 2 - forwardR0);
         // 5.3.2R Jab-Kick with right foot - removed
         // 5.3.3R lean - not used
         // 5.3.4R left
@@ -178,10 +163,20 @@ nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
   nao_ik_interfaces::msg::IKCommand command;
   command.left_ankle.position.x = forwardL;
   command.left_ankle.position.y = leftL + 0.050;
-  command.left_ankle.position.z = -hiph + foothL;
+  command.left_ankle.position.z = ankle_z + foothL;
   command.right_ankle.position.x = forwardR;
   command.right_ankle.position.y = leftR - 0.050;
-  command.right_ankle.position.z = -hiph + foothR;
+  command.right_ankle.position.z = ankle_z + foothR;
 
-  return command;
+  sendIKCommand(command);
+}
+
+void Walk::abort()
+{
+  // Do something to abort.
+}
+
+void Walk::setTarget(const geometry_msgs::msg::Twist & target)
+{
+  this->target = target;
 }
