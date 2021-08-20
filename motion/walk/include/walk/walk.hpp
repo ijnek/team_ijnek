@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WALK_GENERATOR__WALK_GENERATOR_HPP_
-#define WALK_GENERATOR__WALK_GENERATOR_HPP_
+#ifndef WALK__WALK_HPP_
+#define WALK__WALK_HPP_
 
 #include "rclcpp/rclcpp.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
@@ -21,10 +21,10 @@
 #include "nao_ik_interfaces/msg/ik_command.hpp"
 
 
-class WalkGenerator : public rclcpp::Node
+class Walk : public rclcpp::Node
 {
 public:
-  WalkGenerator();
+  Walk();
 
 private:
   enum WalkOption
@@ -54,4 +54,4 @@ private:
   geometry_msgs::msg::Twist twist;
 };
 
-#endif  // WALK_GENERATOR__WALK_GENERATOR_HPP_
+#endif  // WALK__WALK_HPP_

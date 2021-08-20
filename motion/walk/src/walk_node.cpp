@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WALK_GENERATOR__MATHS_FUNCTIONS_HPP_
-#define WALK_GENERATOR__MATHS_FUNCTIONS_HPP_
+#include <memory>
+#include "walk/walk.hpp"
 
-float parabolicStep(float dt, float time, float period, float deadTimeFraction = 0);
-float parabolicReturnMod(float f);
-float linearStep(float time, float period);
-
-#endif  // WALK_GENERATOR__MATHS_FUNCTIONS_HPP_
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<Walk>());
+  rclcpp::shutdown();
+  return 0;
+}

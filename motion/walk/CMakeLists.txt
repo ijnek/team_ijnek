@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(walk_generator)
+project(walk)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -33,12 +33,12 @@ add_library(maths_functions SHARED
   src/maths_functions.cpp
 )
 
-# Build walk_generator
-add_executable(walk_generator
-  src/walk_generator_node.cpp
-  src/walk_generator.cpp)
+# Build walk
+add_executable(walk
+  src/walk_node.cpp
+  src/walk.cpp)
 
-ament_target_dependencies(walk_generator
+ament_target_dependencies(walk
   rclcpp
   nao_sensor_msgs
   geometry_msgs
@@ -46,12 +46,12 @@ ament_target_dependencies(walk_generator
   nao_ik_interfaces)
 
 target_link_libraries(
-  walk_generator maths_functions
+  walk maths_functions
 )
 
 # Install
 install(TARGETS
-  walk_generator
+  walk
   DESTINATION lib/${PROJECT_NAME})
 
 install(

@@ -15,7 +15,7 @@
   <depend>rcss3d_nao</depend>
   <depend>nao_state_publisher</depend>
   <depend>static_pose_publisher</depend>
-  <depend>walk_generator</depend>
+  <depend>walk</depend>
   <depend>crouch</depend>
   <depend>kick</depend>
 

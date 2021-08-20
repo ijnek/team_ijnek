@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "walk_generator/walk_generator.hpp"
-#include "walk_generator/maths_functions.hpp"
+#include "walk/walk.hpp"
+#include "walk/maths_functions.hpp"
 
 #define STAND_HIP_HEIGHT 0.248
 #define WALK_HIP_HEIGHT 0.23
@@ -21,8 +21,8 @@
 #define BASE_WALK_PERIOD 0.25
 #define BASE_LEG_LIFT 0.012
 
-WalkGenerator::WalkGenerator()
-: Node("WalkGenerator"),
+Walk::Walk()
+: Node("Walk"),
   hiph(STAND_HIP_HEIGHT)
 {
   sub_twist =
@@ -47,7 +47,7 @@ WalkGenerator::WalkGenerator()
   pub_ik_command = create_publisher<nao_ik_interfaces::msg::IKCommand>("motion/ik_command", 1);
 }
 
-nao_ik_interfaces::msg::IKCommand WalkGenerator::generate_ik_command(
+nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
   nao_sensor_msgs::msg::JointPositions &)
 {
   RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
