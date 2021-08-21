@@ -25,9 +25,7 @@
 #include "walk/walk.hpp"
 #include "walk/maths_functions.hpp"
 
-#define STAND_ANKLE_Z -0.198
 #define WALK_ANKLE_Z -0.18
-#define CROUCH_STAND_PERIOD 0.5
 #define BASE_WALK_PERIOD 0.25
 #define BASE_LEG_LIFT 0.012
 
@@ -36,47 +34,45 @@ Walk::Walk(
   std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand)
 : notifyGoalAchieved(notifyGoalAchieved),
   sendIKCommand(sendIKCommand),
-  ankle_z(STAND_ANKLE_Z),
+  ankle_z(WALK_ANKLE_Z),
   logger(rclcpp::get_logger("walk"))
 {
 }
 
-void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions &)
+void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions & jointPositions)
 {
   RCLCPP_DEBUG(logger, "notifyJoints called");
-  if (abs(ankle_z - WALK_ANKLE_Z) < .0001) {
-    if (target.linear.x != 0.0 || target.linear.y != 0.0 || target.angular.z != 0.0) {
-      walkOption = WALK;
-      if (t >= BASE_WALK_PERIOD) {
-        t = 0;
-      }
-    } else {
-      walkOption = READY;
+  if (!duringWalk) {
+    RCLCPP_DEBUG(logger, "Returning, not during walk");
+    return;
+  }
+
+  if (target.linear.x != 0.0 || target.linear.y != 0.0 || target.angular.z != 0.0) {
+    walkOption = WALK;
+    if (t >= BASE_WALK_PERIOD) {
       t = 0;
     }
   } else {
     walkOption = CROUCH;
+    t = 0;
   }
   RCLCPP_DEBUG(logger, ("walkOption: " + std::to_string(walkOption)).c_str());
+
+  rclcpp::Time time = jointPositions.header.stamp;
+  double dt = 0;
+  if (firstMsg) {
+    firstMsg = false;
+  } else {
+    dt = (time - prev_time_).nanoseconds() / 1e9;
+  }
+  prev_time_ = time;
 
   t += dt;
 
   float forwardL = 0, forwardR = 0, leftL = 0, leftR = 0,
     foothL = 0, foothR = 0, turnRL = 0;
 
-  if (walkOption == STAND) {
-    ankle_z = STAND_ANKLE_Z;
-  } else if (walkOption == READY) {
-    ankle_z = WALK_ANKLE_Z;
-  } else if (walkOption == CROUCH) {
-    ankle_z = STAND_ANKLE_Z + (WALK_ANKLE_Z - STAND_ANKLE_Z) * parabolicStep(
-      dt, t,
-      CROUCH_STAND_PERIOD);
-  } else if (walkOption == STANDUP) {
-    ankle_z = WALK_ANKLE_Z + (STAND_ANKLE_Z - WALK_ANKLE_Z) * parabolicStep(
-      dt, t,
-      CROUCH_STAND_PERIOD);
-  } else if (walkOption == WALK) {
+  if (walkOption == WALK) {
     float forward = target.linear.x;
     float left = target.linear.y;
     float turn = target.angular.z;
@@ -113,7 +109,6 @@ void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions &)
           // turn back to restore previous turn angle
           turnRL = turnRL0 + (-0.4 * turn - turnRL0) * parabolicStep(dt, t, BASE_WALK_PERIOD, 0.0);
         }
-        RCLCPP_DEBUG(logger, "(LeftPhase) forwardR, forwardL: %f, %f", forwardR, forwardL);
       }
       // 5.3.6L determine how high to lift the swing foot off the ground
       foothL = varfootHeight;                            // lift left swing foot
@@ -168,15 +163,34 @@ void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions &)
   command.right_ankle.position.y = leftR - 0.050;
   command.right_ankle.position.z = ankle_z + foothR;
 
+  RCLCPP_DEBUG(
+    logger, "Sending IKCommand: %f, %f, %f, %f, %f, %f",
+    command.left_ankle.position.x,
+    command.left_ankle.position.y,
+    command.left_ankle.position.z,
+    command.right_ankle.position.x,
+    command.right_ankle.position.y,
+    command.right_ankle.position.z);
+
   sendIKCommand(command);
 }
 
 void Walk::abort()
 {
-  // Do something to abort.
+  duringWalk = false;
+  firstMsg = true;
 }
 
-void Walk::setTarget(const geometry_msgs::msg::Twist & target)
+void Walk::crouch()
 {
+  duringWalk = true;
+  walkOption = CROUCH;
+  firstMsg = true;
+}
+
+void Walk::walk(const geometry_msgs::msg::Twist & target)
+{
+  duringWalk = true;
+  walkOption = WALK;
   this->target = target;
 }

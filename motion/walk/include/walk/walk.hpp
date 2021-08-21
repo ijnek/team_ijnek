@@ -29,7 +29,8 @@ public:
     std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand);
   void notifyJoints(nao_sensor_msgs::msg::JointPositions & sensor_joints);
   void abort();
-  void setTarget(const geometry_msgs::msg::Twist & target);
+  void walk(const geometry_msgs::msg::Twist & target);
+  void crouch();
 
 private:
   std::function<void(void)> notifyGoalAchieved;
@@ -37,20 +38,20 @@ private:
 
   enum WalkOption
   {
-    STAND = 0,      // with knees straight
-    STANDUP = 1,      // process of moving from WALK crouch to STAND
-    CROUCH = 2,      // process of transitioning from STAND to WALK
-    READY = 3,      // crouch still ready to walk
-    WALK = 4,
+    CROUCH = 1,      // crouch still ready to walk
+    WALK = 2,
   };
 
-  WalkOption walkOption = STAND;
+  WalkOption walkOption = CROUCH;
   float ankle_z;
-  float dt = 0.02;    // make sure to change this for real robot
+  bool firstMsg = true;
+  rclcpp::Time prev_time_;
   float t = 0.0;
   float forwardL0, forwardR0, leftL0, leftR0, turnRL0;
   bool isLeftPhase = false;
   bool weightHasShifted = true;
+
+  bool duringWalk = false;
 
   geometry_msgs::msg::Twist target;
 

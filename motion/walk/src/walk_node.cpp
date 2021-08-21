@@ -62,7 +62,7 @@ public:
           target.linear.x, target.linear.y, target.linear.z,
           target.angular.x, target.angular.y, target.angular.z);
         // Accept all goals
-        walk.setTarget(target);
+        walk.walk(target);
         return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
       },
       [this](const std::shared_ptr<WalkGoalHandle>)
@@ -101,7 +101,7 @@ private:
       walk_goal_handle_->abort(result);
     }
     walk_goal_handle_ = goal_handle;
-    walk.setTarget(goal_handle->get_goal()->target);
+    walk.walk(goal_handle->get_goal()->target);
   }
 
   void notifyGoalAchieved()
