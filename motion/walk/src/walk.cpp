@@ -34,9 +34,19 @@ Walk::Walk(
   std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand)
 : notifyGoalAchieved(notifyGoalAchieved),
   sendIKCommand(sendIKCommand),
-  ankle_z(WALK_ANKLE_Z),
   logger(rclcpp::get_logger("walk"))
 {
+}
+
+void Walk::setParams(
+  float maxForward, float maxLeft, float maxTurn, float speedMultiplier, float footLiftAmp,
+  float period, float ankleZ, float maxForwardChange, float maxLeftChange, float maxTurnChange)
+{
+  this->period = period;
+  this->ankleZ = ankleZ;
+  stepCalculator.setParams(
+    maxForward, maxLeft, maxTurn, speedMultiplier, footLiftAmp,
+    maxForwardChange, maxLeftChange, maxTurnChange);
 }
 
 void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions & jointPositions)
@@ -47,11 +57,38 @@ void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions & jointPositions)
     return;
   }
 
+  if (t == 0) {
+    // Move towards targetWalkOption and targetTwist
+    if (targetWalkOption == WALK) {
+      if (walkOption == CROUCH) {
+        walkOption = WALK;
+      }
+      auto [nextTwist, nextStep] = stepCalculator.calculateNext(currTwist, target);
+      currTwist = nextTwist;
+      currStep = nextStep;
+    } else if (targetWalkOption == CROUCH) {
+      if (walkOption == WALK) {
+        auto [nextTwist, nextStep] = stepCalculator.calculateNext(currTwist, target);
+        currTwist = nextTwist;
+        currStep = nextStep;
+      }
+    }
+  }
+
+  // if (walkOption == CROUCH)
+  // {
+  //   if (targetWalkOption == WALK)
+  //   {
+  //   }
+  // }
+
+  // if (t == 0)
+  // {
+  //   if ()
+  // }
+
   if (target.linear.x != 0.0 || target.linear.y != 0.0 || target.angular.z != 0.0) {
     walkOption = WALK;
-    if (t >= BASE_WALK_PERIOD) {
-      t = 0;
-    }
   } else {
     walkOption = CROUCH;
     t = 0;
@@ -152,16 +189,28 @@ void Walk::notifyJoints(nao_sensor_msgs::msg::JointPositions & jointPositions)
       leftL0 = leftL;
       leftR0 = leftR;
       isLeftPhase = !isLeftPhase;
+      t = 0;
+    }
+  }
+
+  // Report if we've achieved any goals
+  if (targetWalkOption == CROUCH) {
+    if (currTwist == geometry_msgs::msg::Twist{}) { // if zero
+      notifyGoalAchieved();
+    }
+  } else if (targetWalkOption == WALK) {
+    if (currTwist == target) {
+      notifyGoalAchieved();
     }
   }
 
   nao_ik_interfaces::msg::IKCommand command;
   command.left_ankle.position.x = forwardL;
   command.left_ankle.position.y = leftL + 0.050;
-  command.left_ankle.position.z = ankle_z + foothL;
+  command.left_ankle.position.z = WALK_ANKLE_Z + foothL;
   command.right_ankle.position.x = forwardR;
   command.right_ankle.position.y = leftR - 0.050;
-  command.right_ankle.position.z = ankle_z + foothR;
+  command.right_ankle.position.z = WALK_ANKLE_Z + foothR;
 
   RCLCPP_DEBUG(
     logger, "Sending IKCommand: %f, %f, %f, %f, %f, %f",
@@ -184,13 +233,13 @@ void Walk::abort()
 void Walk::crouch()
 {
   duringWalk = true;
-  walkOption = CROUCH;
+  targetWalkOption = CROUCH;
   firstMsg = true;
 }
 
 void Walk::walk(const geometry_msgs::msg::Twist & target)
 {
   duringWalk = true;
-  walkOption = WALK;
+  targetWalkOption = WALK;
   this->target = target;
 }

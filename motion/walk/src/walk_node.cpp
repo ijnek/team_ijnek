@@ -30,6 +30,29 @@ public:
       std::bind(&WalkNode::notifyGoalAchieved, this),
       std::bind(&WalkNode::sendIKCommand, this, std::placeholders::_1))
   {
+    this->declare_parameter("max_forward", 0.3);
+    this->declare_parameter("max_left", 0.2);
+    this->declare_parameter("max_turn", 2.0);
+    this->declare_parameter("speed_multiplier", 1.0);
+    this->declare_parameter("foot_lift_amp", 0.012);
+    this->declare_parameter("period", 0.25);
+    this->declare_parameter("ankle_z", -0.18);
+    this->declare_parameter("max_forward_change", 0.06);
+    this->declare_parameter("max_left_change", 0.1);
+    this->declare_parameter("max_turn_change", 1.0);
+
+    walk.setParams(
+      get_parameter("max_forward").as_double(),
+      get_parameter("max_left").as_double(),
+      get_parameter("max_turn").as_double(),
+      get_parameter("speed_multiplier").as_double(),
+      get_parameter("foot_lift_amp").as_double(),
+      get_parameter("period").as_double(),
+      get_parameter("ankle_z").as_double(),
+      get_parameter("max_forward_change").as_double(),
+      get_parameter("max_left_change").as_double(),
+      get_parameter("max_turn_change").as_double());
+
     sub_joint_states =
       create_subscription<nao_sensor_msgs::msg::JointPositions>(
       "sensors/joint_positions", 1,

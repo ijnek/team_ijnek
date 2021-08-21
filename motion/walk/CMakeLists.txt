@@ -35,7 +35,9 @@ add_library(maths_functions SHARED
 )
 
 # Build walk
-add_library(walk src/walk.cpp)
+add_library(walk
+  src/walk.cpp
+  src/step_calculator.cpp)
 ament_target_dependencies(walk
   rclcpp
   nao_sensor_msgs
