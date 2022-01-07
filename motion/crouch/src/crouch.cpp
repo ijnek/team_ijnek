@@ -19,11 +19,11 @@ Crouch::Crouch(
   std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses)
 : sendAnklePoses(sendAnklePoses)
 {
-  command.left_ankle.position.y = 0.05;
-  command.left_ankle.position.z = -0.18;
+  command.l_ankle.position.y = 0.05;
+  command.l_ankle.position.z = -0.18;
 
-  command.right_ankle.position.y = -0.05;
-  command.right_ankle.position.z = -0.18;
+  command.r_ankle.position.y = -0.05;
+  command.r_ankle.position.z = -0.18;
 }
 
 void Crouch::start()

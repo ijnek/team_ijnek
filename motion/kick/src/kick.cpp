@@ -175,12 +175,12 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
     std::cout << "anklesHeightChange: " << anklesHeightChange << std::endl;
 
     biped_interfaces::msg::AnklePoses command;
-    command.left_ankle.position.x = forward_l;
-    command.left_ankle.position.y = Y_HIP_OFFSET + left_l + anklesSideChange;
-    command.left_ankle.position.z = BASE_ANKLE_HEIGHT + footh_l + anklesHeightChange;
-    command.right_ankle.position.x = forward_r;
-    command.right_ankle.position.y = -Y_HIP_OFFSET + left_r + anklesSideChange;
-    command.right_ankle.position.z = BASE_ANKLE_HEIGHT + footh_r + anklesHeightChange;
+    command.l_ankle.position.x = forward_l;
+    command.l_ankle.position.y = Y_HIP_OFFSET + left_l + anklesSideChange;
+    command.l_ankle.position.z = BASE_ANKLE_HEIGHT + footh_l + anklesHeightChange;
+    command.r_ankle.position.x = forward_r;
+    command.r_ankle.position.y = -Y_HIP_OFFSET + left_r + anklesSideChange;
+    command.r_ankle.position.z = BASE_ANKLE_HEIGHT + footh_r + anklesHeightChange;
     sendAnklePoses(command);
   }
 }

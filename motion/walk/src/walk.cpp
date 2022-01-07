@@ -176,12 +176,12 @@ biped_interfaces::msg::AnklePoses Walk::generate_ankle_poses(
   }
 
   biped_interfaces::msg::AnklePoses command;
-  command.left_ankle.position.x = forwardL;
-  command.left_ankle.position.y = leftL + 0.050;
-  command.left_ankle.position.z = -hiph + foothL;
-  command.right_ankle.position.x = forwardR;
-  command.right_ankle.position.y = leftR - 0.050;
-  command.right_ankle.position.z = -hiph + foothR;
+  command.l_ankle.position.x = forwardL;
+  command.l_ankle.position.y = leftL + 0.050;
+  command.l_ankle.position.z = -hiph + foothL;
+  command.r_ankle.position.x = forwardR;
+  command.r_ankle.position.y = leftR - 0.050;
+  command.r_ankle.position.z = -hiph + foothR;
 
   return command;
 }
