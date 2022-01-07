@@ -16,7 +16,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "crouch/crouch.hpp"
 #include "std_msgs/msg/empty.hpp"
-#include "nao_ik_interfaces/msg/ik_command.hpp"
+#include "biped_interfaces/msg/ankle_poses.hpp"
 
 using namespace std::placeholders;
 
@@ -26,7 +26,7 @@ public:
   CrouchNode()
   : Node("CrouchNode"),
     crouch(
-      std::bind(&CrouchNode::sendIKCommand, this, _1))
+      std::bind(&CrouchNode::sendAnklePoses, this, _1))
   {
     sub_crouch_start =
       create_subscription<std_msgs::msg::Empty>(
@@ -35,19 +35,19 @@ public:
         crouch.start();
       });
 
-    pub_ik_command = create_publisher<nao_ik_interfaces::msg::IKCommand>("motion/ik_command", 1);
+    pub_ankle_poses = create_publisher<biped_interfaces::msg::AnklePoses>("motion/ankle_poses", 1);
   }
 
 private:
   Crouch crouch;
 
-  void sendIKCommand(nao_ik_interfaces::msg::IKCommand ik_command)
+  void sendAnklePoses(biped_interfaces::msg::AnklePoses ankle_poses)
   {
-    pub_ik_command->publish(ik_command);
+    pub_ankle_poses->publish(ankle_poses);
   }
 
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_crouch_start;
-  rclcpp::Publisher<nao_ik_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
+  rclcpp::Publisher<biped_interfaces::msg::AnklePoses>::SharedPtr pub_ankle_poses;
 };
 
 int main(int argc, char * argv[])

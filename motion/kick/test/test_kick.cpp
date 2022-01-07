@@ -16,25 +16,25 @@
 #include "kick/kick.hpp"
 
 bool notifyKickDoneCalled = false;
-bool sendIKCommandCalled = false;
+bool sendAnklePosesCalled = false;
 
 void notifyKickDone()
 {
   notifyKickDoneCalled = true;
 }
 
-void sendIKCommand(nao_ik_interfaces::msg::IKCommand)
+void sendAnklePoses(biped_interfaces::msg::AnklePoses)
 {
-  sendIKCommandCalled = true;
+  sendAnklePosesCalled = true;
 }
 
 TEST(TestKick, Test1)
 {
-  Kick kick(notifyKickDone, sendIKCommand);
+  Kick kick(notifyKickDone, sendAnklePoses);
   kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
-  ASSERT_FALSE(sendIKCommandCalled);
+  ASSERT_FALSE(sendAnklePosesCalled);
 
   kick.start(motion_interfaces::msg::Kick{});
   kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
-  ASSERT_TRUE(sendIKCommandCalled);
+  ASSERT_TRUE(sendAnklePosesCalled);
 }

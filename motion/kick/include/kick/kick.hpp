@@ -17,7 +17,7 @@
 
 #include <functional>
 #include "motion_interfaces/msg/kick.hpp"
-#include "nao_ik_interfaces/msg/ik_command.hpp"
+#include "biped_interfaces/msg/ankle_poses.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
 
 class Kick
@@ -25,13 +25,13 @@ class Kick
 public:
   Kick(
     std::function<void(void)> notifyKickDone,
-    std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand);
+    std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses);
   void start(motion_interfaces::msg::Kick req);
   void notifyJoints(nao_sensor_msgs::msg::JointPositions joints);
 
 private:
   std::function<void(void)> notifyKickDone;
-  std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand;
+  std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses;
 
   bool duringKick = false;
   bool use_left_foot;

@@ -52,8 +52,8 @@ inline static geometry_msgs::msg::Quaternion rpy_to_geometry_quat(
 
 Kick::Kick(
   std::function<void(void)> notifyKickDone,
-  std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand)
-: notifyKickDone(notifyKickDone), sendIKCommand(sendIKCommand)
+  std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses)
+: notifyKickDone(notifyKickDone), sendAnklePoses(sendAnklePoses)
 {
 }
 
@@ -174,14 +174,14 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
     std::cout << "anklesSideChange: " << anklesSideChange << std::endl;
     std::cout << "anklesHeightChange: " << anklesHeightChange << std::endl;
 
-    nao_ik_interfaces::msg::IKCommand command;
+    biped_interfaces::msg::AnklePoses command;
     command.left_ankle.position.x = forward_l;
     command.left_ankle.position.y = Y_HIP_OFFSET + left_l + anklesSideChange;
     command.left_ankle.position.z = BASE_ANKLE_HEIGHT + footh_l + anklesHeightChange;
     command.right_ankle.position.x = forward_r;
     command.right_ankle.position.y = -Y_HIP_OFFSET + left_r + anklesSideChange;
     command.right_ankle.position.z = BASE_ANKLE_HEIGHT + footh_r + anklesHeightChange;
-    sendIKCommand(command);
+    sendAnklePoses(command);
   }
 }
 

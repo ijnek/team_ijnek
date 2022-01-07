@@ -16,19 +16,19 @@
 #define CROUCH__CROUCH_HPP_
 
 #include <functional>
-#include "nao_ik_interfaces/msg/ik_command.hpp"
+#include "biped_interfaces/msg/ankle_poses.hpp"
 #include "std_msgs/msg/empty.hpp"
 
 class Crouch
 {
 public:
   Crouch(
-    std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand);
+    std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses);
   void start();
 
 private:
-  std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand;
-  nao_ik_interfaces::msg::IKCommand command;
+  std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses;
+  biped_interfaces::msg::AnklePoses command;
 };
 
 #endif  // CROUCH__CROUCH_HPP_

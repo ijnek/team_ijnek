@@ -26,7 +26,7 @@ find_package(nao_command_msgs REQUIRED)
 find_package(nao_sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(motion_interfaces REQUIRED)
-find_package(nao_ik_interfaces REQUIRED)
+find_package(biped_interfaces REQUIRED)
 
 # Build maths_functions lib
 add_library(maths_functions SHARED
@@ -43,7 +43,7 @@ ament_target_dependencies(walk
   nao_sensor_msgs
   geometry_msgs
   motion_interfaces
-  nao_ik_interfaces)
+  biped_interfaces)
 
 target_link_libraries(
   walk maths_functions

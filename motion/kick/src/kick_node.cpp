@@ -17,7 +17,7 @@
 #include "kick/kick.hpp"
 #include "std_msgs/msg/empty.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
-#include "nao_ik_interfaces/msg/ik_command.hpp"
+#include "biped_interfaces/msg/ankle_poses.hpp"
 #include "motion_interfaces/msg/kick.hpp"
 
 using namespace std::placeholders;
@@ -29,7 +29,7 @@ public:
   : Node("KickNode"),
     kick(
       std::bind(&KickNode::notifyKickDone, this),
-      std::bind(&KickNode::sendIKCommand, this, _1))
+      std::bind(&KickNode::sendAnklePoses, this, _1))
   {
     sub_joint_states =
       create_subscription<nao_sensor_msgs::msg::JointPositions>(
@@ -45,7 +45,7 @@ public:
         kick.start(*kick_msg);
       });
 
-    pub_ik_command = create_publisher<nao_ik_interfaces::msg::IKCommand>("motion/ik_command", 1);
+    pub_ankle_poses = create_publisher<biped_interfaces::msg::AnklePoses>("motion/ankle_poses", 1);
     pub_kick_done = create_publisher<std_msgs::msg::Empty>("motion/kick_done", 1);
   }
 
@@ -57,14 +57,14 @@ private:
     pub_kick_done->publish(std_msgs::msg::Empty{});
   }
 
-  void sendIKCommand(nao_ik_interfaces::msg::IKCommand ik_command)
+  void sendAnklePoses(biped_interfaces::msg::AnklePoses ankle_poses)
   {
-    pub_ik_command->publish(ik_command);
+    pub_ankle_poses->publish(ankle_poses);
   }
 
   rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<motion_interfaces::msg::Kick>::SharedPtr sub_kick_start;
-  rclcpp::Publisher<nao_ik_interfaces::msg::IKCommand>::SharedPtr pub_ik_command;
+  rclcpp::Publisher<biped_interfaces::msg::AnklePoses>::SharedPtr pub_ankle_poses;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr pub_kick_done;
 };
 

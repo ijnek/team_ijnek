@@ -25,7 +25,7 @@ find_package(motion_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nao_sensor_msgs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-find_package(nao_ik_interfaces REQUIRED)
+find_package(biped_interfaces REQUIRED)
 
 ament_export_include_directories(include)
 
@@ -36,7 +36,7 @@ ament_target_dependencies(kick
   std_msgs
   nao_sensor_msgs
   tf2_geometry_msgs
-  nao_ik_interfaces)
+  biped_interfaces)
 
 # Build kick_node
 add_executable(kick_node src/kick_node.cpp)

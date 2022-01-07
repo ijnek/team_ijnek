@@ -15,16 +15,16 @@
 #include <gtest/gtest.h>
 #include "crouch/crouch.hpp"
 
-bool sendIKCommandCalled = false;
+bool sendAnklePosesCalled = false;
 
-void sendIKCommand(nao_ik_interfaces::msg::IKCommand)
+void sendAnklePoses(biped_interfaces::msg::AnklePoses)
 {
-  sendIKCommandCalled = true;
+  sendAnklePosesCalled = true;
 }
 
 TEST(TestCrouch, Test1)
 {
-  Crouch crouch(sendIKCommand);
+  Crouch crouch(sendAnklePoses);
   crouch.start();
-  ASSERT_TRUE(sendIKCommandCalled);
+  ASSERT_TRUE(sendAnklePosesCalled);
 }

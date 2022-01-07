@@ -16,8 +16,8 @@
 #include <iostream>
 
 Crouch::Crouch(
-  std::function<void(nao_ik_interfaces::msg::IKCommand)> sendIKCommand)
-: sendIKCommand(sendIKCommand)
+  std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses)
+: sendAnklePoses(sendAnklePoses)
 {
   command.left_ankle.position.y = 0.05;
   command.left_ankle.position.z = -0.18;
@@ -28,5 +28,5 @@ Crouch::Crouch(
 
 void Crouch::start()
 {
-  sendIKCommand(command);
+  sendAnklePoses(command);
 }

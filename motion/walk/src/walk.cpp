@@ -40,17 +40,17 @@ Walk::Walk()
     create_subscription<nao_sensor_msgs::msg::JointPositions>(
     "sensors/joint_positions", 1,
     [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
-      nao_ik_interfaces::msg::IKCommand ikCommand = generate_ik_command(*sensor_joints);
-      pub_ik_command->publish(ikCommand);
+      biped_interfaces::msg::AnklePoses ikCommand = generate_ankle_poses(*sensor_joints);
+      pub_ankle_poses->publish(ikCommand);
     });
 
-  pub_ik_command = create_publisher<nao_ik_interfaces::msg::IKCommand>("motion/ik_command", 1);
+  pub_ankle_poses = create_publisher<biped_interfaces::msg::AnklePoses>("motion/ankle_poses", 1);
 }
 
-nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
+biped_interfaces::msg::AnklePoses Walk::generate_ankle_poses(
   nao_sensor_msgs::msg::JointPositions &)
 {
-  RCLCPP_DEBUG(get_logger(), "generate_ik_command called");
+  RCLCPP_DEBUG(get_logger(), "generate_ankle_poses called");
   if (twist.linear.z == 0.0) {
     if (abs(hiph - STAND_HIP_HEIGHT) < .0001) {
       walkOption = STAND;
@@ -175,7 +175,7 @@ nao_ik_interfaces::msg::IKCommand Walk::generate_ik_command(
     }
   }
 
-  nao_ik_interfaces::msg::IKCommand command;
+  biped_interfaces::msg::AnklePoses command;
   command.left_ankle.position.x = forwardL;
   command.left_ankle.position.y = leftL + 0.050;
   command.left_ankle.position.z = -hiph + foothL;
