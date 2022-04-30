@@ -4,7 +4,7 @@
 [![Build and Test (galactic)](https://github.com/ijnek/team_ijnek/actions/workflows/build_and_test_galactic.yaml/badge.svg)](https://github.com/ijnek/team_ijnek/actions/workflows/build_and_test_galactic.yaml)
 [![Build and Test (rolling)](https://github.com/ijnek/team_ijnek/actions/workflows/build_and_test_rolling.yaml/badge.svg)](https://github.com/ijnek/team_ijnek/actions/workflows/build_and_test_rolling.yaml)
 
-Sample "team" package
+Sample robot soccer "team" package
 
 These packages show how a team would use other packages to get a robot up and running.
 
