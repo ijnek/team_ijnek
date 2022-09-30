@@ -16,7 +16,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "crouch/crouch.hpp"
 #include "std_msgs/msg/empty.hpp"
-#include "biped_interfaces/msg/ankle_poses.hpp"
+#include "biped_interfaces/msg/sole_poses.hpp"
 
 using namespace std::placeholders;
 
@@ -35,19 +35,19 @@ public:
         crouch.start();
       });
 
-    pub_ankle_poses = create_publisher<biped_interfaces::msg::AnklePoses>("motion/ankle_poses", 1);
+    pub_ankle_poses = create_publisher<biped_interfaces::msg::SolePoses>("motion/ankle_poses", 1);
   }
 
 private:
   Crouch crouch;
 
-  void sendAnklePoses(biped_interfaces::msg::AnklePoses ankle_poses)
+  void sendAnklePoses(biped_interfaces::msg::SolePoses ankle_poses)
   {
     pub_ankle_poses->publish(ankle_poses);
   }
 
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_crouch_start;
-  rclcpp::Publisher<biped_interfaces::msg::AnklePoses>::SharedPtr pub_ankle_poses;
+  rclcpp::Publisher<biped_interfaces::msg::SolePoses>::SharedPtr pub_ankle_poses;
 };
 
 int main(int argc, char * argv[])

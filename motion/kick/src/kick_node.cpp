@@ -17,7 +17,7 @@
 #include "kick/kick.hpp"
 #include "std_msgs/msg/empty.hpp"
 #include "nao_sensor_msgs/msg/joint_positions.hpp"
-#include "biped_interfaces/msg/ankle_poses.hpp"
+#include "biped_interfaces/msg/sole_poses.hpp"
 #include "motion_interfaces/msg/kick.hpp"
 
 using namespace std::placeholders;
@@ -45,7 +45,7 @@ public:
         kick.start(*kick_msg);
       });
 
-    pub_ankle_poses = create_publisher<biped_interfaces::msg::AnklePoses>("motion/ankle_poses", 1);
+    pub_ankle_poses = create_publisher<biped_interfaces::msg::SolePoses>("motion/ankle_poses", 1);
     pub_kick_done = create_publisher<std_msgs::msg::Empty>("motion/kick_done", 1);
   }
 
@@ -57,14 +57,14 @@ private:
     pub_kick_done->publish(std_msgs::msg::Empty{});
   }
 
-  void sendAnklePoses(biped_interfaces::msg::AnklePoses ankle_poses)
+  void sendAnklePoses(biped_interfaces::msg::SolePoses ankle_poses)
   {
     pub_ankle_poses->publish(ankle_poses);
   }
 
   rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<motion_interfaces::msg::Kick>::SharedPtr sub_kick_start;
-  rclcpp::Publisher<biped_interfaces::msg::AnklePoses>::SharedPtr pub_ankle_poses;
+  rclcpp::Publisher<biped_interfaces::msg::SolePoses>::SharedPtr pub_ankle_poses;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr pub_kick_done;
 };
 

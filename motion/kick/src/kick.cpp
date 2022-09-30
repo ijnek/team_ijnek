@@ -52,7 +52,7 @@ inline static geometry_msgs::msg::Quaternion rpy_to_geometry_quat(
 
 Kick::Kick(
   std::function<void(void)> notifyKickDone,
-  std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses)
+  std::function<void(biped_interfaces::msg::SolePoses)> sendAnklePoses)
 : notifyKickDone(notifyKickDone), sendAnklePoses(sendAnklePoses)
 {
 }
@@ -174,13 +174,13 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
     std::cout << "anklesSideChange: " << anklesSideChange << std::endl;
     std::cout << "anklesHeightChange: " << anklesHeightChange << std::endl;
 
-    biped_interfaces::msg::AnklePoses command;
-    command.l_ankle.position.x = forward_l;
-    command.l_ankle.position.y = Y_HIP_OFFSET + left_l + anklesSideChange;
-    command.l_ankle.position.z = BASE_ANKLE_HEIGHT + footh_l + anklesHeightChange;
-    command.r_ankle.position.x = forward_r;
-    command.r_ankle.position.y = -Y_HIP_OFFSET + left_r + anklesSideChange;
-    command.r_ankle.position.z = BASE_ANKLE_HEIGHT + footh_r + anklesHeightChange;
+    biped_interfaces::msg::SolePoses command;
+    command.l_sole.position.x = forward_l;
+    command.l_sole.position.y = Y_HIP_OFFSET + left_l + anklesSideChange;
+    command.l_sole.position.z = BASE_ANKLE_HEIGHT + footh_l + anklesHeightChange;
+    command.r_sole.position.x = forward_r;
+    command.r_sole.position.y = -Y_HIP_OFFSET + left_r + anklesSideChange;
+    command.r_sole.position.z = BASE_ANKLE_HEIGHT + footh_r + anklesHeightChange;
     sendAnklePoses(command);
   }
 }

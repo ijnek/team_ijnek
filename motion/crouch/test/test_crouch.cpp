@@ -17,7 +17,7 @@
 
 bool sendAnklePosesCalled = false;
 
-void sendAnklePoses(biped_interfaces::msg::AnklePoses)
+void sendAnklePoses(biped_interfaces::msg::SolePoses)
 {
   sendAnklePosesCalled = true;
 }
