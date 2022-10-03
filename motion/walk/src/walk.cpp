@@ -40,17 +40,17 @@ Walk::Walk()
     create_subscription<nao_sensor_msgs::msg::JointPositions>(
     "sensors/joint_positions", 1,
     [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
-      biped_interfaces::msg::SolePoses ikCommand = generate_ankle_poses(*sensor_joints);
-      pub_ankle_poses->publish(ikCommand);
+      biped_interfaces::msg::SolePoses ikCommand = generate_sole_poses(*sensor_joints);
+      pub_sole_poses->publish(ikCommand);
     });
 
-  pub_ankle_poses = create_publisher<biped_interfaces::msg::SolePoses>("motion/ankle_poses", 1);
+  pub_sole_poses = create_publisher<biped_interfaces::msg::SolePoses>("motion/sole_poses", 1);
 }
 
-biped_interfaces::msg::SolePoses Walk::generate_ankle_poses(
+biped_interfaces::msg::SolePoses Walk::generate_sole_poses(
   nao_sensor_msgs::msg::JointPositions &)
 {
-  RCLCPP_DEBUG(get_logger(), "generate_ankle_poses called");
+  RCLCPP_DEBUG(get_logger(), "generate_sole_poses called");
   if (twist.linear.z == 0.0) {
     if (abs(hiph - STAND_HIP_HEIGHT) < .0001) {
       walkOption = STAND;

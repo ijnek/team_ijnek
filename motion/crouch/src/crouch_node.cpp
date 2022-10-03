@@ -26,7 +26,7 @@ public:
   CrouchNode()
   : Node("CrouchNode"),
     crouch(
-      std::bind(&CrouchNode::sendAnklePoses, this, _1))
+      std::bind(&CrouchNode::sendSolePoses, this, _1))
   {
     sub_crouch_start =
       create_subscription<std_msgs::msg::Empty>(
@@ -35,19 +35,19 @@ public:
         crouch.start();
       });
 
-    pub_ankle_poses = create_publisher<biped_interfaces::msg::SolePoses>("motion/ankle_poses", 1);
+    pub_sole_poses = create_publisher<biped_interfaces::msg::SolePoses>("motion/sole_poses", 1);
   }
 
 private:
   Crouch crouch;
 
-  void sendAnklePoses(biped_interfaces::msg::SolePoses ankle_poses)
+  void sendSolePoses(biped_interfaces::msg::SolePoses sole_poses)
   {
-    pub_ankle_poses->publish(ankle_poses);
+    pub_sole_poses->publish(sole_poses);
   }
 
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr sub_crouch_start;
-  rclcpp::Publisher<biped_interfaces::msg::SolePoses>::SharedPtr pub_ankle_poses;
+  rclcpp::Publisher<biped_interfaces::msg::SolePoses>::SharedPtr pub_sole_poses;
 };
 
 int main(int argc, char * argv[])

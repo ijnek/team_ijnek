@@ -16,8 +16,8 @@
 #include <iostream>
 
 Crouch::Crouch(
-  std::function<void(biped_interfaces::msg::SolePoses)> sendAnklePoses)
-: sendAnklePoses(sendAnklePoses)
+  std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses)
+: sendSolePoses(sendSolePoses)
 {
   command.l_sole.position.y = 0.05;
   command.l_sole.position.z = -0.18;
@@ -28,5 +28,5 @@ Crouch::Crouch(
 
 void Crouch::start()
 {
-  sendAnklePoses(command);
+  sendSolePoses(command);
 }

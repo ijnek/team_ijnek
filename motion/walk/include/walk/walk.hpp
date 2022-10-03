@@ -44,12 +44,12 @@ private:
   bool isLeftPhase = false;
   bool weightHasShifted = true;
 
-  biped_interfaces::msg::SolePoses generate_ankle_poses(
+  biped_interfaces::msg::SolePoses generate_sole_poses(
     nao_sensor_msgs::msg::JointPositions & sensor_joints);
 
   rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist;
-  rclcpp::Publisher<biped_interfaces::msg::SolePoses>::SharedPtr pub_ankle_poses;
+  rclcpp::Publisher<biped_interfaces::msg::SolePoses>::SharedPtr pub_sole_poses;
 
   geometry_msgs::msg::Twist twist;
 };

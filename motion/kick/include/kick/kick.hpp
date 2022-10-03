@@ -25,13 +25,13 @@ class Kick
 public:
   Kick(
     std::function<void(void)> notifyKickDone,
-    std::function<void(biped_interfaces::msg::SolePoses)> sendAnklePoses);
+    std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses);
   void start(motion_interfaces::msg::Kick req);
   void notifyJoints(nao_sensor_msgs::msg::JointPositions joints);
 
 private:
   std::function<void(void)> notifyKickDone;
-  std::function<void(biped_interfaces::msg::SolePoses)> sendAnklePoses;
+  std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses;
 
   bool duringKick = false;
   bool use_left_foot;
@@ -41,8 +41,8 @@ private:
   float lastSide;
   float lastFooth;
   float lastRock;
-  float lastAnklesHeightChange;
-  float lastAnklesSideChange;
+  float lastSolesHeightChange;
+  float lastSolesSideChange;
 };
 
 #endif  // KICK__KICK_HPP_

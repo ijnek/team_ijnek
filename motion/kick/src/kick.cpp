@@ -36,9 +36,9 @@
 #define TOTAL_PHASE (BACK_PHASE + KICK_PHASE + THROUGH_PHASE + END_PHASE)
 
 #define KICK_STEP_HEIGHT 0.065  // how far to lift kicking foot
-#define BASE_ANKLE_HEIGHT -0.185
-#define ANKLES_HEIGHT_CHANGE_MAG 0.012
-#define ANKLES_SIDE_CHANGE_MAG 0.065
+#define BASE_SOLE_HEIGHT -0.185
+#define SOLES_HEIGHT_CHANGE_MAG 0.012
+#define SOLES_SIDE_CHANGE_MAG 0.065
 
 #define Y_HIP_OFFSET 0.050
 
@@ -52,8 +52,8 @@ inline static geometry_msgs::msg::Quaternion rpy_to_geometry_quat(
 
 Kick::Kick(
   std::function<void(void)> notifyKickDone,
-  std::function<void(biped_interfaces::msg::SolePoses)> sendAnklePoses)
-: notifyKickDone(notifyKickDone), sendAnklePoses(sendAnklePoses)
+  std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses)
+: notifyKickDone(notifyKickDone), sendSolePoses(sendSolePoses)
 {
 }
 
@@ -77,8 +77,8 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
     float kickPower = pow(power, 1.7);
     float kickBackAmp = -kickAmp * kickPower;
 
-    float anklesHeightChange = 0;
-    float anklesSideChange = 0;
+    float solesHeightChange = 0;
+    float solesSideChange = 0;
     float kickStepH = KICK_STEP_HEIGHT;
 
     float swingDelayFactor = 0.2;
@@ -100,11 +100,11 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
 
       // shift weight sideways
       if (kickT < totalShift) {
-        anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG * parabolicStep(kickT, totalShift, 0);
-        anklesSideChange = ANKLES_SIDE_CHANGE_MAG * parabolicStep(kickT, totalShift, 0);
+        solesHeightChange = SOLES_HEIGHT_CHANGE_MAG * parabolicStep(kickT, totalShift, 0);
+        solesSideChange = SOLES_SIDE_CHANGE_MAG * parabolicStep(kickT, totalShift, 0);
       } else {
-        anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG;
-        anklesSideChange = ANKLES_SIDE_CHANGE_MAG;
+        solesHeightChange = SOLES_HEIGHT_CHANGE_MAG;
+        solesSideChange = SOLES_SIDE_CHANGE_MAG;
       }
       // only start lifting the kicking at 1/3
       if (kickT >= totalShift / 3) {
@@ -128,31 +128,31 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
           KICK_PHASE);
       }
       side = sideAmp;
-      anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG;
-      anklesSideChange = ANKLES_SIDE_CHANGE_MAG;
+      solesHeightChange = SOLES_HEIGHT_CHANGE_MAG;
+      solesSideChange = SOLES_SIDE_CHANGE_MAG;
       footh = kickStepH;
       // Hold...
     } else if (kickT < (BACK_PHASE + KICK_PHASE + THROUGH_PHASE)) {
       // Keep hip balance
       forwardDist = kickAmp;
       side = sideAmp;
-      anklesHeightChange = ANKLES_HEIGHT_CHANGE_MAG;
-      anklesSideChange = ANKLES_SIDE_CHANGE_MAG;
+      solesHeightChange = SOLES_HEIGHT_CHANGE_MAG;
+      solesSideChange = SOLES_SIDE_CHANGE_MAG;
       footh = kickStepH;
     } else if (kickT < (TOTAL_PHASE + SHIFT_END_PERIOD / 4)) {
       forwardDist = lastKickForward - lastKickForward * parabolicStep(
         kickT - TOTAL_PHASE,
         SHIFT_END_PERIOD / 8, 0);
       side = lastSide - lastSide * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 8, 0);
-      anklesSideChange = lastAnklesSideChange - lastAnklesSideChange * parabolicStep(
+      solesSideChange = lastSolesSideChange - lastSolesSideChange * parabolicStep(
         kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 4, 0);
-      anklesHeightChange = lastAnklesHeightChange - lastAnklesHeightChange * parabolicStep(
+      solesHeightChange = lastSolesHeightChange - lastSolesHeightChange * parabolicStep(
         kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 4, 0);
       footh = lastFooth - lastFooth * parabolicStep(kickT - TOTAL_PHASE, SHIFT_END_PERIOD / 6, 0);
     } else {
       kickT = 0;
-      anklesSideChange = 0;
-      anklesHeightChange = 0;
+      solesSideChange = 0;
+      solesHeightChange = 0;
       footh = 0;
       duringKick = false;
       notifyKickDone();
@@ -163,25 +163,25 @@ void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
       lastKickForward = forwardDist;
       lastSide = side;
       lastFooth = footh;
-      lastAnklesSideChange = anklesSideChange;
-      lastAnklesHeightChange = anklesHeightChange;
+      lastSolesSideChange = solesSideChange;
+      lastSolesHeightChange = solesHeightChange;
     }
 
     if (!use_left_foot) {
-      anklesSideChange *= -1.0;
+      solesSideChange *= -1.0;
     }
 
-    std::cout << "anklesSideChange: " << anklesSideChange << std::endl;
-    std::cout << "anklesHeightChange: " << anklesHeightChange << std::endl;
+    std::cout << "solesSideChange: " << solesSideChange << std::endl;
+    std::cout << "solesHeightChange: " << solesHeightChange << std::endl;
 
     biped_interfaces::msg::SolePoses command;
     command.l_sole.position.x = forward_l;
-    command.l_sole.position.y = Y_HIP_OFFSET + left_l + anklesSideChange;
-    command.l_sole.position.z = BASE_ANKLE_HEIGHT + footh_l + anklesHeightChange;
+    command.l_sole.position.y = Y_HIP_OFFSET + left_l + solesSideChange;
+    command.l_sole.position.z = BASE_SOLE_HEIGHT + footh_l + solesHeightChange;
     command.r_sole.position.x = forward_r;
-    command.r_sole.position.y = -Y_HIP_OFFSET + left_r + anklesSideChange;
-    command.r_sole.position.z = BASE_ANKLE_HEIGHT + footh_r + anklesHeightChange;
-    sendAnklePoses(command);
+    command.r_sole.position.y = -Y_HIP_OFFSET + left_r + solesSideChange;
+    command.r_sole.position.z = BASE_SOLE_HEIGHT + footh_r + solesHeightChange;
+    sendSolePoses(command);
   }
 }
 

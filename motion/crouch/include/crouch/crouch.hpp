@@ -23,11 +23,11 @@ class Crouch
 {
 public:
   Crouch(
-    std::function<void(biped_interfaces::msg::SolePoses)> sendAnklePoses);
+    std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses);
   void start();
 
 private:
-  std::function<void(biped_interfaces::msg::SolePoses)> sendAnklePoses;
+  std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses;
   biped_interfaces::msg::SolePoses command;
 };
 
