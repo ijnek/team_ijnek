@@ -15,16 +15,16 @@
 #include <gtest/gtest.h>
 #include "crouch/crouch.hpp"
 
-bool sendAnklePosesCalled = false;
+bool sendSolePosesCalled = false;
 
-void sendAnklePoses(biped_interfaces::msg::AnklePoses)
+void sendSolePoses(biped_interfaces::msg::SolePoses)
 {
-  sendAnklePosesCalled = true;
+  sendSolePosesCalled = true;
 }
 
 TEST(TestCrouch, Test1)
 {
-  Crouch crouch(sendAnklePoses);
+  Crouch crouch(sendSolePoses);
   crouch.start();
-  ASSERT_TRUE(sendAnklePosesCalled);
+  ASSERT_TRUE(sendSolePosesCalled);
 }

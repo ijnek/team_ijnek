@@ -16,17 +16,17 @@
 #include <iostream>
 
 Crouch::Crouch(
-  std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses)
-: sendAnklePoses(sendAnklePoses)
+  std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses)
+: sendSolePoses(sendSolePoses)
 {
-  command.l_ankle.position.y = 0.05;
-  command.l_ankle.position.z = -0.18;
+  command.l_sole.position.y = 0.05;
+  command.l_sole.position.z = -0.18;
 
-  command.r_ankle.position.y = -0.05;
-  command.r_ankle.position.z = -0.18;
+  command.r_sole.position.y = -0.05;
+  command.r_sole.position.z = -0.18;
 }
 
 void Crouch::start()
 {
-  sendAnklePoses(command);
+  sendSolePoses(command);
 }

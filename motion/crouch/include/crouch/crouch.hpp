@@ -16,19 +16,19 @@
 #define CROUCH__CROUCH_HPP_
 
 #include <functional>
-#include "biped_interfaces/msg/ankle_poses.hpp"
+#include "biped_interfaces/msg/sole_poses.hpp"
 #include "std_msgs/msg/empty.hpp"
 
 class Crouch
 {
 public:
   Crouch(
-    std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses);
+    std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses);
   void start();
 
 private:
-  std::function<void(biped_interfaces::msg::AnklePoses)> sendAnklePoses;
-  biped_interfaces::msg::AnklePoses command;
+  std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses;
+  biped_interfaces::msg::SolePoses command;
 };
 
 #endif  // CROUCH__CROUCH_HPP_
