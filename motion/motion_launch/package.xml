@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>walk</name>
+  <name>motion_launch</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="kenjibrameld@gmail.com">ijnek</maintainer>
-  <license>Apache License 2.0</license>
+  <maintainer email="kenjibrameld@gmail.com">vscode</maintainer>
+  <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>nao_sensor_msgs</depend>
-  <depend>nao_command_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>motion_interfaces</depend>
-  <depend>biped_interfaces</depend>
-  <depend>rclcpp</depend>
+  <exec_depend>rcss3d_nao</exec_depend>
+  <exec_depend>nao_ik</exec_depend>
+  <exec_depend>biped_interfaces</exec_depend>
+  <exec_depend>nao_phase_provider</exec_depend>
+  <exec_depend>teleop_twist_keyboard</exec_depend>
+  <exec_depend>rqt_gui</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
