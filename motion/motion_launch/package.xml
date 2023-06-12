@@ -9,12 +9,13 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>rcss3d_nao</exec_depend>
-  <exec_depend>nao_ik</exec_depend>
   <exec_depend>biped_interfaces</exec_depend>
+  <exec_depend>nao_ik</exec_depend>
   <exec_depend>nao_phase_provider</exec_depend>
-  <exec_depend>teleop_twist_keyboard</exec_depend>
+  <exec_depend>rcss3d_nao</exec_depend>
   <exec_depend>rqt_gui</exec_depend>
+  <exec_depend>teleop_twist_keyboard</exec_depend>
+  <exec_depend>walk</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
