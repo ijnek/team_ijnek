@@ -41,17 +41,6 @@ def generate_launch_description():
     rqt_node = Node(package='rqt_gui', executable='rqt_gui',
                     arguments=['--perspective-file', LaunchConfiguration('perspective')])
 
-    #     ros2 topic pub --once /motion/sole_poses biped_interfaces/msg/SolePoses "
-    # l_sole:
-    # position:
-    #     y: 0.05
-    #     z: -0.23
-    # r_sole:
-    # position:
-    #     y: -0.05
-    #     z: -0.23
-    # "
-
     # ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=target
 
     return LaunchDescription([

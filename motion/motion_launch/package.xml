@@ -14,6 +14,7 @@
   <exec_depend>nao_phase_provider</exec_depend>
   <exec_depend>rcss3d_nao</exec_depend>
   <exec_depend>rqt_gui</exec_depend>
+  <exec_depend>sole_poses_ims</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
   <exec_depend>walk</exec_depend>
 
