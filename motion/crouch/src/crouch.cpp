@@ -20,10 +20,10 @@ Crouch::Crouch(
 : sendSolePoses(sendSolePoses)
 {
   command.l_sole.position.y = 0.05;
-  command.l_sole.position.z = -0.18;
+  command.l_sole.position.z = -0.265;
 
   command.r_sole.position.y = -0.05;
-  command.r_sole.position.z = -0.18;
+  command.r_sole.position.z = -0.265;
 }
 
 void Crouch::start()
