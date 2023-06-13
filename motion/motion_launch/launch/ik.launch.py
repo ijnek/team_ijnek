@@ -28,7 +28,9 @@ def generate_launch_description():
     nao_state_publisher_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('nao_state_publisher'), 'launch', 'nao_state_publisher_launch.py'])))
+                [FindPackageShare('nao_state_publisher'),
+                 'launch',
+                 'nao_state_publisher_launch.py'])))
 
     nao_ik = Node(package='nao_ik', executable='ik_node')
     nao_loopback = Node(package='nao_loopback', executable='nao_loopback')
