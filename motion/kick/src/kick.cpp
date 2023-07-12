@@ -25,7 +25,7 @@
 #include "kick/kick.hpp"
 #include <iostream>
 #include <cmath>
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 #define SHIFT_PERIOD 2.6
 #define SHIFT_END_PERIOD 2.5
