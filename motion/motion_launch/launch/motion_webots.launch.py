@@ -39,8 +39,6 @@ def generate_launch_description():
     nao_phase_provider_node = Node(package='nao_phase_provider', executable='nao_phase_provider',
                                    remappings=[('fsr', '/sensors/fsr')])
     walk_node = Node(package='walk', executable='walk')
-    rqt_node = Node(package='rqt_gui', executable='rqt_gui',
-                    arguments=['--perspective-file', LaunchConfiguration('perspective')])
 
     return LaunchDescription([
         perspective_arg,
@@ -61,5 +59,4 @@ def generate_launch_description():
         ik_node,
         nao_phase_provider_node,
         walk_node,
-        rqt_node,
     ])
