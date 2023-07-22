@@ -32,7 +32,7 @@ def generate_launch_description():
             [FindPackageShare('walk'), 'perspective', 'walk', 'walk.perspective']))
 
     kill_webots= ExecuteProcess(cmd=['pkill -9 webots|| true'], shell=True)
-    run_webots = ExecuteProcess(cmd=['webots ~/WebotsLolaController/worlds/nao_robocup.wbt'], shell=True)
+    run_webots = ExecuteProcess(cmd=['webots ~/WebotsLoLaController/worlds/nao_robocup.wbt'], shell=True)
 
     nao_lola_node = Node(package='nao_lola', executable='nao_lola')
     ik_node = Node(package='nao_ik', executable='ik_node')
