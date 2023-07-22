@@ -11,6 +11,7 @@
 
   <exec_depend>biped_interfaces</exec_depend>
   <exec_depend>nao_ik</exec_depend>
+  <exec_depend>nao_lola</exec_depend>
   <exec_depend>nao_phase_provider</exec_depend>
   <exec_depend>rcss3d_nao</exec_depend>
   <exec_depend>rqt_gui</exec_depend>
