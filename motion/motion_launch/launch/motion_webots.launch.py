@@ -74,7 +74,7 @@ def generate_launch_description():
                     LogInfo(msg='killed any lingering webots processes'),
                     run_webots,
                     TimerAction(
-                        period=3.0,
+                        period=5.0,
                         actions=[nao_lola_node],
                     )
                 ]
