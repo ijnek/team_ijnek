@@ -17,7 +17,7 @@ from launch.actions import (DeclareLaunchArgument, ExecuteProcess, IncludeLaunch
                             LogInfo, RegisterEventHandler, TimerAction)
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -64,6 +64,19 @@ def generate_launch_description():
         arguments=['-d', rviz_config_path],
     )
 
+    plotjuggler_config_launch_arg = DeclareLaunchArgument('plotjuggler_config_path',
+        default_value=PathJoinSubstitution(
+          [FindPackageShare('motion_launch'), 'plotjuggler', 'walk.xml']))
+    plotjuggler_node = Node(
+        package='plotjuggler',
+        executable='plotjuggler',
+        arguments=[
+          '--window_title', 'Walk',
+          '--layout', LaunchConfiguration('plotjuggler_config_path'),
+          '--nosplash',
+        ],
+    )
+
     return LaunchDescription([
         perspective_arg,
         kill_webots,
@@ -87,4 +100,6 @@ def generate_launch_description():
         nao_interfaces_bridge_node,
         lower_arms,
         rviz_node,
+        plotjuggler_config_launch_arg,
+        plotjuggler_node,
     ])
