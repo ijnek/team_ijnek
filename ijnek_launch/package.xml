@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>motion_launch</name>
+  <name>ijnek_launch</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="kenjibrameld@gmail.com">ijnek</maintainer>
@@ -13,6 +13,7 @@
   <exec_depend>nao_ik</exec_depend>
   <exec_depend>nao_interfaces_bridge</exec_depend>
   <exec_depend>nao_lola</exec_depend>
+  <exec_depend>nao_loopback</exec_depend>
   <exec_depend>nao_phase_provider</exec_depend>
   <exec_depend>nao_state_publisher</exec_depend>
   <exec_depend>rcss3d_nao</exec_depend>
