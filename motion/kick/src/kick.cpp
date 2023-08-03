@@ -66,7 +66,7 @@ void Kick::start(motion_interfaces::msg::Kick req)
   }
 }
 
-void Kick::notifyJoints(nao_sensor_msgs::msg::JointPositions)
+void Kick::notifyJoints(nao_lola_sensor_msgs::msg::JointPositions)
 {
   if (duringKick) {
     kickT += 0.02;
