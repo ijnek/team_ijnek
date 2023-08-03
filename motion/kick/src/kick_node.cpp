@@ -16,7 +16,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "kick/kick.hpp"
 #include "std_msgs/msg/empty.hpp"
-#include "nao_sensor_msgs/msg/joint_positions.hpp"
+#include "nao_lola_sensor_msgs/msg/joint_positions.hpp"
 #include "biped_interfaces/msg/sole_poses.hpp"
 #include "motion_interfaces/msg/kick.hpp"
 
@@ -32,9 +32,9 @@ public:
       std::bind(&KickNode::sendSolePoses, this, _1))
   {
     sub_joint_states =
-      create_subscription<nao_sensor_msgs::msg::JointPositions>(
+      create_subscription<nao_lola_sensor_msgs::msg::JointPositions>(
       "sensors/joint_positions", 1,
-      [this](nao_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
+      [this](nao_lola_sensor_msgs::msg::JointPositions::SharedPtr sensor_joints) {
         kick.notifyJoints(*sensor_joints);
       });
 
@@ -62,7 +62,7 @@ private:
     pub_sole_poses->publish(sole_poses);
   }
 
-  rclcpp::Subscription<nao_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
+  rclcpp::Subscription<nao_lola_sensor_msgs::msg::JointPositions>::SharedPtr sub_joint_states;
   rclcpp::Subscription<motion_interfaces::msg::Kick>::SharedPtr sub_kick_start;
   rclcpp::Publisher<biped_interfaces::msg::SolePoses>::SharedPtr pub_sole_poses;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr pub_kick_done;

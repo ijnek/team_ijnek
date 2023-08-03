@@ -31,10 +31,10 @@ void sendSolePoses(biped_interfaces::msg::SolePoses)
 TEST(TestKick, Test1)
 {
   Kick kick(notifyKickDone, sendSolePoses);
-  kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
+  kick.notifyJoints(nao_lola_sensor_msgs::msg::JointPositions{});
   ASSERT_FALSE(sendSolePosesCalled);
 
   kick.start(motion_interfaces::msg::Kick{});
-  kick.notifyJoints(nao_sensor_msgs::msg::JointPositions{});
+  kick.notifyJoints(nao_lola_sensor_msgs::msg::JointPositions{});
   ASSERT_TRUE(sendSolePosesCalled);
 }

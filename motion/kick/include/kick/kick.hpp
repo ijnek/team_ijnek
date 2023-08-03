@@ -18,7 +18,7 @@
 #include <functional>
 #include "motion_interfaces/msg/kick.hpp"
 #include "biped_interfaces/msg/sole_poses.hpp"
-#include "nao_sensor_msgs/msg/joint_positions.hpp"
+#include "nao_lola_sensor_msgs/msg/joint_positions.hpp"
 
 class Kick
 {
@@ -27,7 +27,7 @@ public:
     std::function<void(void)> notifyKickDone,
     std::function<void(biped_interfaces::msg::SolePoses)> sendSolePoses);
   void start(motion_interfaces::msg::Kick req);
-  void notifyJoints(nao_sensor_msgs::msg::JointPositions joints);
+  void notifyJoints(nao_lola_sensor_msgs::msg::JointPositions joints);
 
 private:
   std::function<void(void)> notifyKickDone;

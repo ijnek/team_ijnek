@@ -17,7 +17,7 @@
   <depend>motion_interfaces</depend>
   <depend>biped_interfaces</depend>
   <depend>std_msgs</depend>
-  <depend>nao_command_msgs</depend>
+  <depend>nao_lola_command_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

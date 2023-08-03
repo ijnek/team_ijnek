@@ -23,7 +23,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(motion_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(nao_sensor_msgs REQUIRED)
+find_package(nao_lola_sensor_msgs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(biped_interfaces REQUIRED)
 
@@ -34,7 +34,7 @@ add_library(kick src/kick.cpp)
 ament_target_dependencies(kick
   motion_interfaces
   std_msgs
-  nao_sensor_msgs
+  nao_lola_sensor_msgs
   tf2_geometry_msgs
   biped_interfaces)
 
