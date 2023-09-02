@@ -22,7 +22,7 @@ def generate_launch_description():
 
     kill_webots= ExecuteProcess(cmd=['pkill -9 webots|| true'], shell=True)
     run_webots = ExecuteProcess(cmd=['webots ~/WebotsLoLaController/worlds/nao_robocup.wbt'], shell=True)
-    nao_lola_node = Node(package='nao_lola', executable='nao_lola')
+    nao_lola_client_node = Node(package='nao_lola_client', executable='nao_lola_client')
 
     return LaunchDescription([
         kill_webots,
@@ -34,7 +34,7 @@ def generate_launch_description():
                     run_webots,
                     TimerAction(
                         period=5.0,
-                        actions=[nao_lola_node],
+                        actions=[nao_lola_client_node],
                     )
                 ]
             )
