@@ -21,12 +21,11 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    namespace_arg = DeclareLaunchArgument('namespace', default_value='')
-    team_arg = DeclareLaunchArgument('team', default_value='ijnek')
-    unum_arg = DeclareLaunchArgument('unum', default_value='2')
-    x_arg = DeclareLaunchArgument('x', default_value='0.0')
-    y_arg = DeclareLaunchArgument('y', default_value='0.0')
-    theta_arg = DeclareLaunchArgument('theta', default_value='0.0')
+    team_arg = DeclareLaunchArgument('team', default_value='ijnek', description='Team name')
+    unum_arg = DeclareLaunchArgument('unum', default_value='2', description='Player number')
+    x_arg = DeclareLaunchArgument('x', default_value='0.0', description='Initial x position of robot in meters')
+    y_arg = DeclareLaunchArgument('y', default_value='0.0', description='Initial y position of robot in meters')
+    theta_arg = DeclareLaunchArgument('theta', default_value='0.0', description='Initial heading of robot in degrees')
 
     kill_rcssserver3d = ExecuteProcess(cmd=['pkill -9 rcssserver3d || true'], shell=True)
     run_rcsoccersim3d = ExecuteProcess(cmd=['rcsoccersim3d'])
@@ -43,7 +42,6 @@ def generate_launch_description():
         }])
 
     return LaunchDescription([
-        namespace_arg,
         team_arg,
         unum_arg,
         x_arg,
