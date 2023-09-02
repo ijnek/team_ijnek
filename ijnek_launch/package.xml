@@ -3,16 +3,16 @@
 <package format="3">
   <name>ijnek_launch</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Example launch files RoboCup Soccer SPL</description>
   <maintainer email="kenjibrameld@gmail.com">ijnek</maintainer>
-  <license>TODO: License declaration</license>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>biped_interfaces</exec_depend>
   <exec_depend>nao_ik</exec_depend>
   <exec_depend>nao_interfaces_bridge</exec_depend>
-  <exec_depend>nao_lola</exec_depend>
+  <exec_depend>nao_lola_client</exec_depend>
   <exec_depend>nao_loopback</exec_depend>
   <exec_depend>nao_phase_provider</exec_depend>
   <exec_depend>nao_state_publisher</exec_depend>
