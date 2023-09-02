@@ -13,7 +13,8 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, LogInfo, RegisterEventHandler, TimerAction
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, LogInfo, RegisterEventHandler, \
+                           TimerAction
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -23,16 +24,18 @@ def generate_launch_description():
 
     team_arg = DeclareLaunchArgument('team', default_value='ijnek', description='Team name')
     unum_arg = DeclareLaunchArgument('unum', default_value='2', description='Player number')
-    x_arg = DeclareLaunchArgument('x', default_value='0.0', description='Initial x position of robot in meters')
-    y_arg = DeclareLaunchArgument('y', default_value='0.0', description='Initial y position of robot in meters')
-    theta_arg = DeclareLaunchArgument('theta', default_value='0.0', description='Initial heading of robot in degrees')
+    x_arg = DeclareLaunchArgument('x', default_value='0.0',
+                                  description='Initial x position of robot in meters')
+    y_arg = DeclareLaunchArgument('y', default_value='0.0',
+                                  description='Initial y position of robot in meters')
+    theta_arg = DeclareLaunchArgument('theta', default_value='0.0',
+                                      description='Initial heading of robot in degrees')
 
     kill_rcssserver3d = ExecuteProcess(cmd=['pkill -9 rcssserver3d || true'], shell=True)
     run_rcsoccersim3d = ExecuteProcess(cmd=['rcsoccersim3d'])
     rcss3d_nao_node = Node(
         package='rcss3d_nao',
         executable='rcss3d_nao',
-        namespace=LaunchConfiguration('namespace'),
         parameters=[{
             'team': LaunchConfiguration('team'),
             'unum': LaunchConfiguration('unum'),

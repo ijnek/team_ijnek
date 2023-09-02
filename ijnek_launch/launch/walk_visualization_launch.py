@@ -31,7 +31,8 @@ def generate_launch_description():
         arguments=['-d', rviz_config_path],
     )
 
-    plotjuggler_config_launch_arg = DeclareLaunchArgument('plotjuggler_config_path',
+    plotjuggler_config_launch_arg = DeclareLaunchArgument(
+        'plotjuggler_config_path',
         default_value=PathJoinSubstitution(
           [FindPackageShare('ijnek_launch'), 'plotjuggler', 'walk.xml']))
     plotjuggler_node = Node(

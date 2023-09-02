@@ -27,7 +27,9 @@ def generate_launch_description():
     walk_node = Node(package='walk', executable='walk', remappings=[('imu', '/sensors/imu')])
 
     lower_arms = ExecuteProcess(
-        cmd=['ros2 topic pub --once /effectors/joint_positions nao_command_msgs/msg/JointPositions "{indexes: [2, 18], positions: [1.517, 1.517]}"'],
+        cmd=['ros2 topic pub --once /effectors/joint_positions '
+             'nao_lola_command_msgs/msg/JointPositions '
+             '"{indexes: [2, 18], positions: [1.517, 1.517]}"'],
         shell=True)
 
     return LaunchDescription([
