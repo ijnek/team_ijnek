@@ -25,12 +25,13 @@ hip_offset_y = 0.050
 
 def generate_launch_description():
 
-    nao_state_publisher_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [FindPackageShare('nao_state_publisher'),
-                 'launch',
-                 'nao_state_publisher_launch.py'])))
+    urdf_file = PathJoinSubstitution(
+        [FindPackageShare('nao_description'), 'urdf', 'nao.urdf'])
+    robot_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        arguments=[urdf_file]
+    )
 
     ik_node = Node(package='nao_ik', executable='ik_node')
     nao_loopback = Node(package='nao_loopback', executable='nao_loopback')
@@ -55,9 +56,9 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        nao_state_publisher_launch,
-        sole_poses_ims,
-        ik_node,
-        nao_loopback,
+        robot_state_publisher_node,
+        # sole_poses_ims,
+        # ik_node,
+        # nao_loopback,
         rviz_node,
     ])
