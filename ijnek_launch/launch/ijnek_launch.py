@@ -30,11 +30,11 @@ def generate_launch_description():
     nao_interfaces_bridge_node = Node(
         package='nao_interfaces_bridge', executable='nao_interfaces_bridge')
 
-    nao_state_publisher_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [FindPackageShare('nao_state_publisher'),
-                    'launch', 'nao_state_publisher_launch.py'])))
+    robot_state_publisher_launch = IncludeLaunchDescription(
+        PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'description.launch.py']),
+        launch_arguments={
+            'urdf_package': 'nao_description',
+            'urdf_package_path': PathJoinSubstitution(['urdf', 'nao.urdf'])}.items())
 
     walk_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -49,7 +49,7 @@ def generate_launch_description():
     return LaunchDescription([
         simulation_launch,
         nao_interfaces_bridge_node,
-        nao_state_publisher_launch,
+        robot_state_publisher_launch,
         walk_launch,
         walk_visualization_launch,
     ])
