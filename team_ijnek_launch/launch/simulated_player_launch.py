@@ -39,7 +39,8 @@ def generate_launch_description():
                 'theta': LaunchConfiguration('theta')
             }]),
         IncludeLaunchDescription(
-            PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'description.launch.py']),
+            PathJoinSubstitution(
+                [FindPackageShare('urdf_launch'), 'launch', 'description.launch.py']),
             launch_arguments={
                 'urdf_package': 'nao_description',
                 'urdf_package_path': PathJoinSubstitution(['urdf', 'nao.urdf'])}.items()),
