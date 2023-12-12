@@ -19,45 +19,37 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
-stand_height = 0.04519 + 0.10290 + 0.100 + 0.085
-hip_offset_y = 0.050
-
 
 def generate_launch_description():
+
+    simulation_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [FindPackageShare('ijnek_launch'), 'launch', 'simulation_launch.py'])))
+
+    nao_interfaces_bridge_node = Node(
+        package='nao_interfaces_bridge', executable='nao_interfaces_bridge')
 
     nao_state_publisher_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [FindPackageShare('nao_state_publisher'),
-                 'launch',
-                 'nao_state_publisher_launch.py'])))
+                    'launch', 'nao_state_publisher_launch.py'])))
 
-    nao_ik = Node(package='nao_ik', executable='ik_node')
-    nao_loopback = Node(package='nao_loopback', executable='nao_loopback')
-    sole_poses_ims = Node(
-      package='sole_poses_ims',
-      executable='sole_poses_ims',
-      parameters=[{
-        'l_sole_default_y': hip_offset_y,
-        'l_sole_default_z': -stand_height,
-        'r_sole_default_y': -hip_offset_y,
-        'r_sole_default_z': -stand_height,
-      }],
-    )
+    walk_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [FindPackageShare('ijnek_launch'), 'launch', 'walk_launch.py'])))
 
-    rviz_config_path = PathJoinSubstitution(
-        [FindPackageShare('motion_launch'), 'rviz', 'ik.rviz'])
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        arguments=['-d', rviz_config_path],
-    )
+    walk_visualization_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [FindPackageShare('ijnek_launch'), 'launch', 'walk_visualization_launch.py'])))
 
     return LaunchDescription([
+        simulation_launch,
+        nao_interfaces_bridge_node,
         nao_state_publisher_launch,
-        sole_poses_ims,
-        nao_ik,
-        nao_loopback,
-        rviz_node,
+        walk_launch,
+        walk_visualization_launch,
     ])
