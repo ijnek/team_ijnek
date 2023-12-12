@@ -15,11 +15,12 @@
   <exec_depend>nao_lola_client</exec_depend>
   <exec_depend>nao_loopback</exec_depend>
   <exec_depend>nao_phase_provider</exec_depend>
-  <exec_depend>nao_state_publisher</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rcss3d_nao</exec_depend>
   <exec_depend>rqt_gui</exec_depend>
   <exec_depend>sole_poses_ims</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
+  <exec_depend>urdf_launch</exec_depend>
   <exec_depend>walk</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
