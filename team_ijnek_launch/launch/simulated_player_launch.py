@@ -12,20 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
 
     return LaunchDescription([
-        DeclareLaunchArgument('namespace', default_value=''),
         DeclareLaunchArgument('team', default_value='ijnek'),
         DeclareLaunchArgument('unum', default_value='2'),
         DeclareLaunchArgument('x', default_value='0.0'),
@@ -34,7 +31,6 @@ def generate_launch_description():
         Node(
             package='rcss3d_nao',
             executable='rcss3d_nao',
-            namespace=LaunchConfiguration('namespace'),
             parameters=[{
                 'team': LaunchConfiguration('team'),
                 'unum': LaunchConfiguration('unum'),
@@ -43,36 +39,19 @@ def generate_launch_description():
                 'theta': LaunchConfiguration('theta')
             }]),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                get_package_share_directory('nao_state_publisher'),
-                '/launch', '/nao_state_publisher_launch.py']),
+            PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'description.launch.py']),
             launch_arguments={
-                'namespace': LaunchConfiguration('namespace'),
-            }.items(),
-        ),
+                'urdf_package': 'nao_description',
+                'urdf_package_path': PathJoinSubstitution(['urdf', 'nao.urdf'])}.items()),
         Node(
             package='static_pose_publisher',
             executable='static_pose_publisher',
-            namespace=LaunchConfiguration('namespace'),
             parameters=[{
                 'x': LaunchConfiguration('x'),
                 'y': LaunchConfiguration('y'),
                 'theta': LaunchConfiguration('theta')
-            }]
-        ),
-        Node(
-            package='nao_ik',
-            executable='ik_node',
-            namespace=LaunchConfiguration('namespace'),
-        ),
-        Node(
-            package='crouch',
-            executable='crouch_node',
-            namespace=LaunchConfiguration('namespace'),
-        ),
-        Node(
-            package='kick',
-            executable='kick_node',
-            namespace=LaunchConfiguration('namespace'),
-        ),
+            }]),
+        Node(package='nao_ik', executable='nao_ik'),
+        Node(package='crouch', executable='crouch_node'),
+        Node(package='kick', executable='kick_node'),
     ])

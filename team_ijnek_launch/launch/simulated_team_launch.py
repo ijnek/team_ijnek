@@ -19,6 +19,8 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import PushRosNamespace
+from launch.actions import GroupAction
 
 import yaml
 
@@ -47,20 +49,22 @@ def generate_launch_description():
             print(player_params)
             ld.add_action(
                 TimerAction(period=str(delay_seconds), actions=[
-                    IncludeLaunchDescription(
-                        PythonLaunchDescriptionSource([
-                            get_package_share_directory('team_ijnek_launch'),
-                            '/launch', '/simulated_player_launch.py']),
-                        launch_arguments={
-                            'namespace': str(team) + '/player' + str(player),
-                            'team': str(team),
-                            'unum': str(player),
-                            'x': str(player_params['x']),
-                            'y': str(player_params['y']),
-                            'theta': str(player_params['theta']),
-                        }.items(),
-                    ),
-                ]))
+                    GroupAction([
+                        PushRosNamespace(str(team) + '/player' + str(player)),
+                        IncludeLaunchDescription(
+                            PythonLaunchDescriptionSource([
+                                get_package_share_directory('team_ijnek_launch'),
+                                '/launch', '/simulated_player_launch.py']),
+                            launch_arguments={
+                                'team': str(team),
+                                'unum': str(player),
+                                'x': str(player_params['x']),
+                                'y': str(player_params['y']),
+                                'theta': str(player_params['theta']),
+                            }.items()),
+                    ]),
+                ]),
+            )
 
             delay_seconds = delay_seconds + 1
 

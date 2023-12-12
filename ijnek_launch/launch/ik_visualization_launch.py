@@ -13,8 +13,6 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -33,7 +31,7 @@ def generate_launch_description():
         arguments=[urdf_file]
     )
 
-    ik_node = Node(package='nao_ik', executable='ik_node')
+    nao_ik = Node(package='nao_ik', executable='nao_ik')
     nao_loopback = Node(package='nao_loopback', executable='nao_loopback')
     sole_poses_ims = Node(
       package='sole_poses_ims',
@@ -57,8 +55,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         robot_state_publisher_node,
-        # sole_poses_ims,
-        # ik_node,
-        # nao_loopback,
+        sole_poses_ims,
+        nao_ik,
+        nao_loopback,
         rviz_node,
     ])

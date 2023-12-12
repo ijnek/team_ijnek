@@ -19,7 +19,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    ik_node = Node(package='nao_ik', executable='ik_node')
+    nao_ik = Node(package='nao_ik', executable='nao_ik')
 
     nao_phase_provider_node = Node(package='nao_phase_provider', executable='nao_phase_provider',
                                    remappings=[('fsr', '/sensors/fsr')])
@@ -33,7 +33,7 @@ def generate_launch_description():
         shell=True)
 
     return LaunchDescription([
-        ik_node,
+        nao_ik,
         nao_phase_provider_node,
         walk_node,
         lower_arms,
