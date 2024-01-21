@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -23,13 +24,11 @@ hip_offset_y = 0.050
 
 def generate_launch_description():
 
-    urdf_file = PathJoinSubstitution(
-        [FindPackageShare('nao_description'), 'urdf', 'nao.urdf'])
-    robot_state_publisher_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        arguments=[urdf_file]
-    )
+    description_launch = IncludeLaunchDescription(
+        PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'description.launch.py']),
+        launch_arguments={
+            'urdf_package': 'nao_description',
+            'urdf_package_path': PathJoinSubstitution(['urdf', 'nao.urdf'])}.items())
 
     nao_ik = Node(package='nao_ik', executable='nao_ik')
     nao_loopback = Node(package='nao_loopback', executable='nao_loopback')
@@ -45,7 +44,7 @@ def generate_launch_description():
     )
 
     rviz_config_path = PathJoinSubstitution(
-        [FindPackageShare('ijnek_launch'), 'rviz', 'ik.rviz'])
+        [FindPackageShare('motion_launch'), 'rviz', 'ik.rviz'])
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -54,7 +53,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        robot_state_publisher_node,
+        description_launch,
         sole_poses_ims,
         nao_ik,
         nao_loopback,

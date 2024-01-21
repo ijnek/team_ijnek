@@ -1,18 +1,20 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ijnek_launch</name>
+  <name>motion_launch</name>
   <version>0.0.0</version>
-  <description>Example launch files RoboCup Soccer SPL</description>
+  <description>Example launch files for motion</description>
   <maintainer email="kenjibrameld@gmail.com">ijnek</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>motion_launch</exec_depend>
-  <exec_depend>nao_lola_client</exec_depend>
-  <exec_depend>rcss3d_nao</exec_depend>
+  <exec_depend>nao_ik</exec_depend>
+  <exec_depend>nao_loopback</exec_depend>
+  <exec_depend>nao_phase_provider</exec_depend>
+  <exec_depend>sole_poses_ims</exec_depend>
   <exec_depend>urdf_launch</exec_depend>
+  <exec_depend>walk</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
