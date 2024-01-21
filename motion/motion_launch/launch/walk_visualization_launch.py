@@ -23,7 +23,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
     rviz_config_path = PathJoinSubstitution(
-        [FindPackageShare('ijnek_launch'), 'rviz', 'walk.rviz'])
+        [FindPackageShare('motion_launch'), 'rviz', 'walk.rviz'])
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -34,7 +34,7 @@ def generate_launch_description():
     plotjuggler_config_launch_arg = DeclareLaunchArgument(
         'plotjuggler_config_path',
         default_value=PathJoinSubstitution(
-          [FindPackageShare('ijnek_launch'), 'plotjuggler', 'walk.xml']))
+          [FindPackageShare('motion_launch'), 'plotjuggler', 'walk.xml']))
     plotjuggler_node = Node(
         package='plotjuggler',
         executable='plotjuggler',
