@@ -37,8 +37,14 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [FindPackageShare('motion_launch'), 'launch', 'motion_launch.py'])))
 
+    communication_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [FindPackageShare('communication_launch'), 'launch', 'communication_launch.py'])))
+
     return LaunchDescription([
         simulation_launch,
         description_launch,
         motion_launch,
+        communication_launch,
     ])

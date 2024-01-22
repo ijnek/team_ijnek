@@ -9,7 +9,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>communication_launch</exec_depend>
   <exec_depend>motion_launch</exec_depend>
+  <exec_depend>nao_description</exec_depend>
   <exec_depend>nao_lola_client</exec_depend>
   <exec_depend>rcss3d_nao</exec_depend>
   <exec_depend>urdf_launch</exec_depend>
