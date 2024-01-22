@@ -21,10 +21,10 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    simulation_launch = IncludeLaunchDescription(
+    communication_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('ijnek_launch'), 'launch', 'simulation_launch.py'])))
+                [FindPackageShare('communication_launch'), 'launch', 'communication_launch.py'])))
 
     description_launch = IncludeLaunchDescription(
         PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'description.launch.py']),
@@ -37,14 +37,20 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [FindPackageShare('motion_launch'), 'launch', 'motion_launch.py'])))
 
-    communication_launch = IncludeLaunchDescription(
+    simulation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('communication_launch'), 'launch', 'communication_launch.py'])))
+                [FindPackageShare('ijnek_launch'), 'launch', 'simulation_launch.py'])))
+
+    visualization_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [FindPackageShare('visualization'), 'launch', 'visualization_launch.py'])))
 
     return LaunchDescription([
-        simulation_launch,
+        communication_launch,
         description_launch,
         motion_launch,
-        communication_launch,
+        simulation_launch,
+        visualization_launch,
     ])
