@@ -15,7 +15,7 @@
   <exec_depend>crouch</exec_depend>
   <exec_depend>kick</exec_depend>
   <exec_depend>rcss3d_nao</exec_depend>
-  <exec_depend>static_pose_publisher</exec_depend>
+  <exec_depend>state_estimation</exec_depend>
   <exec_depend>urdf_launch</exec_depend>
   <exec_depend>walk</exec_depend>
 
