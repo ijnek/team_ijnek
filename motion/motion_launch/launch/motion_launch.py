@@ -26,12 +26,6 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [FindPackageShare('motion_launch'), 'launch', 'walk_launch.py'])))
 
-    walk_visualization_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [FindPackageShare('motion_launch'), 'launch', 'walk_visualization_launch.py'])))
-
     return LaunchDescription([
         walk_launch,
-        walk_visualization_launch,
     ])
