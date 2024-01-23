@@ -27,3 +27,7 @@ repositories:
     type: git
     url: https://github.com/ijnek/sole_poses_ims.git
     version: rolling
+  webots_nao_camera:
+    type: git
+    url: https://github.com/ijnek/webots_nao_camera.git
+    version: rolling

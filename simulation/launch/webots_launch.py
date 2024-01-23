@@ -24,6 +24,7 @@ def generate_launch_description():
     run_webots = ExecuteProcess(cmd=['webots ~/WebotsLoLaController/worlds/nao_robocup.wbt'],
                                 shell=True)
     nao_lola_client_node = Node(package='nao_lola_client', executable='nao_lola_client')
+    webots_nao_camera_node = Node(package='webots_nao_camera', executable='webots_nao_camera')
 
     return LaunchDescription([
         kill_webots,
@@ -35,7 +36,7 @@ def generate_launch_description():
                     run_webots,
                     TimerAction(
                         period=5.0,
-                        actions=[nao_lola_client_node],
+                        actions=[nao_lola_client_node, webots_nao_camera_node],
                     )
                 ]
             )
