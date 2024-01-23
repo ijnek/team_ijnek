@@ -40,7 +40,7 @@ def generate_launch_description():
     simulation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('ijnek_launch'), 'launch', 'simulation_launch.py'])))
+                [FindPackageShare('simulation'), 'launch', 'simulation_launch.py'])))
 
     visualization_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(

@@ -32,13 +32,13 @@ def generate_launch_description():
     simspark_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('ijnek_launch'), 'launch', 'simspark_launch.py'])),
+                [FindPackageShare('simulation'), 'launch', 'simspark_launch.py'])),
         condition=IfCondition(EqualsSubstitution(LaunchConfiguration('simulator'), 'simspark')))
 
     webots_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('ijnek_launch'), 'launch', 'webots_launch.py'])),
+                [FindPackageShare('simulation'), 'launch', 'webots_launch.py'])),
         condition=IfCondition(EqualsSubstitution(LaunchConfiguration('simulator'), 'webots')))
 
     return LaunchDescription([
