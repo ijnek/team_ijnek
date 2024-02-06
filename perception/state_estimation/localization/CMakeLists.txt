@@ -17,6 +17,7 @@ endif()
 
 # Find packages
 find_package(ament_cmake REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
@@ -24,6 +25,7 @@ find_package(soccer_vision_3d_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
+  Eigen3
   nav_msgs
   rclcpp
   rclcpp_components
@@ -32,11 +34,14 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
 
 # Build
 add_library(localization_node SHARED
-  src/localization.cpp)
+  src/cmkf.cpp
+  src/localization.cpp
+  src/multi_modal_cmkf.cpp)
 
 target_include_directories(localization_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:include>
+  ${EIGEN3_INCLUDE_DIR})
 
 rclcpp_components_register_node(localization_node
   PLUGIN "localization::Localization"
