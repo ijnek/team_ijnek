@@ -45,7 +45,7 @@ def generate_launch_description():
                 'urdf_package': 'nao_description',
                 'urdf_package_path': PathJoinSubstitution(['urdf', 'nao.urdf'])}.items()),
         Node(
-            package='state_estimation',
+            package='localization',
             executable='static_pose_publisher',
             parameters=[{
                 'x': LaunchConfiguration('x'),
