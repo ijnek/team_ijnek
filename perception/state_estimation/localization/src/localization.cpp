@@ -1,4 +1,5 @@
 #include "localization/localization.hpp"
+#include "multi_modal_cmkf.hpp"
 
 namespace localization
 {
@@ -6,6 +7,8 @@ namespace localization
 Localization::Localization(const rclcpp::NodeOptions & options)
 : rclcpp::Node{"localization", options}
 {
+  mmcmkf = std::make_unique<MultiModalCMKF>();
+
   // Parameters
 
   // Subscriptions
@@ -22,10 +25,12 @@ Localization::Localization(const rclcpp::NodeOptions & options)
 
 void Localization::markings_callback(const soccer_vision_3d_msgs::msg::MarkingArray::SharedPtr msg)
 {
+  mmcmkf->update(*msg);
 }
 
 void Localization::odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
 {
+  mmcmkf->predict(*msg);
 }
 
 

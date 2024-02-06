@@ -1,5 +1,4 @@
-#ifndef LOCALIZATION__LOCALIZATION_HPP_
-#define LOCALIZATION__LOCALIZATION_HPP_
+#pragma once
 
 #include <memory>
 
@@ -10,6 +9,9 @@
 
 namespace localization
 {
+
+// Forward declaration
+class MultiModalCMKF;
 
 class Localization : public rclcpp::Node
 {
@@ -24,8 +26,8 @@ private:
   rclcpp::Subscription<soccer_vision_3d_msgs::msg::MarkingArray>::SharedPtr sub_markings_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr sub_odom_;
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+
+  std::unique_ptr<MultiModalCMKF> mmcmkf;
 };
 
 }  // namespace localization
-
-#endif  // LOCALIZATION__LOCALIZATION_HPP_
