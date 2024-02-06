@@ -15,22 +15,51 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+# Find packages
 find_package(ament_cmake REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(soccer_vision_3d_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 
-# Build static_pose_publisher
-add_executable(static_pose_publisher src/static_pose_publisher.cpp)
-ament_target_dependencies(static_pose_publisher
+set(THIS_PACKAGE_INCLUDE_DEPENDS
+  nav_msgs
   rclcpp
-  tf2_ros
-  geometry_msgs)
+  rclcpp_components
+  soccer_vision_3d_msgs
+  tf2_ros)
+
+# Build
+add_library(localization_node SHARED
+  src/localization.cpp)
+
+target_include_directories(localization_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+rclcpp_components_register_node(localization_node
+  PLUGIN "localization::Localization"
+  EXECUTABLE localization)
+
+ament_target_dependencies(localization_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+ament_export_targets(export_localization HAS_LIBRARY_TARGET)
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # Install
-install(TARGETS
-  static_pose_publisher
-  DESTINATION lib/${PROJECT_NAME})
+install(
+  DIRECTORY include/
+  DESTINATION include)
+install(
+  TARGETS localization_node
+  EXPORT export_localization
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include)
 
+# Tests
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
