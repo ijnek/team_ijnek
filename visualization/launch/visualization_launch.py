@@ -30,6 +30,15 @@ def generate_launch_description():
         arguments=['-d', rviz_config_path],
     )
 
+    soccer_vision_3d_rviz_markers_config_path = PathJoinSubstitution(
+        [FindPackageShare('soccer_vision_3d_rviz_markers'), 'config', 'spl.yaml'])
+    soccer_vision_3d_rviz_markers_node = Node(
+        package='soccer_vision_3d_rviz_markers',
+        executable='visualizer',
+        parameters=[soccer_vision_3d_rviz_markers_config_path],
+    )
+
     return LaunchDescription([
         rviz_node,
+        soccer_vision_3d_rviz_markers_node,
     ])

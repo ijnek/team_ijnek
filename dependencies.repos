@@ -1,16 +1,8 @@
 repositories:
-  nao_interfaces:
+  soccer_vision_3d_rviz_markers:
     type: git
-    url: https://github.com/ijnek/nao_interfaces.git
+    url: https://github.com/ros-sports/soccer_vision_3d_rviz_markers.git
     version: rolling
-  soccer_object_msgs:
-    type: git
-    url: https://github.com/ijnek/soccer_object_msgs.git
-    version: rolling
-  ros2_rcss3d:
-    type: git
-    url: https://gitlab.com/ijnek/ros2_rcss3d.git
-    version: kenji-rolling
   naosoccer_sim:
     type: git
     url: https://github.com/ijnek/naosoccer_sim.git
