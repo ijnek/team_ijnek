@@ -143,7 +143,7 @@ void LocaliserTransitioner::handleTransition(const EstimatorInfoIn &estimatorInf
                             if (newGameState == STATE_INITIAL) {
                                 resetToInitialPose();
                             } else {
-                                // Reset to unpenalised pose                                
+                                // Reset to unpenalised pose
                                 resetToUnpenalisedPose();
                             }
 
