@@ -27,15 +27,23 @@ def generate_launch_description():
             ComposableNode(
                 package='localization',
                 plugin='localization::TransitionDetector',
+                remappings=[
+                    ('rcgcd', 'gc/data'),
+                    ('transition', 'localization/transition')],
                 extra_arguments=[{'use_intra_process_comms': True}]),
             ComposableNode(
                 package='localization',
                 plugin='localization::PoseResetter',
+                remappings=[
+                    ('transition', 'localization/transition'),
+                    ('set_poses', 'localization/set_poses')],
                 extra_arguments=[{'use_intra_process_comms': True}]),
             ComposableNode(
                 package='localization',
                 plugin='localization::MMCMKF',
-                remappings=[],
+                remappings=[
+                    ('marking_array', 'soccer_vision_3d/markings'),
+                    ('set_poses', 'localization/set_poses'),],
                 extra_arguments=[{'use_intra_process_comms': True}])
         ]
     )

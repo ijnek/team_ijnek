@@ -14,7 +14,7 @@ TransitionDetector::TransitionDetector(const rclcpp::NodeOptions & options)
   // Subscription
   // - pickedup (some info about being picked up)
   rcgcd_sub_ = this->create_subscription<game_controller_spl_interfaces::msg::RCGCD15>(
-    "gc/data", 10,
+    "rcgcd", 10,
     std::bind(&TransitionDetector::rcgcd_callback, this, std::placeholders::_1));
 
   // Publisher
