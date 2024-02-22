@@ -36,37 +36,37 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   soccer_vision_3d_msgs
   tf2_ros)
 
-# Build localization node
-add_library(localization_node SHARED
+# Build mmcmkf node
+add_library(mmcmkf_node SHARED
   src/cmkf.cpp
-  src/localization.cpp
+  src/mmcmkf.cpp
   src/multi_modal_cmkf.cpp)
 
-target_include_directories(localization_node PUBLIC
+target_include_directories(mmcmkf_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${EIGEN3_INCLUDE_DIR})
 
-rclcpp_components_register_node(localization_node
-  PLUGIN "localization::Localization"
-  EXECUTABLE localization)
+rclcpp_components_register_node(mmcmkf_node
+  PLUGIN "localization::MMCMKF"
+  EXECUTABLE mmcmkf)
 
-ament_target_dependencies(localization_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_target_dependencies(mmcmkf_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
-# Build localization_transition_detector node
-add_library(localization_transition_detector_node SHARED
-  src/localization_transition_detector.cpp)
+# Build transition_detector node
+add_library(transition_detector_node SHARED
+  src/transition_detector.cpp)
 
-target_include_directories(localization_transition_detector_node PUBLIC
+target_include_directories(transition_detector_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${EIGEN3_INCLUDE_DIR})
 
-rclcpp_components_register_node(localization_transition_detector_node
-  PLUGIN "localization::LocalizationTransitionDetector"
-  EXECUTABLE localization_transition_detector)
+rclcpp_components_register_node(transition_detector_node
+  PLUGIN "localization::TransitionDetector"
+  EXECUTABLE transition_detector)
 
-ament_target_dependencies(localization_transition_detector_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_target_dependencies(transition_detector_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # Build pose_resetter node
 add_library(pose_resetter_node SHARED
@@ -92,15 +92,23 @@ install(
   DIRECTORY include/
   DESTINATION include)
 install(
-  TARGETS localization_node localization_transition_detector_node pose_resetter_node
+  TARGETS mmcmkf_node transition_detector_node pose_resetter_node
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include)
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME})
+
 
 # Tests
 if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_pose_resetter test/test_pose_resetter.cpp)
+  target_link_libraries(test_pose_resetter pose_resetter_node)
+
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()

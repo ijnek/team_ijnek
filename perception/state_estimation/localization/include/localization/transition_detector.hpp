@@ -7,16 +7,19 @@
 namespace localization
 {
 
-class LocalizationTransitionDetector : public rclcpp::Node
+class TransitionDetector : public rclcpp::Node
 {
 public:
-  explicit LocalizationTransitionDetector(
+  explicit TransitionDetector(
     const rclcpp::NodeOptions & options = rclcpp::NodeOptions{});
 
 private:
   void rcgcd_callback(const game_controller_spl_interfaces::msg::RCGCD15::SharedPtr msg);
 
-  // uint8_t prevCompetitionType;
+  rclcpp::Subscription<game_controller_spl_interfaces::msg::RCGCD15>::SharedPtr rcgcd_sub_;
+  rclcpp::Publisher<ijnek_interfaces::msg::LocalizationTransition>::SharedPtr localization_transition_pub_;
+
+  uint8_t prevCompetitionType;
   // uint8_t prevGameState;
   // uint8_t prevGamePhase;
   // uint8_t prevPenalty;

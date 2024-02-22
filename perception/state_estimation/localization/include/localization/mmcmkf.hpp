@@ -6,6 +6,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "soccer_vision_3d_msgs/msg/marking_array.hpp"
 #include "tf2_ros/transform_broadcaster.h"
+#include "ijnek_interfaces/srv/set_poses.hpp"
 
 namespace localization
 {
@@ -13,10 +14,10 @@ namespace localization
 // Forward declaration
 class MultiModalCMKF;
 
-class Localization : public rclcpp::Node
+class MMCMKF : public rclcpp::Node
 {
 public:
-  explicit Localization(const rclcpp::NodeOptions & options = rclcpp::NodeOptions{});
+  explicit MMCMKF(const rclcpp::NodeOptions & options = rclcpp::NodeOptions{});
 
 private:
 
@@ -26,6 +27,12 @@ private:
   rclcpp::Subscription<soccer_vision_3d_msgs::msg::MarkingArray>::SharedPtr sub_markings_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr sub_odom_;
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+
+  // Reset poses service
+  rclcpp::Service<ijnek_interfaces::srv::SetPoses>::SharedPtr set_poses_srv_;
+  void set_poses_cb(
+    const std::shared_ptr<ijnek_interfaces::srv::SetPoses::Request> request,
+    std::shared_ptr<ijnek_interfaces::srv::SetPoses::Response> response);
 
   std::unique_ptr<MultiModalCMKF> mmcmkf;
 };
