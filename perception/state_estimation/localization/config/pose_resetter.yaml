@@ -1,0 +1,45 @@
+# Initial state poses
+initial_state:
+  player_1:
+    x: -3.900
+    y: 3.000
+    theta: -1.57
+  player_2:
+    x: -3.240
+    y: -3.000
+    theta: 1.57
+  player_3:
+    x: -2.810
+    y: 3.000
+    theta: -1.57
+  player_4:
+    x: -2.160
+    y: -3.000
+    theta: 1.57
+  player_5:
+    x: -1.700
+    y: 3.000
+    theta: -1.57
+  player_6:
+    x: -1.200
+    y: -3.000
+    theta: 1.57
+  player_7:
+    x: -0.700
+    y: 3.000
+    theta: -1.57
+
+# Penalty shootout poses
+penalty_shootout:
+  offense:
+    x: 2200
+    y: 0
+    theta: 0
+  defense:
+    x: -FIELD_LENGTH / 2
+    y: 0
+    theta: 0
+  selected:
+    x: -4000
+    y: -2000
+    theta: 1.57

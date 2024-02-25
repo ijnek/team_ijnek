@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "localization/pose_resetter.hpp"
+#include "pose_resetter_params.hpp"
 
 namespace localization
 {
@@ -23,6 +24,8 @@ PoseResetter::PoseResetter(const rclcpp::NodeOptions & options)
   // Params
   // - player number
   // - transition poses (Provide sample param files for challenger league and champion league)
+  auto param_listener = std::make_shared<pose_resetter::ParamListener>(get_node_parameters_interface());
+  auto params = param_listener->get_params();
 
   // Subscription
   localization_transition_sub_ =
