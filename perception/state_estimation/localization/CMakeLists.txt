@@ -18,6 +18,7 @@ endif()
 # Find packages
 find_package(ament_cmake REQUIRED)
 find_package(game_controller_spl_interfaces REQUIRED)
+find_package(generate_parameter_library REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(ijnek_interfaces REQUIRED)
 find_package(nav_msgs REQUIRED)
@@ -69,6 +70,8 @@ rclcpp_components_register_node(transition_detector_node
 ament_target_dependencies(transition_detector_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # Build pose_resetter node
+generate_parameter_library(pose_resetter_params src/pose_resetter_params.yaml)
+
 add_library(pose_resetter_node SHARED
   src/pose_resetter.cpp)
 
@@ -81,6 +84,7 @@ rclcpp_components_register_node(pose_resetter_node
   PLUGIN "localization::PoseResetter"
   EXECUTABLE pose_resetter)
 
+target_link_libraries(pose_resetter_node pose_resetter_params)
 ament_target_dependencies(pose_resetter_node ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # Ament export
@@ -92,14 +96,14 @@ install(
   DIRECTORY include/
   DESTINATION include)
 install(
-  TARGETS mmcmkf_node transition_detector_node pose_resetter_node
+  TARGETS mmcmkf_node transition_detector_node pose_resetter_node pose_resetter_params
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include)
 install(
-  DIRECTORY launch
+  DIRECTORY config launch
   DESTINATION share/${PROJECT_NAME})
 
 

@@ -1,0 +1,130 @@
+pose_resetter:
+  initial_state:
+    player_1:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 1 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 1 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 1 at INITIAL state",
+      }
+    player_2:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 2 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 2 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 2 at INITIAL state",
+      }
+    player_2:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 2 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 2 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 2 at INITIAL state",
+      }
+    player_3:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 3 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 3 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 3 at INITIAL state",
+      }
+    player_4:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 4 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 4 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 4 at INITIAL state",
+      }
+    player_5:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 5 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 5 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 5 at INITIAL state",
+      }
+    player_6:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 6 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 6 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 6 at INITIAL state",
+      }
+    player_7:
+      x: {
+        type: double,
+        default_value: 0.0,
+        description: "x position of player 7 at INITIAL state",
+      }
+      y: {
+        type: double,
+        default_value: 0.0,
+        description: "y position of player 7 at INITIAL state",
+      }
+      theta: {
+        type: double,
+        default_value: 0.0,
+        description: "heading of player 7 at INITIAL state",
+      }

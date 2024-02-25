@@ -10,6 +10,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>gc_spl_interfaces</depend>
+  <depend>generate_parameter_library</depend>
   <depend>eigen</depend>
   <depend>ijnek_interfaces</depend>
   <depend>nav_msgs</depend>

@@ -13,11 +13,19 @@
 # limitations under the License.
 
 import launch
+from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+
+    # Load configs
+    pose_resetter_config = PathJoinSubstitution(
+        [FindPackageShare('localization'), 'config', 'pose_resetter.yaml'])
+
+    # Create composable node container
     container = ComposableNodeContainer(
         name='localization',
         namespace='',
@@ -37,6 +45,7 @@ def generate_launch_description():
                 remappings=[
                     ('transition', 'localization/transition'),
                     ('set_poses', 'localization/set_poses')],
+                parameters=[pose_resetter_config],
                 extra_arguments=[{'use_intra_process_comms': True}]),
             ComposableNode(
                 package='localization',
