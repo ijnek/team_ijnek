@@ -13,17 +13,27 @@
 # limitations under the License.
 
 import launch
-from launch.substitutions import PathJoinSubstitution
-from launch_ros.actions import ComposableNodeContainer
+from launch.actions import DeclareLaunchArgument, SetLaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.actions import ComposableNodeContainer, Node
 from launch_ros.descriptions import ComposableNode
+from launch_ros.parameter_descriptions import ParameterFile
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
 
-    # Load configs
-    pose_resetter_config = PathJoinSubstitution(
-        [FindPackageShare('localization'), 'config', 'pose_resetter.yaml'])
+    # Launch arguments
+    launch_arguments = [
+        DeclareLaunchArgument(name='player_number', default_value='2', description='The player number of the robot.'),
+        DeclareLaunchArgument(name='field_length', default_value='9000.0', description='Full length of field (in metres)'),
+        DeclareLaunchArgument(name='field_width', default_value='6000.0', description='Full width of field (in metres)'),
+    ]
+
+    # Parameter files
+    pose_resetter_parameters = ParameterFile(
+        param_file=PathJoinSubstitution([FindPackageShare('localization'), 'config', 'pose_resetter.yaml']),
+        allow_substs=True)
 
     # Create composable node container
     container = ComposableNodeContainer(
@@ -45,7 +55,9 @@ def generate_launch_description():
                 remappings=[
                     ('transition', 'localization/transition'),
                     ('set_poses', 'localization/set_poses')],
-                parameters=[pose_resetter_config],
+                parameters=[
+                    {'player_number': LaunchConfiguration('player_number')},
+                    pose_resetter_parameters],
                 extra_arguments=[{'use_intra_process_comms': True}]),
             ComposableNode(
                 package='localization',
@@ -57,4 +69,4 @@ def generate_launch_description():
         ]
     )
 
-    return launch.LaunchDescription([container])
+    return launch.LaunchDescription([*launch_arguments, container])

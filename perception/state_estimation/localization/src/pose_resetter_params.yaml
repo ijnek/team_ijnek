@@ -1,4 +1,9 @@
 pose_resetter:
+  player_number: {
+    type: int,
+    default_value: 2,
+    description: "Player number of robot",
+  }
   initial_state:
     player_1:
       x: {
