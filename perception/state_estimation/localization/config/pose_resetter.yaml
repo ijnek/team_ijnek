@@ -2,32 +2,32 @@
 initial_state:
   player_1:
     x: -3.900
-    y: 3.000
-    theta: -1.57
+    y: $(eval '$(var field_width) / 2')
+    theta: $(eval '-pi / 2')
   player_2:
     x: -3.240
-    y: -3.000
-    theta: 1.57
+    y: $(eval '-$(var field_width) / 2')
+    theta: $(eval 'pi / 2')
   player_3:
     x: -2.810
-    y: 3.000
-    theta: -1.57
+    y: $(eval '$(var field_width) / 2')
+    theta: $(eval '-pi / 2')
   player_4:
     x: -2.160
-    y: -3.000
-    theta: 1.57
+    y: $(eval '-$(var field_width) / 2')
+    theta: $(eval 'pi / 2')
   player_5:
     x: -1.700
-    y: 3.000
-    theta: -1.57
+    y: $(eval '$(var field_width) / 2')
+    theta: $(eval '-pi / 2')
   player_6:
     x: -1.200
-    y: -3.000
-    theta: 1.57
+    y: $(eval '-$(var field_width) / 2')
+    theta: $(eval 'pi / 2')
   player_7:
     x: -0.700
-    y: 3.000
-    theta: -1.57
+    y: $(eval '$(var field_width) / 2')
+    theta: $(eval '-pi / 2')
 
 # Penalty shootout poses
 penalty_shootout:
@@ -36,7 +36,7 @@ penalty_shootout:
     y: 0
     theta: 0
   defense:
-    x: -FIELD_LENGTH / 2
+    x: $(eval '-$(var field_length) / 2')
     y: 0
     theta: 0
   selected:
