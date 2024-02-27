@@ -13,6 +13,7 @@
   <exec_depend>motion_launch</exec_depend>
   <exec_depend>nao_description</exec_depend>
   <exec_depend>nao_lola_client</exec_depend>
+  <exec_depend>perception</exec_depend>
   <exec_depend>simulation</exec_depend>
   <exec_depend>urdf_launch</exec_depend>
   <exec_depend>visualization</exec_depend>
