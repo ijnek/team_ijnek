@@ -31,7 +31,7 @@ def generate_launch_description():
         package='game_controller_spl',
         executable='game_controller_spl',
         parameters=[{
-            'rcgcd_version': 15,
+            'rcgcd_version': 16,
             'rcgcrd_version': 4,
         }])
 
