@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "geometry_msgs/msg/pose.hpp"
+#include "geometry_msgs/msg/pose_with_covariance.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "soccer_vision_3d_msgs/msg/marking_array.hpp"
 
@@ -22,7 +23,7 @@ public:
 
   // getAllRobotPos();
   // getRobotPos();
-  geometry_msgs::msg::Pose getRobotPose();
+  geometry_msgs::msg::PoseWithCovariance getPoseWithCovariance();
   // getRobotPoseUncertainty();
   // getRobotHeadingUncertainty();
 

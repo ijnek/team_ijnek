@@ -42,16 +42,29 @@ void MultiModalCMKF::update(const soccer_vision_3d_msgs::msg::MarkingArray & mar
   (void)markers;
 }
 
-geometry_msgs::msg::Pose MultiModalCMKF::getRobotPose()
+geometry_msgs::msg::PoseWithCovariance MultiModalCMKF::getPoseWithCovariance()
 {
   // For now, just return the pose of the first CMKF
   // Also need to fill the orientation field
-  const auto& state = kfs_.at(0)->state;
-  geometry_msgs::msg::Pose pose;
-  pose.position.x = state(ME_X_DIM);
-  pose.position.y = state(ME_Y_DIM);
-  pose.position.z = state(ME_H_DIM);
-  return pose;
+  geometry_msgs::msg::PoseWithCovariance pose_with_covariance;
+
+  const auto & state = kfs_.at(0)->state;
+  pose_with_covariance.pose.position.x = state(ME_X_DIM);
+  pose_with_covariance.pose.position.y = state(ME_Y_DIM);
+  pose_with_covariance.pose.position.z = state(ME_H_DIM);
+
+  const auto & covariance = kfs_.at(0)->covariance;
+  pose_with_covariance.covariance[0] = static_cast<double>(covariance(ME_X_DIM, ME_X_DIM));
+  pose_with_covariance.covariance[1] = static_cast<double>(covariance(ME_X_DIM, ME_Y_DIM));
+  pose_with_covariance.covariance[3] = static_cast<double>(covariance(ME_X_DIM, ME_H_DIM));
+  pose_with_covariance.covariance[6] = static_cast<double>(covariance(ME_Y_DIM, ME_X_DIM));
+  pose_with_covariance.covariance[7] = static_cast<double>(covariance(ME_Y_DIM, ME_Y_DIM));
+  pose_with_covariance.covariance[9] = static_cast<double>(covariance(ME_Y_DIM, ME_H_DIM));
+  pose_with_covariance.covariance[18] = static_cast<double>(covariance(ME_H_DIM, ME_X_DIM));
+  pose_with_covariance.covariance[19] = static_cast<double>(covariance(ME_H_DIM, ME_Y_DIM));
+  pose_with_covariance.covariance[21] = static_cast<double>(covariance(ME_H_DIM, ME_H_DIM));
+
+  return pose_with_covariance;
 }
 
 static void predictCMKF(
