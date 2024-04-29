@@ -113,6 +113,9 @@ if(BUILD_TESTING)
   ament_add_gtest(test_pose_resetter test/test_pose_resetter.cpp)
   target_link_libraries(test_pose_resetter pose_resetter_node)
 
+  ament_add_gtest(test_multi_modal_cmkf test/test_multi_modal_cmkf.cpp)
+  target_link_libraries(test_multi_modal_cmkf mmcmkf_node)
+
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
