@@ -30,6 +30,14 @@ public:
 private:
   std::vector<std::unique_ptr<CMKF>> kfs_;
   nav_msgs::msg::Odometry last_odometry_;
+
+  void predictAllCMKFs(const nav_msgs::msg::Odometry & odometry);
+  void updateAllCMKFs(const soccer_vision_3d_msgs::msg::MarkingArray & markers);
+  void deleteOffFieldCMKFs();
+  void mergeCMKFs();
+  void normalizeCMKFWeights();
+  void deleteLowWeightCMKFs();
+  void determineBestCMKF();
 };
 
 }  // namespace localization

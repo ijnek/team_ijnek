@@ -10,6 +10,9 @@ namespace localization
 static void predictCMKF(
   CMKF & cmkf, const nav_msgs::msg::Odometry & odometry,
   const nav_msgs::msg::Odometry & last_odom);
+static void updateCMKF(CMKF & cmkf, const soccer_vision_3d_msgs::msg::MarkingEllipse & ellipse);
+static void updateCMKF(CMKF & cmkf, const soccer_vision_3d_msgs::msg::MarkingIntersection & intersection);
+static void updateCMKF(CMKF & cmkf, const soccer_vision_3d_msgs::msg::MarkingSegment & segment);
 
 MultiModalCMKF::MultiModalCMKF()
 {
@@ -30,9 +33,12 @@ MultiModalCMKF::~MultiModalCMKF()
 
 void MultiModalCMKF::predict(const nav_msgs::msg::Odometry & odometry)
 {
-  for (auto & kf : kfs_) {
-    predictCMKF(*kf, odometry, last_odometry_);
-  }
+  predictAllCMKFs(odometry);
+  deleteOffFieldCMKFs();
+  mergeCMKFs();
+  normalizeCMKFWeights();
+  deleteLowWeightCMKFs();
+  determineBestCMKF();
 
   last_odometry_ = odometry;
 }
@@ -40,6 +46,54 @@ void MultiModalCMKF::predict(const nav_msgs::msg::Odometry & odometry)
 void MultiModalCMKF::update(const soccer_vision_3d_msgs::msg::MarkingArray & markers)
 {
   (void)markers;
+  updateAllCMKFs(markers);
+  deleteOffFieldCMKFs();
+  mergeCMKFs();
+  normalizeCMKFWeights();
+  deleteLowWeightCMKFs();
+  determineBestCMKF();
+}
+
+void MultiModalCMKF::predictAllCMKFs(const nav_msgs::msg::Odometry & odometry)
+{
+  for (auto & kf : kfs_) {
+    predictCMKF(*kf, odometry, last_odometry_);
+  }
+}
+
+void MultiModalCMKF::updateAllCMKFs(const soccer_vision_3d_msgs::msg::MarkingArray & markers)
+{
+  for (auto & kf : kfs_) {
+    for (const auto & ellipse : markers.ellipses) {
+      updateCMKF(*kf, ellipse);
+    }
+    for (const auto & intersection : markers.intersections) {
+      updateCMKF(*kf, intersection);
+    }
+    for (const auto & segment : markers.segments) {
+      updateCMKF(*kf, segment);
+    }
+  }
+}
+
+void MultiModalCMKF::deleteOffFieldCMKFs()
+{
+}
+
+void MultiModalCMKF::mergeCMKFs()
+{
+}
+
+void MultiModalCMKF::normalizeCMKFWeights()
+{
+}
+
+void MultiModalCMKF::deleteLowWeightCMKFs()
+{
+}
+
+void MultiModalCMKF::determineBestCMKF()
+{
 }
 
 geometry_msgs::msg::PoseWithCovariance MultiModalCMKF::getPoseWithCovariance()
@@ -80,6 +134,24 @@ static void predictCMKF(
   // Predict the state
   cmkf.state(ME_X_DIM) += delta_x;
   cmkf.state(ME_Y_DIM) += delta_y;
+}
+
+static void updateCMKF(CMKF & cmkf, const soccer_vision_3d_msgs::msg::MarkingEllipse & ellipse)
+{
+  (void) cmkf;
+  (void) ellipse;
+}
+
+static void updateCMKF(CMKF & cmkf, const soccer_vision_3d_msgs::msg::MarkingIntersection & intersection)
+{
+  (void) cmkf;
+  (void) intersection;
+}
+
+static void updateCMKF(CMKF & cmkf, const soccer_vision_3d_msgs::msg::MarkingSegment & segment)
+{
+  (void) cmkf;
+  (void) segment;
 }
 
 }  // namespace localization
