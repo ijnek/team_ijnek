@@ -23,7 +23,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    # Launch arguments
+    # Declare launch arguments
     launch_arguments = [
         DeclareLaunchArgument(name='player_number', default_value='2', description='The player number of the robot.'),
         DeclareLaunchArgument(name='field_length', default_value='9000.0', description='Full length of field (in metres)'),

@@ -1,0 +1,139 @@
+field_width: 7.4
+field_length: 10.4
+field_lines:
+  - start:  # Left side line
+      x: -4.5
+      y: 3.0
+      z: 0.0
+    end:
+      x: 4.5
+      y: 3.0
+      z: 0.0
+  - start:  # Right side line
+      x: -4.5
+      y: -3.0
+      z: 0.0
+    end:
+      x: 4.5
+      y: -3.0
+      z: 0.0
+  - start:  # Our base line
+      x: -4.5
+      y: -3.0
+      z: 0.0
+    end:
+      x: -4.5
+      y: 3.0
+      z: 0.0
+  - start:  # Oponent base line
+      x: 4.5
+      y: -3.0
+      z: 0.0
+    end:
+      x: 4.5
+      y: 3.0
+      z: 0.0
+  - start:  # Center line
+      x: 0.0
+      y: -3.0
+      z: 0.0
+    end:
+      x: 0.0
+      y: 3.0
+      z: 0.0
+  - start:  # Our left penalty box line
+      x: -4.5
+      y: 2.0
+      z: 0.0
+    end:
+      x: -2.85
+      y: 2.0
+      z: 0.0
+  - start:  # Opponent left penalty box line
+      x: 4.5
+      y: 2.0
+      z: 0.0
+    end:
+      x: 2.85
+      y: 2.0
+      z: 0.0
+  - start:  # Opponent right penalty box line
+      x: 4.5
+      y: -2.0
+      z: 0.0
+    end:
+      x: 2.85
+      y: -2.0
+      z: 0.0
+  - start:  # Our right penalty box line
+      x: -4.5
+      y: -2.0
+      z: 0.0
+    end:
+      x: -2.85
+      y: -2.0
+      z: 0.0
+  - start:  # Our outer penalty box line
+      x: -2.85
+      y: -2.0
+      z: 0.0
+    end:
+      x: -2.85
+      y: 2.0
+      z: 0.0
+  - start:  # Opponent outer penalty box line
+      x: 2.85
+      y: -2.0
+      z: 0.0
+    end:
+      x: 2.85
+      y: 2.0
+      z: 0.0
+  - start:  # Our left goal box line
+      x: -4.5
+      y: 1.1
+      z: 0.0
+    end:
+      x: -3.9
+      y: 1.1
+      z: 0.0
+  - start:  # Opponent left goal box line
+      x: 4.5
+      y: 1.1
+      z: 0.0
+    end:
+      x: 3.9
+      y: 1.1
+      z: 0.0
+  - start:  # Opponent right goal box line
+      x: 4.5
+      y: -1.1
+      z: 0.0
+    end:
+      x: 3.9
+      y: -1.1
+      z: 0.0
+  - start:  # Our right goal box line
+      x: -4.5
+      y: -1.1
+      z: 0.0
+    end:
+      x: -3.9
+      y: -1.1
+      z: 0.0
+  - start:  # Our outer goal box line
+      x: -3.9
+      y: -1.1
+      z: 0.0
+    end:
+      x: -3.9
+      y: 1.1
+      z: 0.0
+  - start:  # Opponent outer goal box line
+      x: 3.9
+      y: -1.1
+      z: 0.0
+    end:
+      x: 3.9
+      y: 1.1
+      z: 0.0

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from launch import LaunchDescription
+from launch.actions import ExecuteProcess
 from launch.substitutions import PathJoinSubstitution
 
 from launch_ros.actions import Node
@@ -38,7 +39,12 @@ def generate_launch_description():
         parameters=[soccer_vision_3d_rviz_markers_config_path],
     )
 
+    pub_field_visualization = ExecuteProcess(
+        cmd=['cat $(ros2 pkg prefix --share visualization)/yaml/field_visualization.yaml | ros2 topic pub --once --qos-durability transient_local /field_visualization ijnek_interfaces/msg/FieldVisualization --stdin'],
+        shell=True)
+
     return LaunchDescription([
         rviz_node,
         soccer_vision_3d_rviz_markers_node,
+        pub_field_visualization,
     ])

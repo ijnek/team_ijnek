@@ -17,9 +17,10 @@ endif()
 
 # Find packages
 find_package(ament_cmake REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(game_controller_spl_interfaces REQUIRED)
 find_package(generate_parameter_library REQUIRED)
-find_package(Eigen3 REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(ijnek_interfaces REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -28,14 +29,16 @@ find_package(soccer_vision_3d_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
-  game_controller_spl_interfaces
   Eigen3
+  game_controller_spl_interfaces
+  geometry_msgs
   ijnek_interfaces
   nav_msgs
   rclcpp
   rclcpp_components
   soccer_vision_3d_msgs
-  tf2_ros)
+  tf2_ros
+)
 
 # Build mmcmkf node
 add_library(mmcmkf_node SHARED
@@ -105,7 +108,6 @@ install(
 install(
   DIRECTORY config launch
   DESTINATION share/${PROJECT_NAME})
-
 
 # Tests
 if(BUILD_TESTING)

@@ -7,6 +7,7 @@
 #include "soccer_vision_3d_msgs/msg/marking_array.hpp"
 #include "tf2_ros/transform_broadcaster.h"
 #include "ijnek_interfaces/srv/set_poses.hpp"
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 
 namespace localization
 {
@@ -23,10 +24,13 @@ private:
 
   void markings_callback(const soccer_vision_3d_msgs::msg::MarkingArray::SharedPtr msg);
   void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
+  void timer_callback();
 
   rclcpp::Subscription<soccer_vision_3d_msgs::msg::MarkingArray>::SharedPtr sub_markings_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr sub_odom_;
+  rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pub_pwcs_;
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  rclcpp::TimerBase::SharedPtr timer_;
 
   // Reset poses service
   rclcpp::Service<ijnek_interfaces::srv::SetPoses>::SharedPtr set_poses_srv_;

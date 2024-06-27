@@ -11,6 +11,8 @@ find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/FieldLineVisualization.msg"
+  "msg/FieldVisualization.msg"
   "msg/LocalizationTransition.msg"
   "srv/SetPoses.srv"
   DEPENDENCIES geometry_msgs

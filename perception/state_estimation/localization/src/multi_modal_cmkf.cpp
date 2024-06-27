@@ -105,7 +105,8 @@ geometry_msgs::msg::PoseWithCovariance MultiModalCMKF::getPoseWithCovariance()
   const auto & state = kfs_.at(0)->state;
   pose_with_covariance.pose.position.x = state(ME_X_DIM);
   pose_with_covariance.pose.position.y = state(ME_Y_DIM);
-  pose_with_covariance.pose.position.z = state(ME_H_DIM);
+  pose_with_covariance.pose.position.z = 0.315;  // Set to robot walk height for now.
+  // pose_with_covariance.pose.position.z = state(ME_H_DIM);
 
   const auto & covariance = kfs_.at(0)->covariance;
   pose_with_covariance.covariance[0] = static_cast<double>(covariance(ME_X_DIM, ME_X_DIM));

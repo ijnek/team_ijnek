@@ -1,0 +1,14 @@
+<library path="ijnek_rviz_plugins">
+
+  <class
+    name="ijnek_rviz_plugins/FieldVisualizationDisplay"
+    type="ijnek_rviz_plugins::FieldVisualizationDisplay"
+    base_class_type="rviz_common::Display"
+  >
+    <description>
+      Display for ijnek_rviz_plugins/msg/FieldVisualizationDisplay message
+    </description>
+    <message_type>ijnek_rviz_plugins/msg/FieldVisualizationDisplay</message_type>
+  </class>
+
+</library>
