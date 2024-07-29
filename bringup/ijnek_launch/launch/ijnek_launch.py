@@ -42,6 +42,11 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [FindPackageShare('simulation'), 'launch', 'simulation_launch.py'])))
 
+    teleoperation_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [FindPackageShare('teleoperation'), 'launch', 'teleoperation_launch.py'])))
+
     visualization_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
@@ -52,5 +57,6 @@ def generate_launch_description():
         description_launch,
         motion_launch,
         simulation_launch,
+        teleoperation_launch,
         visualization_launch,
     ])
