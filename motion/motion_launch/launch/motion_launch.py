@@ -17,15 +17,19 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
 
-    walk_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [FindPackageShare('motion_launch'), 'launch', 'walk_launch.py'])))
+    # walk_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         PathJoinSubstitution(
+    #             [FindPackageShare('motion_launch'), 'launch', 'walk_launch.py'])))
+
+    motion_key_frame = Node(package='motion_key_frame', executable='motion_key_frame')
 
     return LaunchDescription([
-        walk_launch,
+        # walk_launch,
+        motion_key_frame,
     ])
